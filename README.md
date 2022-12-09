@@ -1,4 +1,8 @@
-# DECAPAY PERSONAL FINANCIAL TRACKER 
+# DECAPAY PERSONAL FINANCIAL TRACKER
+<p align="center">
+  <img src="web-front-page.png">
+</p>
+
 
 Welcome to DecaPay Budget Tracker, a personal finance tool that helps you keep track of your budget and expenses. 
 This simple and easy-to-use app allows you to track your income and expenses, so you can stay on top of your financial situation and make informed decisions about your money.
