@@ -21,7 +21,7 @@ import javax.persistence.OneToOne;
 @Entity(name = "category_tb")
 @SQLDelete(sql = "UPDATE category_tb SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
-public class Category extends BaseEntity{
+public class BudgetCategory extends BaseEntity{
     private String name;
 
     @ManyToOne()

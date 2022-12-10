@@ -23,7 +23,7 @@ import java.util.List;
 public class LineItem extends BaseEntity {
 
     @OneToOne(mappedBy = "lineItem")
-    private Category category;
+    private BudgetCategory budgetCategory;
 
     private BigDecimal projectedAmount = BigDecimal.ZERO;
 

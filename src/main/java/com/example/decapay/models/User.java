@@ -39,7 +39,7 @@ public class User extends BaseEntity {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Category> categories;
+    private List<BudgetCategory> categories;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Budget> budgets;
