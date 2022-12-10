@@ -39,7 +39,7 @@ TOTAL Budget for the month of July: **$3050**
     Groceries - $24
     Groceries. - $60
 
-TOTAL expenses so far: **$3050**
+TOTAL expenses so far: **$141**
 ***
 
 ### Here are some of the key features of the DecaPay personal finance tracker:
