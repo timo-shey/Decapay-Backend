@@ -19,8 +19,9 @@ services:
 
   decapay_server:
     build:
-      context: ./src
+      context: .
     container_name: decapay_server
+    image: decapay
     environment:
       POSTGRES_HOST: decapay_db
     ports:
