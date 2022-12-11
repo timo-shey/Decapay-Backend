@@ -18,6 +18,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    private final String path = "/api/v1/auth";
+    private final String[] AUTH_WHITELIST = {
+            path +"/signin", path + "/forgot-password", path + "/reset-password",
+            path + "/register", path + "/verify-code", path + "/references" };
     private final JwtAuthFilter jwtAuthFilter;
     private final CustomUserDetailService userDetailService;
 
@@ -26,7 +30,7 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

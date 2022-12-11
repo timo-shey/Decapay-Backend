@@ -3,6 +3,7 @@ package com.example.decapay.configurations.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,8 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    private String JWT_SECRET = "jwtsecretkey";
+    @Value("${app.jwt_secret}")
+    private String JWT_SECRET;
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
