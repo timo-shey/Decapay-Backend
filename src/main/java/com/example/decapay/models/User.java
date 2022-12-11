@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     private String userId;
     private String firstname;
     private String lastname;
-    private Boolean verificationStatus = false;
+    private Boolean isVerified = false;
     @Column(name = "email")
     private String email;
     @Column(name = "phone_number")
