@@ -19,7 +19,7 @@ public class UpdatePasswordController {
 
     @PostMapping("/update-password")
     public ApiResponse<String> updatePassword(@Valid @RequestBody PasswordUpdateRequest passwordUpdateRequest){
-        this.passwordUpdateService.createPassword(passwordUpdateRequest);
+        this.passwordUpdateService.updatePassword(passwordUpdateRequest);
         return responseManager.success("password updated successfully!");
     }
 }

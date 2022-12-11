@@ -5,6 +5,7 @@ import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.PasswordUpdateRequest;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.PasswordUpdateService;
+import com.example.decapay.utils.UserUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,27 +30,29 @@ class PasswordUpdateServiceImplTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private UserUtil userUtil;
 
     @BeforeEach
     void setUp() {
-        passwordUpdateService = new PasswordUpdateServiceImpl(jwtUtils, userRepository, passwordEncoder);
+        passwordUpdateService = new PasswordUpdateServiceImpl(jwtUtils, userRepository, passwordEncoder, userUtil);
     }
 
     @Test
     void createPassword() {
         PasswordUpdateRequest passwordUpdateRequest = new PasswordUpdateRequest(
-                "1234", "123456", "123456", "hvsailweoaukhqhadghivakuxaseip");
+                "1234", "123456", "123456");
         User user = new User();
         user.setPassword("1234");
         user.setEmail("jon@email.com");
 
-        given(jwtUtils.extractUsername(passwordUpdateRequest.getToken())).willReturn("jon@email.com");
+        given(userUtil.getAuthenticatedUserEmail()).willReturn("jon@email.com");
 
         given(userRepository.findByEmail("jon@email.com")).willReturn(Optional.of(user));
 
         given(passwordEncoder.matches(passwordUpdateRequest.getPassword(), user.getPassword())).willReturn(true);
 
-        passwordUpdateService.createPassword(passwordUpdateRequest);
+        passwordUpdateService.updatePassword(passwordUpdateRequest);
 
         verify(userRepository).save(any());
     }

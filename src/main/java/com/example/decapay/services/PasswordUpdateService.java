@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface PasswordUpdateService {
-    void createPassword(PasswordUpdateRequest passwordUpdateRequest);
+    void updatePassword(PasswordUpdateRequest passwordUpdateRequest);
 }

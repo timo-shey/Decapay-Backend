@@ -6,6 +6,7 @@ import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.PasswordUpdateRequest;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.PasswordUpdateService;
+import com.example.decapay.utils.UserUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,16 +20,16 @@ public class PasswordUpdateServiceImpl  implements PasswordUpdateService {
     private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserUtil userUtil;
 
     @Override
-    public void createPassword(PasswordUpdateRequest passwordUpdateRequest) {
+    public void updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
 
         String password = passwordUpdateRequest.getPassword();
         String newPassword = passwordUpdateRequest.getNewPassword();
         String confirmPassword = passwordUpdateRequest.getConfirmPassword();
-        String token = passwordUpdateRequest.getToken();
 
-        String email =  jwtUtils.extractUsername(token);
+        String email = userUtil.getAuthenticatedUserEmail();
 
         Optional<User> optionalUser = userRepository.findByEmail(email);
 

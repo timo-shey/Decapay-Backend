@@ -18,6 +18,5 @@ public class PasswordUpdateRequest {
     @NotBlank(message = "password is mandatory")
     private String confirmPassword;
 
-    private String token;
 
 }
