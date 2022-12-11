@@ -32,6 +32,7 @@ public class User extends BaseEntity {
     private String userId;
     private String firstname;
     private String lastname;
+    private Boolean verificationStatus = false;
     @Column(name = "email")
     private String email;
     @Column(name = "phone_number")
