@@ -1,5 +1,8 @@
 package com.example.decapay.configurations.mails;
 
+import com.example.decapay.pojos.mailDto.MailDto;
+import org.springframework.http.ResponseEntity;
+
 public interface EmailSenderService {
-    void sendEmail(String to, String subject, String message);
+    ResponseEntity<String> sendEmail(MailDto mailDto);
 }

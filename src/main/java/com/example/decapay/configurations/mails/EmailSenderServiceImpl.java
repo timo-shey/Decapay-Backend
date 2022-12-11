@@ -1,6 +1,9 @@
 package com.example.decapay.configurations.mails;
 
+import com.example.decapay.pojos.mailDto.MailDto;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,14 +14,16 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private final JavaMailSender mailSender;
 
     @Override
-    public void sendEmail(String to, String subject, String message) {
+    public ResponseEntity<String> sendEmail(MailDto mailDto) {
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("decapay1@gmail.com");
-        simpleMailMessage.setTo(to);
-        simpleMailMessage.setSubject(subject);
-        simpleMailMessage.setText(message);
+        simpleMailMessage.setTo(mailDto.getTo());
+        simpleMailMessage.setSubject(mailDto.getSubject());
+        simpleMailMessage.setText(mailDto.getMessage());
 
         mailSender.send(simpleMailMessage);
+
+        return new ResponseEntity<>("Message sent successfully", HttpStatus.OK);
     }
 }
