@@ -1,0 +1,40 @@
+# latest compose format
+version: '3.8'
+services:
+  decapay_db:
+    image: postgres:latest
+    container_name: decapay_database
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_DB: decapay_db
+      POSTGRES_USER: decapay
+      POSTGRES_PASSWORD: decapay
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - decapay-pg-data:/var/lib/postgresql/data/pgdata
+    networks:
+      - decapay-backend
+
+  decapay_server:
+    build:
+      context: ./src
+    container_name: decapay_server
+    environment:
+      POSTGRES_HOST: decapay_db
+    ports:
+      - 8082:8082
+    depends_on:
+      - decapay_db
+    restart: always
+    networks:
+      - decapay-backend
+
+
+volumes:
+  decapay-pg-data:
+
+
+networks:
+  decapay-backend:
