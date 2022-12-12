@@ -1,6 +1,6 @@
 package com.example.decapay.controllers;
 
-import com.example.decapay.pojos.requestDtos.UserUpdateRequestDto;
+import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.services.UserService;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import javax.validation.Valid;
 public class UserController {
     private final UserService userService;
     @PutMapping("/edit/{Id}")
-    public ApiResponse editUser(@PathVariable Long Id, @Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto){
-        return userService.editUser(Id, userUpdateRequestDto);
+    public ApiResponse editUser(@PathVariable Long Id, @Valid @RequestBody UserUpdateRequest userUpdateRequest){
+        return userService.editUser(Id, userUpdateRequest);
     }
 }

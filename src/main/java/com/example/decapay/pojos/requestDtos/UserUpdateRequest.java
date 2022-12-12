@@ -4,20 +4,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
 
-public class UserUpdateRequestDto {
-    @NotNull(message = "First Name field can't be empty")
+public class UserUpdateRequest {
+    @NotBlank(message = "First Name field can't be empty")
     private String firstname;
-    @NotNull(message = "Last Name field can't be empty")
+    @NotBlank(message = "Last Name field can't be empty")
     private String lastname;
-    @NotNull(message ="Email field can't be empty")
+    @NotBlank(message ="Email field can't be empty")
     @Email(message = "Please enter a valid email address")
     private String email;
-    @NotNull(message="Phone Number field can't be empty")
+    @NotBlank(message="Phone Number field can't be empty")
     private String phoneNumber;
 
 }

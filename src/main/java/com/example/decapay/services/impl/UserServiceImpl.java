@@ -1,13 +1,15 @@
 package com.example.decapay.services.impl;
 
 import com.example.decapay.models.User;
-import com.example.decapay.pojos.requestDtos.UserUpdateRequestDto;
+import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.ResponseManager;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -17,19 +19,20 @@ public class UserServiceImpl implements UserService {
     private final ResponseManager responseManager;
 
     @Override
-    public ApiResponse<String> editUser(Long Id, UserUpdateRequestDto userUpdateRequestDto) {
+    @Transactional
+    public ApiResponse<String> editUser(Long Id, UserUpdateRequest userUpdateRequest) {
 
         User user = userRepository.findById(Id).orElse(null);
         if (user == null)
             return responseManager.error("User not found");
 
-        user.setFirstname(userUpdateRequestDto.getFirstname());
+        user.setFirstname(userUpdateRequest.getFirstname());
         user.setLastname(user.getLastname());
-        user.setEmail(userUpdateRequestDto.getEmail());
-        user.setPhoneNumber(userUpdateRequestDto.getPhoneNumber());
+        user.setEmail(userUpdateRequest.getEmail());
+        user.setPhoneNumber(userUpdateRequest.getPhoneNumber());
 
         userRepository.save(user);
 
-        return responseManager.success("User details updated successfully");
+        return responseManager.success("User details updated");
     }
 }

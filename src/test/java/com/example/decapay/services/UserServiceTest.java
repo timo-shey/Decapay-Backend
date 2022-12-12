@@ -1,7 +1,7 @@
 package com.example.decapay.services;
 
 import com.example.decapay.models.User;
-import com.example.decapay.pojos.requestDtos.UserUpdateRequestDto;
+import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.impl.UserServiceImpl;
@@ -29,17 +29,17 @@ class UserServiceTest {
     @Mock
     private ResponseManager responseManager;
 
-    private  UserUpdateRequestDto userUpdateRequestDto;
+    private UserUpdateRequest userUpdateRequest;
     @BeforeEach
     void setUp() {
 
         userService = new UserServiceImpl(userRepository, responseManager);
 
-        userUpdateRequestDto = new UserUpdateRequestDto();
-        userUpdateRequestDto.setFirstname("Michael");
-        userUpdateRequestDto.setLastname("Ajayi");
-        userUpdateRequestDto.setEmail("olamic695@gmail.com");
-        userUpdateRequestDto.setPhoneNumber("08022222222");
+        userUpdateRequest = new UserUpdateRequest();
+        userUpdateRequest.setFirstname("Michael");
+        userUpdateRequest.setLastname("Ajayi");
+        userUpdateRequest.setEmail("olamic695@gmail.com");
+        userUpdateRequest.setPhoneNumber("08022222222");
     }
 
     @AfterEach
@@ -50,15 +50,15 @@ class UserServiceTest {
     void editUser() {
 
        ApiResponse response = new ApiResponse<String>(
-               "Success", HttpStatus.OK.value(), "User details updated successfully");
+               "Success", HttpStatus.OK.value(), "User details updated");
 
        User user = new User();
 
        given(userRepository.findById(1L)).willReturn(Optional.of(user));
 
-       given(responseManager.success("User details updated successfully")).willReturn(response);
+       given(responseManager.success("User details updated")).willReturn(response);
 
-       userService.editUser(1L, userUpdateRequestDto);
+       userService.editUser(1L, userUpdateRequest);
 
        verify(userRepository).save(user);
     }

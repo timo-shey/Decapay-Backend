@@ -1,6 +1,6 @@
 package com.example.decapay.controllers;
 
-import com.example.decapay.pojos.requestDtos.UserUpdateRequestDto;
+import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -27,12 +27,12 @@ class UserControllerTest {
     @Test
     void editUser() {
         try {
-            UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto();
-            userUpdateRequestDto.setFirstname("Michael");
-            userUpdateRequestDto.setLastname("Ajayi");
-            userUpdateRequestDto.setEmail("olamic695@yahoo.com");
+            UserUpdateRequest userUpdateRequest = new UserUpdateRequest();
+            userUpdateRequest.setFirstname("Michael");
+            userUpdateRequest.setLastname("Ajayi");
+            userUpdateRequest.setEmail("olamic695@yahoo.com");
 
-            String requestBody = mapper.writeValueAsString(userUpdateRequestDto);
+            String requestBody = mapper.writeValueAsString(userUpdateRequest);
             mockMvc.perform(put("/api/v1/user/edit/1")
                             .contentType("application/json")
                             .content(requestBody))
