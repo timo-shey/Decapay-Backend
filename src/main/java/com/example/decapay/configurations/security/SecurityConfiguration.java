@@ -8,6 +8,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,8 +23,8 @@ public class SecurityConfiguration {
     private final String[] AUTH_WHITELIST = {
             path +"/signin", path + "/forgot-password", path + "/reset-password",
             path + "/register", path + "/verify-code", path + "/references" ,
-           path + "/v2/api-docs",  path + "/configuration/**",  path + "/swagger*/**",
-            path + "/swagger-ui/**",  path +  "/webjars/**"
+           "/v3/api-docs/**",  "/configuration/**",   "/swagger*/**",
+            "/swagger-ui/**",  "/webjars/**"
 
     };
 
@@ -67,4 +68,7 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
+
 }

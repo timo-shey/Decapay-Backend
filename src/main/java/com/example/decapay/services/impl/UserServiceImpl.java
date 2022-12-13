@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
         if (user == null)
             return responseManager.error("User not found");
 
-        user.setFirstname(userUpdateRequest.getFirstname());
-        user.setLastname(user.getLastname());
+        user.setFirstName(userUpdateRequest.getFirstname());
+        user.setLastName(user.getLastName());
         user.setEmail(userUpdateRequest.getEmail());
         user.setPhoneNumber(userUpdateRequest.getPhoneNumber());
 
