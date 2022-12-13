@@ -33,8 +33,6 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
 
-        userService = new UserServiceImpl(userRepository, responseManager);
-
         userUpdateRequest = new UserUpdateRequest();
         userUpdateRequest.setFirstname("Michael");
         userUpdateRequest.setLastname("Ajayi");

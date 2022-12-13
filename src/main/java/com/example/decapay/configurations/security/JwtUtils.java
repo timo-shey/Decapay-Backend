@@ -61,6 +61,23 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS256, JWT_SECRET).compact();
     }
 
+//    ========================================================================================================
+    public String generatePasswordResetToken(String email){
+        Date currDate = new Date();
+        Date expireDate = new Date(currDate.getTime() + 600000);
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(expireDate)
+                .signWith(SignatureAlgorithm.HS256, JWT_SECRET)
+                .compact();
+    }
+
+
+
+    //===========================================================================================
+
     public Boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
