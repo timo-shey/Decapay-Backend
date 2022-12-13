@@ -1,6 +1,8 @@
 package com.example.decapay.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,6 +20,8 @@ import java.time.LocalDateTime;
 
 
 @MappedSuperclass
+@Getter
+@Setter
 public abstract class BaseEntity implements Serializable {
 
     @Id
@@ -25,14 +29,12 @@ public abstract class BaseEntity implements Serializable {
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
-    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
-    @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    private boolean deleted = Boolean.FALSE;
+    private boolean deleted;
 }
