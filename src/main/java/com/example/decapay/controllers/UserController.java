@@ -11,16 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
-@RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
+
 public class UserController {
 
-    private final UserServiceImpl userService;
 
-    @PostMapping("/signin")
-    public ResponseEntity<String> signIn(@RequestBody @Valid LoginRequestDto loginRequestDto) throws UserNotFoundException {
-        return userService.userLogin(loginRequestDto);
-    }
 
 }
