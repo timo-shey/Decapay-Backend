@@ -19,24 +19,18 @@ import java.util.List;
 @Setter
 @ToString
 @Entity
-@Table(name = "user_tb", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id"}),
-        @UniqueConstraint(columnNames = "email"),
-        @UniqueConstraint(columnNames = "phone_number")
-})
-@SQLDelete(sql = "UPDATE user_tb SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@Table(name = "user_tb")
 public class User extends BaseEntity {
 
-    @Column(name = "user_id")
+    @Column(unique = true)
     private String userId;
-    private String firstname;
-    private String lastname;
-    private Boolean isVerified = false;
+    private String firstName;
+    private String lastName;
+    private boolean isVerified;
     private String imagePath;
-    @Column(name = "email")
+    @Column(unique = true)
     private String email;
-    @Column(name = "phone_number")
+    @Column(unique = true)
     private String phoneNumber;
     private String password;
 

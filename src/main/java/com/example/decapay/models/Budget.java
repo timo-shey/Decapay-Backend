@@ -20,21 +20,18 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity(name = "budget_tb")
-@SQLDelete(sql = "UPDATE budget_tb SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@Entity
+@Table(name = "budget_tb")
 public class Budget extends BaseEntity{
 
     private String title;
     private BigDecimal amount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    @Column(name = "start_date")
     @Timestamp
     private LocalDateTime startDate;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    @Column(name = "end_date")
     @Timestamp
     private LocalDateTime endDate;
 
