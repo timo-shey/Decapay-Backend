@@ -9,6 +9,7 @@ import com.example.decapay.models.User;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -22,13 +23,17 @@ import java.util.Objects;
 public class CloudinaryUtils {
     private final CloudinaryConfig config;
 
-  private final Dotenv dotenv = Dotenv.load();
-  private final   Cloudinary cloudinary = config.getCloudinary();
-    private final String cloudinaryFolderName = dotenv.get("FOLDER_NAME");
+    private final   Cloudinary cloudinary = config.getCloudinary();
 
     private MultipartFile imagePathDirectory;
+    @Value("${FOLDER_NAME}")
+    private String cloudinaryFolderName;
 
-   private final String avatarImagePath = dotenv.get("DEFAULT_AVATAR");
+    @Value("${DEFAULT_AVATAR}")
+    private String avatarImagePath;
+
+    @Value("${SECRETE_KEY}")
+    private String  secreteKey;
 
     private Map setImageParameter(User user){
         return ObjectUtils.asMap
@@ -41,7 +46,6 @@ public class CloudinaryUtils {
 
                 );
     }
-
 
 
 
@@ -81,7 +85,6 @@ public class CloudinaryUtils {
             Map params = setImageParameter(user);
             try
             {
-                String secreteKey = "secure_url";
 
                 imageUrl =  cloudinary.uploader().upload(filePath, params).get(secreteKey).toString();
 

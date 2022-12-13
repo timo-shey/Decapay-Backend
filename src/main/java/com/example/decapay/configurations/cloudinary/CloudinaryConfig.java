@@ -8,7 +8,9 @@ import com.example.decapay.models.User;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,17 +27,15 @@ import java.util.Objects;
 
 public class CloudinaryConfig
 {
-
-    private  final Dotenv dotenv;
-
     private final Cloudinary cloudinary;
+
+    @Value("${CLOUDINARY_URL}")
+    private String cloudinaryUrl;
 
 
     public CloudinaryConfig()
     {
-        dotenv= Dotenv.load();
-
-        cloudinary = new Cloudinary(dotenv.get("CLOUDINARY_URL"));
+        cloudinary = new Cloudinary(cloudinaryUrl);
     }
 
 
