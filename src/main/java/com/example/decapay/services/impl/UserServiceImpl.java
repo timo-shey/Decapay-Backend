@@ -2,38 +2,70 @@ package com.example.decapay.services.impl;
 
 import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtUtils;
-import com.example.decapay.exceptions.AuthenticationException;
-import com.example.decapay.exceptions.UserNotFoundException;
 
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
 
 import com.example.decapay.services.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import com.example.decapay.models.User;
+import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
+import com.example.decapay.pojos.responseDtos.ApiResponse;
+import com.example.decapay.repositories.UserRepository;
+import com.example.decapay.utils.ResponseManager;
+
+import javax.transaction.Transactional;
 
 @Service
-@RequiredArgsConstructor
+//@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final AuthenticationManager authenticationManager;
-    private final CustomUserDetailService customUserDetailService;
-    private final JwtUtils jwtUtils;
+    private final UserRepository userRepository;
+    private final ResponseManager responseManager;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    public UserServiceImpl(UserRepository userRepository, ResponseManager responseManager) {
+        this.userRepository = userRepository;
+        this.responseManager = responseManager;
+    }
 
     @Override
     public ResponseEntity<String> userLogin(LoginRequestDto loginRequestDto) {
-            Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(),loginRequestDto.getPassword()));
-                final UserDetails user = customUserDetailService.loadUserByUsername(loginRequestDto.getEmail());
+         authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
+        final UserDetails user = customUserDetailService.loadUserByUsername(loginRequestDto.getEmail());
 
-                if(user != null)
-                    return ResponseEntity.ok(jwtUtils.generateToken(user));
+        if (user != null)
+            return ResponseEntity.ok(jwtUtils.generateToken(user));
 
-                return ResponseEntity.status(400).body("Some Error Occurred");
+        return ResponseEntity.status(400).body("Some Error Occurred");
     }
+
+    @Override
+    @Transactional
+    public ApiResponse<String> editUser(Long Id, UserUpdateRequest userUpdateRequest){
+
+            User user = userRepository.findById(Id).orElse(null);
+            if (user == null)
+                return responseManager.error("User not found");
+
+            user.setFirstname(userUpdateRequest.getFirstname());
+            user.setLastname(user.getLastname());
+            user.setEmail(userUpdateRequest.getEmail());
+            user.setPhoneNumber(userUpdateRequest.getPhoneNumber());
+
+            userRepository.save(user);
+
+            return responseManager.success("User details updated");
+        }
 }

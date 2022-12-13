@@ -1,19 +1,21 @@
 package com.example.decapay.controllers;
 
-import com.example.decapay.exceptions.UserNotFoundException;
-import com.example.decapay.pojos.requestDtos.LoginRequestDto;
-import com.example.decapay.pojos.responseDtos.LoginResponseDto;
-import com.example.decapay.services.impl.UserServiceImpl;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
+import com.example.decapay.pojos.responseDtos.ApiResponse;
+import com.example.decapay.services.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
+@RestController
+@AllArgsConstructor
+@RequestMapping("/api/v1/user")
 public class UserController {
-
-
-
+    private final UserService userService;
+    @PutMapping("/edit/{Id}")
+    public ApiResponse editUser(@PathVariable Long Id, @Valid @RequestBody UserUpdateRequest userUpdateRequest){
+        return userService.editUser(Id, userUpdateRequest);
+    }
 }
