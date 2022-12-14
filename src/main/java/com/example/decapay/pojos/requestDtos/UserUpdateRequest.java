@@ -11,9 +11,9 @@ import javax.validation.constraints.NotBlank;
 
 public class UserUpdateRequest {
     @NotBlank(message = "First Name field can't be empty")
-    private String firstname;
+    private String firstName;
     @NotBlank(message = "Last Name field can't be empty")
-    private String lastname;
+    private String lastName;
     @NotBlank(message ="Email field can't be empty")
     @Email(message = "Please enter a valid email address")
     private String email;

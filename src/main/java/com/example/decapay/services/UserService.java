@@ -1,9 +1,9 @@
 package com.example.decapay.services;
 
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
-import com.example.decapay.pojos.responseDtos.ApiResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    ApiResponse editUser(Long Id, UserUpdateRequest userUpdateRequest);
+    ResponseEntity<String> editUser(UserUpdateRequest userUpdateRequest);
 
 }
