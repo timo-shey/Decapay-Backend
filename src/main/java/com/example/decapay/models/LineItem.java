@@ -17,9 +17,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity(name = "line_item_tb")
-@SQLDelete(sql = "UPDATE line_item_tb SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@Entity
+@Table(name = "line_item_tb")
 public class LineItem extends BaseEntity {
 
     @OneToOne(mappedBy = "lineItem")
