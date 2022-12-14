@@ -3,9 +3,7 @@ package com.example.decapay.controllers;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.services.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

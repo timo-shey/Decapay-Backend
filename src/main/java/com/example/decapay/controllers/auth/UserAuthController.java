@@ -1,6 +1,5 @@
 package com.example.decapay.controllers.auth;
 
-import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
 import com.example.decapay.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
