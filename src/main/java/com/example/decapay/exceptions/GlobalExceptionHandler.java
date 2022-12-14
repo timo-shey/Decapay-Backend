@@ -1,6 +1,7 @@
 package com.example.decapay.exceptions;
 
 
+import com.example.decapay.pojos.responseDtos.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.EntityNotFoundException;
+
 
 
 @RestControllerAdvice
@@ -24,20 +25,21 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({UserNotFoundException.class})
-    public Map<String , String> handleBusiness(UserNotFoundException exception){
-        Map<String,String> errorMap = new HashMap<>();
-        errorMap.put("message",exception.getMessage());
-        return errorMap;
+    public ResponseEntity<String> handleBusiness(UserNotFoundException exception){
+        return new ResponseEntity<>(exception.getMessage(),null, HttpStatus.BAD_REQUEST.value());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String , String> handleInvalidArgument(MethodArgumentNotValidException exception){
-        Map<String , String> errorMap = new HashMap<>();
-        exception.getBindingResult().getFieldErrors().forEach(error->{
-            errorMap.put(error.getField(), error.getDefaultMessage());
-        });
-        return errorMap;
+    public ResponseEntity<String> handleInvalidArgument(MethodArgumentNotValidException exception) {
+        return new ResponseEntity<>(exception.getMessage(),null, HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ApiResponse<String> entityNotFoundExceptionHandler(EntityNotFoundException ex){
+        return  new ApiResponse<>(ex.getMessage(), HttpStatus.NOT_FOUND.value(),null);
     }
 
 }

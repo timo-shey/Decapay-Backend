@@ -6,12 +6,14 @@ import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.impl.UserServiceImpl;
 import com.example.decapay.utils.ResponseManager;
+import com.example.decapay.utils.UserUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
@@ -21,44 +23,41 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+
+    @Autowired
     private UserService userService;
 
     @Mock
     private UserRepository userRepository;
 
     @Mock
-    private ResponseManager responseManager;
+    private UserUtil userUtil;
 
     private UserUpdateRequest userUpdateRequest;
     @BeforeEach
     void setUp() {
 
-        userService = new UserServiceImpl(userRepository, responseManager);
+        userService = new UserServiceImpl(userRepository, userUtil);
 
         userUpdateRequest = new UserUpdateRequest();
-        userUpdateRequest.setFirstname("Michael");
-        userUpdateRequest.setLastname("Ajayi");
+        userUpdateRequest.setFirstName("Michael");
+        userUpdateRequest.setLastName("Ajayi");
         userUpdateRequest.setEmail("olamic695@gmail.com");
         userUpdateRequest.setPhoneNumber("08022222222");
-    }
 
-    @AfterEach
-    void tearDown() {
     }
 
     @Test
     void editUser() {
 
-       ApiResponse response = new ApiResponse<String>(
-               "Success", HttpStatus.OK.value(), "User details updated");
-
        User user = new User();
+       String email = "olamic695@gmail.com";
 
-       given(userRepository.findById(1L)).willReturn(Optional.of(user));
+       given(userUtil.getAuthenticatedUserEmail()).willReturn(email);
 
-       given(responseManager.success("User details updated")).willReturn(response);
+       given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
-       userService.editUser(1L, userUpdateRequest);
+       userService.editUser(userUpdateRequest);
 
        verify(userRepository).save(user);
     }
