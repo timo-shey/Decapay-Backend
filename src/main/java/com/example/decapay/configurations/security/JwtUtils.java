@@ -71,7 +71,7 @@ public class JwtUtils {
 //    ========================================================================================================
     public String generatePasswordResetToken(String email){
         Date currDate = new Date();
-        Date expireDate = new Date(currDate.getTime() + 60000);
+        Date expireDate = new Date(currDate.getTime() + 900000);
 
         return Jwts.builder()
                 .setSubject(email)
