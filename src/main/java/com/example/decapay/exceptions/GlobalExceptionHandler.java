@@ -1,6 +1,7 @@
 package com.example.decapay.exceptions;
 
 
+import com.example.decapay.pojos.responseDtos.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,13 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity<String> handleWrongPasswordException(WrongPasswordException wrongPasswordException){
         return new ResponseEntity<>(wrongPasswordException.getMessage(), null, HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ApiResponse<String> entityNotFoundExceptionHandler(EntityNotFoundException ex){
+        return  new ApiResponse<>(ex.getMessage(), HttpStatus.NOT_FOUND.value(),null);
     }
 
 }

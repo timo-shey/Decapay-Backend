@@ -12,7 +12,7 @@ public class ResponseManager<T> {
         return apiResponse;
     }
     public ApiResponse error(T data){
-        ApiResponse apiResponse = new ApiResponse<T>("Error!", HttpStatus.FORBIDDEN.value(), data);
+        ApiResponse apiResponse = new ApiResponse<T>("Error!", HttpStatus.NOT_FOUND.value(), data);
         return apiResponse;
     }
 }
