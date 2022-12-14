@@ -1,12 +1,10 @@
 package com.example.decapay.controllers;
 
-import com.example.decapay.configurations.security.JwtUtils;
 import com.example.decapay.pojos.requestDtos.ForgetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.services.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,7 @@ public class UserController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody @Valid ForgetPasswordRequest request){
-        return new ResponseEntity<>(userService.generateResetToken(request), HttpStatus.OK);
+        return new ResponseEntity<>(userService.forgotPasswordRequest(request), HttpStatus.OK);
     }
 
     @PostMapping("/reset-password/{token}")

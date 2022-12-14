@@ -9,7 +9,7 @@ public interface UserService {
     ApiResponse editUser(Long Id, UserUpdateRequest userUpdateRequest);
 
 
-    String generateResetToken(ForgetPasswordRequest forgotPasswordRequest);
+    String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest);
 
     String resetPassword(ResetPasswordRequest request, String token);
 }
