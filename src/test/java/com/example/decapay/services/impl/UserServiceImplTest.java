@@ -53,7 +53,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void userLogin() throws Exception{
+    public void userLogin(){
     when(authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())))
             .thenReturn(authentication);

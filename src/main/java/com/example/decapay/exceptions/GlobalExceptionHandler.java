@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(wrongPasswordException.getMessage(), null, HttpStatus.BAD_REQUEST.value());
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({UserNotFoundException.class})
     public Map<String , String> handleBusiness(UserNotFoundException exception){
         Map<String,String> errorMap = new HashMap<>();
@@ -37,13 +37,6 @@ public class GlobalExceptionHandler {
         exception.getBindingResult().getFieldErrors().forEach(error->{
             errorMap.put(error.getField(), error.getDefaultMessage());
         });
-        return errorMap;
-    }
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({AuthenticationException.class})
-    public Map<String , String> handleAuthentication(AuthenticationException exception){
-        Map<String,String> errorMap = new HashMap<>();
-        errorMap.put("message",exception.getMessage());
         return errorMap;
     }
 

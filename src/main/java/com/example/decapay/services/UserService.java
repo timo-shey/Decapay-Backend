@@ -8,7 +8,7 @@ import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.pojos.responseDtos.ApiResponse;
 
 public interface UserService {
-    public ResponseEntity<String> userLogin(LoginRequestDto loginRequestDto) throws UserNotFoundException;
+    public ResponseEntity<String> userLogin(LoginRequestDto loginRequestDto);
 
     ApiResponse editUser(Long Id, UserUpdateRequest userUpdateRequest);
 

@@ -18,7 +18,7 @@ public class UserAuthController {
     private final UserServiceImpl userService;
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signIn(@RequestBody @Valid LoginRequestDto loginRequestDto) throws UserNotFoundException {
+    public ResponseEntity<String> signIn(@RequestBody @Valid LoginRequestDto loginRequestDto){
         return userService.userLogin(loginRequestDto);
     }
 }
