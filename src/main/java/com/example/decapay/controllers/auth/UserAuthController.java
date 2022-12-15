@@ -1,20 +1,32 @@
 package com.example.decapay.controllers.auth;
 
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
+import com.example.decapay.pojos.requestDtos.UserRequestDto;
+import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class UserAuthController {
     private final UserServiceImpl userService;
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto requestDto) throws MessagingException {
+
+        UserResponseDto returnValue = userService.createUser(requestDto);
+
+        return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<String> signIn(@RequestBody @Valid LoginRequestDto loginRequestDto){
