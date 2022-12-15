@@ -25,8 +25,6 @@ class PasswordUpdateServiceImplTest {
     @Autowired
     private PasswordUpdateService passwordUpdateService;
     @Mock
-    private JwtUtils jwtUtils;
-    @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
     private UserRepository userRepository;
@@ -35,7 +33,7 @@ class PasswordUpdateServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        passwordUpdateService = new PasswordUpdateServiceImpl(jwtUtils, userRepository, passwordEncoder, userUtil);
+        passwordUpdateService = new PasswordUpdateServiceImpl(userRepository, passwordEncoder, userUtil);
     }
 
     @Test
