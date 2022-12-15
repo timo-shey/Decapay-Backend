@@ -1,5 +1,6 @@
 package com.example.decapay.configurations.security;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,8 +19,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final CustomUserDetailService userDetailsService;
-    private final JwtUtils jwtUtils;
+    private CustomUserDetailService userDetailsService;
+    private  JwtUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(
@@ -30,7 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String userEmail;
         final String jwtToken;
 
-        if(authHeader == null || !authHeader.startsWith("Bearer")){
+        if (authHeader == null || !authHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -39,7 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         userEmail = jwtUtils.extractUsername(jwtToken);
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
             final boolean isTokenValid = jwtUtils.isTokenValid(jwtToken, userDetails);

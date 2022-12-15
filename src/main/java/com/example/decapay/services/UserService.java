@@ -1,12 +1,16 @@
 package com.example.decapay.services;
 
+import com.example.decapay.pojos.requestDtos.LoginRequestDto;
+import org.springframework.http.ResponseEntity;
 import com.example.decapay.pojos.requestDtos.ForgetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
-import com.example.decapay.pojos.responseDtos.ApiResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    ApiResponse editUser(Long Id, UserUpdateRequest userUpdateRequest);
+    public ResponseEntity<String> userLogin(LoginRequestDto loginRequestDto);
+
+    ResponseEntity<String> editUser(UserUpdateRequest userUpdateRequest);
 
 
     String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest);
