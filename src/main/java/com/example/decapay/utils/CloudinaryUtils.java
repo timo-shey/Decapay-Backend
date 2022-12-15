@@ -6,10 +6,9 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.decapay.configurations.cloudinary.CloudinaryConfig;
 import com.example.decapay.exceptions.NotImageUploadException;
 import com.example.decapay.models.User;
-import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -20,27 +19,23 @@ import java.util.Objects;
 
 @AllArgsConstructor
 @Data
-public class CloudinaryUtils {
-    private final CloudinaryConfig config;
+@Setter
 
-    private final   Cloudinary cloudinary = config.getCloudinary();
+public class CloudinaryUtils {
+
+    private final CloudinaryConfig config = new CloudinaryConfig();
+
+    private final Cloudinary cloudinary = config.getCloudinary();
 
     private MultipartFile imagePathDirectory;
-    @Value("${FOLDER_NAME}")
-    private String cloudinaryFolderName;
 
-    @Value("${DEFAULT_AVATAR}")
-    private String avatarImagePath;
 
-    @Value("${SECRETE_KEY}")
-    private String  secreteKey;
-
-    private Map setImageParameter(User user){
+    private Map setImageParameter(User user) {
         return ObjectUtils.asMap
                 (
 
                         "use_filename", false,
-                        "public_id", cloudinaryFolderName +"/"+ user.getUserId(),
+                        "public_id", config.getCloudinaryFolderName() + "/" + user.getUserId(),
                         "unique_filename", false,
                         "overwrite", true
 
@@ -48,13 +43,9 @@ public class CloudinaryUtils {
     }
 
 
-
-
-
-    private boolean imageFileCheck()
-    {
-        if(Objects.requireNonNull(imagePathDirectory.getContentType()).contains("image") &&
-                imagePathDirectory.getSize()<=1_000_000)
+    private boolean imageFileCheck() {
+        if (Objects.requireNonNull(imagePathDirectory.getContentType()).contains("image") &&
+                imagePathDirectory.getSize() <= 1_000_000)
             return true;
 
         throw new NotImageUploadException("An image type file expected or file size is too large");
@@ -62,8 +53,7 @@ public class CloudinaryUtils {
     }
 
 
-    private String convertFileToString(MultipartFile multipartFile) throws IOException
-    {
+    private String convertFileToString(MultipartFile multipartFile) throws IOException {
         File convFile = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
         FileOutputStream fos = new FileOutputStream(convFile);
@@ -76,17 +66,13 @@ public class CloudinaryUtils {
     }
 
 
-
-    private String uploadAndTransformImage(User user, String filePath)
-    {
+    private String uploadAndTransformImage(User user, String filePath) {
         String imageUrl = new String();
-        if(imageFileCheck())
-        {
+        if (imageFileCheck()) {
             Map params = setImageParameter(user);
-            try
-            {
+            try {
 
-                imageUrl =  cloudinary.uploader().upload(filePath, params).get(secreteKey).toString();
+                imageUrl = cloudinary.uploader().upload(filePath, params).get(config.getSecreteKey()).toString();
 
                 cloudinary.url().transformation(new Transformation()
                                 .crop("pad")
@@ -94,9 +80,7 @@ public class CloudinaryUtils {
                                 .height(400)
                                 .background("auto:predominant"))
                         .imageTag(user.getUserId());
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.getMessage();
             }
         }
@@ -105,25 +89,21 @@ public class CloudinaryUtils {
     }
 
 
-
-    public String defaultImageUpload(User user)
-    {
+    public String defaultImageUpload(User user) {
         String imageUrl = new String();
 
         Map params1 = setImageParameter(user);
 
 
-
-        return uploadAndTransformImage(user, avatarImagePath);
+        return uploadAndTransformImage(user,config.getAvatarImagePath());
     }
 
 
-    public String  createOrUpdateImage(MultipartFile file,User user) throws IOException
-    {
+    public String createOrUpdateImage(MultipartFile file, User user) throws IOException {
 
         String filePath = convertFileToString(file);
 
-        if(filePath.equals(""))
+        if (filePath.equals(""))
             return defaultImageUpload(user);
 
         Map params1 = setImageParameter(user);
@@ -132,14 +112,11 @@ public class CloudinaryUtils {
     }
 
 
-
-    public String deleteImage(User user) throws IOException
-    {
+    public String deleteImage(User user) throws IOException {
         Map params1 = setImageParameter(user);
 
         cloudinary.uploader().destroy(user.getUserId(), params1);
 
         return "Image Successfully deleted";
     }
-
 }
