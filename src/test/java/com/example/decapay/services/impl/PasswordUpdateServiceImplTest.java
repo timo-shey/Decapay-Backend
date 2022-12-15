@@ -35,7 +35,7 @@ class PasswordUpdateServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        passwordUpdateService = new PasswordUpdateServiceImpl(jwtUtils, userRepository, passwordEncoder, userUtil);
+        passwordUpdateService = new PasswordUpdateServiceImpl(userRepository, passwordEncoder, userUtil);
     }
 
     @Test
