@@ -29,9 +29,6 @@ public class CloudinaryUtils {
 
     private final CloudinaryConfig config;
 
-    private Cloudinary cloudinary = new Cloudinary(config.getCloudinaryUrl());
-
-
 
 
     private Map setImageParameter(User user) {
@@ -74,6 +71,7 @@ public class CloudinaryUtils {
 
     private String uploadAndTransformImage(User user, String filePath) {
         String imageUrl = new String();
+        Cloudinary cloudinary = new Cloudinary(config.getCloudinaryUrl());
 
             Map params = setImageParameter(user);
             try {
@@ -115,6 +113,7 @@ public class CloudinaryUtils {
 
     public String deleteImage(User user) throws IOException {
         Map params1 = setImageParameter(user);
+        Cloudinary cloudinary = new Cloudinary(config.getCloudinaryUrl());
 
         cloudinary.uploader().destroy(user.getUserId(), params1);
 
