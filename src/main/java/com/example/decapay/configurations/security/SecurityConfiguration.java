@@ -27,8 +27,8 @@ public class SecurityConfiguration {
             "/swagger-ui/**",  "/webjars/**",
 
             path + "/register", path + "/verify-code", path + "/references",
-            "/api/v1/user/forgot-password",
-            "/api/v1/user/reset-password/**"
+            path + "/forgot-password/**",
+            path + "/reset-password/**"
     };
 
     private final JwtAuthFilter jwtAuthFilter;
