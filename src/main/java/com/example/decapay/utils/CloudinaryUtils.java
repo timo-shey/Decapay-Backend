@@ -6,9 +6,11 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.decapay.configurations.cloudinary.CloudinaryConfig;
 import com.example.decapay.exceptions.NotImageUploadException;
 import com.example.decapay.models.User;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,17 +19,19 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Data
 @Setter
+@Getter
+@Service
 
 public class CloudinaryUtils {
 
-    private final CloudinaryConfig config = new CloudinaryConfig();
+    private final CloudinaryConfig config;
 
-    private final Cloudinary cloudinary = config.getCloudinary();
+    private Cloudinary cloudinary = new Cloudinary(config.getCloudinaryUrl());
 
-    private MultipartFile imagePathDirectory;
+
 
 
     private Map setImageParameter(User user) {
@@ -43,7 +47,7 @@ public class CloudinaryUtils {
     }
 
 
-    private boolean imageFileCheck() {
+    private boolean imageFileCheck(MultipartFile imagePathDirectory) {
         if (Objects.requireNonNull(imagePathDirectory.getContentType()).contains("image") &&
                 imagePathDirectory.getSize() <= 1_000_000)
             return true;
@@ -54,6 +58,8 @@ public class CloudinaryUtils {
 
 
     private String convertFileToString(MultipartFile multipartFile) throws IOException {
+        imageFileCheck(multipartFile);
+
         File convFile = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
         FileOutputStream fos = new FileOutputStream(convFile);
@@ -68,7 +74,7 @@ public class CloudinaryUtils {
 
     private String uploadAndTransformImage(User user, String filePath) {
         String imageUrl = new String();
-        if (imageFileCheck()) {
+
             Map params = setImageParameter(user);
             try {
 
@@ -83,16 +89,13 @@ public class CloudinaryUtils {
             } catch (Exception e) {
                 e.getMessage();
             }
-        }
+
 
         return imageUrl;
     }
 
 
     public String defaultImageUpload(User user) {
-        String imageUrl = new String();
-
-        Map params1 = setImageParameter(user);
 
 
         return uploadAndTransformImage(user,config.getAvatarImagePath());
@@ -105,8 +108,6 @@ public class CloudinaryUtils {
 
         if (filePath.equals(""))
             return defaultImageUpload(user);
-
-        Map params1 = setImageParameter(user);
 
         return uploadAndTransformImage(user, filePath);
     }
