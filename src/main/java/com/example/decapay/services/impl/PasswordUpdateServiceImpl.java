@@ -8,16 +8,16 @@ import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.PasswordUpdateService;
 import com.example.decapay.utils.UserUtil;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class PasswordUpdateServiceImpl  implements PasswordUpdateService {
-    private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserUtil userUtil;

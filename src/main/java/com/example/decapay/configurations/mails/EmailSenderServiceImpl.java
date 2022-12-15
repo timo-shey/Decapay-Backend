@@ -26,4 +26,16 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
         return new ResponseEntity<>("Message sent successfully", HttpStatus.OK);
     }
+
+
+    @Override
+    public void sendPasswordResetEmail(String email, String subject, String link) {
+        subject = "Reset Password";
+        String body = "Kindly use the link below to reset your password  " + link;
+
+        MailDto mailServiceDto = new MailDto(email, subject, body);
+        sendEmail(mailServiceDto);
+
+    }
+
 }

@@ -24,8 +24,11 @@ public class SecurityConfiguration {
             path +"/signin", path + "/forgot-password", path + "/reset-password",
             path + "/register", path + "/verify-code", path + "/references" ,
            "/v3/api-docs/**",  "/configuration/**",   "/swagger*/**",
-            "/swagger-ui/**",  "/webjars/**"
+            "/swagger-ui/**",  "/webjars/**",
 
+            path + "/register", path + "/verify-code", path + "/references",
+            path + "/forgot-password/**",
+            path + "/reset-password/**"
     };
 
     private final JwtAuthFilter jwtAuthFilter;
