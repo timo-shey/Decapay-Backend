@@ -47,7 +47,7 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
 
-        userService = new UserServiceImpl(userRepository, userUtil,passwordEncoder,tokenRepository,emailSenderService);
+//        userService = new UserServiceImpl(userRepository, userUtil,passwordEncoder,tokenRepository,emailSenderService);
 
         userUpdateRequest = new UserUpdateRequest();
         userUpdateRequest.setFirstName("Michael");
