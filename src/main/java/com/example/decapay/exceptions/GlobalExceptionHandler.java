@@ -2,6 +2,7 @@ package com.example.decapay.exceptions;
 
 
 import com.example.decapay.pojos.responseDtos.ApiResponse;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +17,21 @@ import javax.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserAlreadyExistException.class)
+    @ResponseBody
+    public ResponseEntity<String> handleUserAlreadyExistException(UserAlreadyExistException e){
+        return new ResponseEntity<>(e.getMessage(), null, HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    @ResponseBody
+    public ResponseEntity<String> handleValidationException(ValidationException e){
+        return new ResponseEntity<>(e.getMessage(), null, HttpStatus.BAD_REQUEST.value());
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(WrongPasswordException.class)
     @ResponseBody
@@ -40,6 +56,19 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ApiResponse<String> entityNotFoundExceptionHandler(EntityNotFoundException ex){
         return  new ApiResponse<>(ex.getMessage(), HttpStatus.NOT_FOUND.value(),null);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseBody
+    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException resourceNotFoundException){
+        return new ResponseEntity<>(resourceNotFoundException.getMessage(), null, HttpStatus.NOT_FOUND.value());
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(JwtException.class)
+    @ResponseBody
+    public ResponseEntity<String> handleJwtException(JwtException resourceNotFoundException){
+        return new ResponseEntity<>(resourceNotFoundException.getMessage(), null, HttpStatus.BAD_REQUEST.value());
     }
 
 }
