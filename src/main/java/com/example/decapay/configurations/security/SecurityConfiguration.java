@@ -29,7 +29,7 @@ public class SecurityConfiguration {
             path + "/register", path + "/verify-code", path + "/references",
             path + "/forgot-password/**",
             path + "/reset-password/**",
-            path + "/verify-email/**"
+            path + "/verify-token/**"
     };
 
     private final JwtAuthFilter jwtAuthFilter;
