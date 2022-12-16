@@ -45,7 +45,7 @@ import java.util.InputMismatchException;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Value("${forgot.password.url:http://localhost:5432/reset-password/}")
+    @Value("${forgot.password.url:http://localhost:5432/Api/v1/auth/verify-token/}")
     private String forgotPasswordUrl;
 
     private final UserRepository userRepository;
@@ -79,12 +79,14 @@ public class UserServiceImpl implements UserService {
 
         User newUser = new User();
 
+        BeanUtils.copyProperties(request,newUser);
+
         String publicUserId = idUtil.generatedUserId(20);
         newUser.setUserId(publicUserId);
 
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        BeanUtils.copyProperties(request,newUser);
+
 
 
 
@@ -107,7 +109,6 @@ public class UserServiceImpl implements UserService {
          authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
         final UserDetails user = customUserDetailService.loadUserByUsername(loginRequestDto.getEmail());
-
         if (user != null)
             return ResponseEntity.ok(jwtUtils.generateToken(user));
 
@@ -140,7 +141,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest) {
         String email = forgotPasswordRequest.getEmail();
-        System.out.println(forgotPasswordUrl);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -160,26 +160,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String resetPassword(ResetPasswordRequest request, String token) {
+    public String resetPassword(ResetPasswordRequest request) {
         if (!request.getNewPassword().equals(request.getConfirmPassword()))
             throw new InputMismatchException("Passwords do not match");
 
-        String email = jwtUtils.extractUsername(token);
 
-        User user = userRepository.findByEmail(email)
+
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        Token tokenEntity = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new ResourceNotFoundException(HttpStatus.NOT_FOUND, "Token does not exist."));
-
-        if (tokenEntity.getStatus().equals(Status.EXPIRED))
-            throw new ResourceNotFoundException(HttpStatus.BAD_REQUEST, "Token expired.");
+//        Token tokenEntity = tokenRepository.findByToken(token)
+//                .orElseThrow(() -> new ResourceNotFoundException(HttpStatus.NOT_FOUND, "Token does not exist."));
+//
+//        if (tokenEntity.getStatus().equals(Status.EXPIRED))
+//            throw new ResourceNotFoundException(HttpStatus.BAD_REQUEST, "Token expired.");
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
-        tokenEntity.setStatus(Status.EXPIRED);
-        tokenRepository.save(tokenEntity);
+        //todo: to be removed
+
+//        tokenEntity.setStatus(Status.EXPIRED);
+//        tokenRepository.save(tokenEntity);
 
         return "Password reset successful";
     }
@@ -189,6 +191,7 @@ public class UserServiceImpl implements UserService {
 
           tokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("token does not exist"));
+          //todo: update user verification status
 
 
         return "token exist";

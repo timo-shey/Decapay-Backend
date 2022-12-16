@@ -30,7 +30,7 @@ public class MailSenderUtil {
 
     private  final JwtUtils jwtUtils;
 
-    @Value("${verify.email.url:http://localhost:8082/api/v1/auth/verify-email/}")
+    @Value("${verify.email.url:http://localhost:8082/api/v1/auth/verify-token/}")
     private String verifyEmailUrl;
 
     final String SUBJECT = "One last step to complete your registration with DecaPay!";

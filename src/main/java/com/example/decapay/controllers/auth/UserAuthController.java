@@ -1,5 +1,6 @@
 package com.example.decapay.controllers.auth;
 
+import com.example.decapay.pojos.requestDtos.ForgetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
 import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.UserRequestDto;
@@ -27,8 +28,8 @@ public class UserAuthController {
         return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
     }
 
-    @GetMapping("/verify-email/{token}")
-    public ResponseEntity<?> resetPassword( @PathVariable("token") String token) {
+    @GetMapping("/verify-token/{token}")
+    public ResponseEntity<?> verifyToken( @PathVariable("token") String token) {
         return new ResponseEntity<>(userService.verifyToken(token),HttpStatus.FOUND);
     }
 
@@ -36,5 +37,15 @@ public class UserAuthController {
     @PostMapping("/signin")
     public ResponseEntity<String> signIn(@RequestBody @Valid LoginRequestDto loginRequestDto){
         return userService.userLogin(loginRequestDto);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody @Valid ForgetPasswordRequest request){
+        return new ResponseEntity<>(userService.forgotPasswordRequest(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestBody @Valid ResetPasswordRequest request){
+        return userService.resetPassword(request);
     }
 }

@@ -26,15 +26,4 @@ public class UserController {
 
         return userService.editUser(userUpdateRequest);
     }
-
-
-    @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody @Valid ForgetPasswordRequest request){
-        return new ResponseEntity<>(userService.forgotPasswordRequest(request), HttpStatus.OK);
-    }
-
-    @PostMapping("/reset-password/{token}")
-    public String resetPassword(@RequestBody @Valid ResetPasswordRequest request, @PathVariable("token") String token){
-        return userService.resetPassword(request, token);
-    }
 }
