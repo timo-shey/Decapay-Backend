@@ -79,12 +79,14 @@ public class UserServiceImpl implements UserService {
 
         User newUser = new User();
 
+        BeanUtils.copyProperties(request,newUser);
+
         String publicUserId = idUtil.generatedUserId(20);
         newUser.setUserId(publicUserId);
 
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        BeanUtils.copyProperties(request,newUser);
+
 
 
 
@@ -107,7 +109,6 @@ public class UserServiceImpl implements UserService {
          authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
         final UserDetails user = customUserDetailService.loadUserByUsername(loginRequestDto.getEmail());
-
         if (user != null)
             return ResponseEntity.ok(jwtUtils.generateToken(user));
 
@@ -189,6 +190,7 @@ public class UserServiceImpl implements UserService {
 
           tokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("token does not exist"));
+          //todo: update user verification status
 
 
         return "token exist";

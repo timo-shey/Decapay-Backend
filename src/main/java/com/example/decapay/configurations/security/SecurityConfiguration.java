@@ -21,7 +21,7 @@ public class SecurityConfiguration {
 
     private final String path = "/api/v1/auth";
     private final String[] AUTH_WHITELIST = {
-            path +"/signin", path + "/forgot-password", path + "/reset-password",
+            path +"/signin/**", path + "/forgot-password", path + "/reset-password",
             path + "/register", path + "/verify-code", path + "/references" ,
            "/v3/api-docs/**",  "/configuration/**",   "/swagger*/**",
             "/swagger-ui/**",  "/webjars/**",
