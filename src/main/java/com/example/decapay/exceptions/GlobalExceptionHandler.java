@@ -17,6 +17,21 @@ import javax.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserAlreadyExistException.class)
+    @ResponseBody
+    public ResponseEntity<String> handleUserAlreadyExistException(UserAlreadyExistException e){
+        return new ResponseEntity<>(e.getMessage(), null, HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    @ResponseBody
+    public ResponseEntity<String> handleValidationException(ValidationException e){
+        return new ResponseEntity<>(e.getMessage(), null, HttpStatus.BAD_REQUEST.value());
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(WrongPasswordException.class)
     @ResponseBody

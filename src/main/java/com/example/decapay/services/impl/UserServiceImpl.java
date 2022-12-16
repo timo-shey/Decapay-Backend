@@ -6,15 +6,19 @@ import com.example.decapay.configurations.security.JwtUtils;
 import com.example.decapay.enums.Status;
 import com.example.decapay.enums.VerificationType;
 import com.example.decapay.exceptions.ResourceNotFoundException;
+import com.example.decapay.exceptions.UserAlreadyExistException;
+import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
-import com.example.decapay.configurations.security.CustomUserDetailService;
-import com.example.decapay.configurations.security.JwtUtils;
 
-import com.example.decapay.pojos.requestDtos.LoginRequestDto;
+import com.example.decapay.pojos.requestDtos.*;
 
+import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.services.UserService;
-import com.example.decapay.utils.PasswordUtils;
+import com.example.decapay.utils.MailSenderUtil;
+import com.example.decapay.utils.UserIdUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -28,19 +32,18 @@ import org.springframework.stereotype.Service;
 
 
 import com.example.decapay.models.User;
-import com.example.decapay.pojos.requestDtos.ForgetPasswordRequest;
-import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
-import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.repositories.UserRepository;
 
 import com.example.decapay.utils.UserUtil;
 
 
+import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.InputMismatchException;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     @Value("${forgot.password.url:http://localhost:5432/reset-password/}")
     private String forgotPasswordUrl;
@@ -51,6 +54,10 @@ public class UserServiceImpl implements UserService {
     private final EmailSenderService emailSenderService;
     private final TokenRepository tokenRepository;
 
+    private final MailSenderUtil mailSenderUtil;
+
+    private final UserIdUtil idUtil;
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -59,12 +66,40 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    public UserServiceImpl(UserRepository userRepository, UserUtil userUtil,PasswordEncoder passwordEncoder,TokenRepository tokenRepository,EmailSenderService emailSenderService) {
-        this.userRepository = userRepository;
-        this.userUtil = userUtil;
-        this.passwordEncoder=passwordEncoder;
-        this.tokenRepository=tokenRepository;
-        this.emailSenderService=emailSenderService;
+
+    @Override
+    public UserResponseDto createUser(UserRequestDto request) throws  MessagingException {
+
+        if(userRepository.findByEmail(request.getEmail()).isPresent())
+            throw new UserAlreadyExistException("User already exist");
+
+        boolean matches = request.getPassword().equals(request.getConfirmPassword());
+
+        if(!matches) throw new ValidationException("password and confirm password do not match.");
+
+        User newUser = new User();
+
+        String publicUserId = idUtil.generatedUserId(20);
+        newUser.setUserId(publicUserId);
+
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        BeanUtils.copyProperties(request,newUser);
+
+
+
+        User savedUser = userRepository.save(newUser);
+
+        mailSenderUtil.verifyMail(savedUser);
+
+        UserResponseDto responseDto = new UserResponseDto();
+
+        BeanUtils.copyProperties(savedUser,responseDto);
+
+
+
+        return responseDto;
+
     }
 
     @Override
@@ -147,6 +182,16 @@ public class UserServiceImpl implements UserService {
         tokenRepository.save(tokenEntity);
 
         return "Password reset successful";
+    }
+
+    @Override
+    public String verifyToken(String token) {
+
+          tokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("token does not exist"));
+
+
+        return "token exist";
     }
 
 
