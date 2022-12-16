@@ -1,16 +1,15 @@
 package com.example.decapay.controllers.auth;
 
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
+import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.UserRequestDto;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
+import com.example.decapay.services.UserService;
 import com.example.decapay.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -18,7 +17,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class UserAuthController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto requestDto) throws MessagingException {
@@ -27,6 +26,12 @@ public class UserAuthController {
 
         return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
     }
+
+    @GetMapping("/verify-email/{token}")
+    public ResponseEntity<?> resetPassword( @PathVariable("token") String token) {
+        return new ResponseEntity<>(userService.verifyToken(token),HttpStatus.FOUND);
+    }
+
 
     @PostMapping("/signin")
     public ResponseEntity<String> signIn(@RequestBody @Valid LoginRequestDto loginRequestDto){

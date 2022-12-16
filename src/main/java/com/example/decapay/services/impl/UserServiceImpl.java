@@ -14,6 +14,7 @@ import com.example.decapay.configurations.security.JwtUtils;
 
 import com.example.decapay.pojos.requestDtos.*;
 
+import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.services.UserService;
@@ -44,6 +45,7 @@ import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.InputMismatchException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -192,6 +194,16 @@ public class UserServiceImpl implements UserService {
         tokenRepository.save(tokenEntity);
 
         return "Password reset successful";
+    }
+
+    @Override
+    public String verifyToken(String token) {
+
+          tokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("token does not exist"));
+
+
+        return "token exist";
     }
 
 

@@ -1,6 +1,7 @@
 package com.example.decapay.services;
 
 import com.example.decapay.pojos.requestDtos.*;
+import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity;
@@ -18,4 +19,6 @@ public interface UserService {
     String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest);
 
     String resetPassword(ResetPasswordRequest request, String token);
+
+    String verifyToken(String token);
 }

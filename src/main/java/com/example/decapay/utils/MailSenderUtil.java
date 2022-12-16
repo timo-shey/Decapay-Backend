@@ -3,34 +3,45 @@ package com.example.decapay.utils;
 import com.example.decapay.configurations.mails.EmailSenderServiceImpl;
 import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtUtils;
+import com.example.decapay.enums.Status;
+import com.example.decapay.enums.VerificationType;
+import com.example.decapay.models.Token;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.mailDto.MailDto;
+import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MailSenderUtil {
 
     private final EmailSenderServiceImpl emailService;
-    private final UserRepository userRepository;
+
     private final CustomUserDetailService customUserDetailService;
 
+    private final TokenRepository tokenRepository;
+
     private  final JwtUtils jwtUtils;
+
+    @Value("${verify.email.url:http://localhost:8082/api/v1/auth/verify-email/}")
+    private String verifyEmailUrl;
 
     final String SUBJECT = "One last step to complete your registration with DecaPay!";
 
     final String PASSWORD_RESET_SUBJECT = "Password reset request";
 
-    final String HTMLBODY = "`<h1>Please verify your email address</h1>`"
-            + "<p>Thank you for registering with our application. To complete registration process and be able to log in,"
+    final String HTMLBODY = "`Please verify your email address`"
+            + "Thank you for registering with our application. To complete registration process and be able to log in,"
             + " click on the following link: "
-            + "<a href='link=$tokenValue'>"
-            + "Final step to complete your registration" + "</a><br/><br/>"
+            +  "<a href='link=$tokenValue'>"
+            + "Final step to complete your registration" + "</a>"
             + "Thank you! And we are waiting for you inside!";
 
 
@@ -45,12 +56,27 @@ public class MailSenderUtil {
 
 
     public void verifyMail(User user) throws MessagingException {
+
+
+
+
         UserDetails userDetails = customUserDetailService.loadUserByUsername(user.getEmail());
-        String token = jwtUtils.generateToken(userDetails);
+        String generatedToken = jwtUtils.generateToken(userDetails);
 
-        String htmlBodyWithToken = HTMLBODY.replace("$tokenValue", token);
+        Token token = new Token();
+        token.setToken(generatedToken);
+        token.setStatus(Status.ACTIVE);
+        token.setVerificationType(VerificationType.REGISTRATION);
+        token.setUser(user);
 
-        MailDto mailDto = new MailDto(user.getEmail(), SUBJECT, htmlBodyWithToken);
+        tokenRepository.save(token);
+
+        String link = String.format("%s%s",verifyEmailUrl, generatedToken);
+
+        final String registrationMessage = String.format("Thank you for registering with our application. To complete registration process click on the link below \n %s",link);
+
+
+        MailDto mailDto = new MailDto(user.getEmail(), SUBJECT, registrationMessage);
         emailService.sendEmail(mailDto);
     }
 }
