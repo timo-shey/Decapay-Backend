@@ -7,6 +7,7 @@ import com.example.decapay.enums.Status;
 import com.example.decapay.enums.VerificationType;
 import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.exceptions.UserAlreadyExistException;
+import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
 
@@ -15,6 +16,7 @@ import com.example.decapay.pojos.requestDtos.*;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.services.UserService;
+import com.example.decapay.utils.CloudinaryUtils;
 import com.example.decapay.utils.MailSenderUtil;
 import com.example.decapay.utils.UserIdUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +37,15 @@ import com.example.decapay.models.User;
 import com.example.decapay.repositories.UserRepository;
 
 import com.example.decapay.utils.UserUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +70,9 @@ public class UserServiceImpl implements UserService {
     private CustomUserDetailService customUserDetailService;
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private CloudinaryUtils cloudinaryUtils;
 
 
     @Override
@@ -195,6 +203,19 @@ public class UserServiceImpl implements UserService {
 
 
         return "token exist";
+    }
+
+    @Override
+    public ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
+        String email = userUtil.getAuthenticatedUserEmail();
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            String pictureUrl = cloudinaryUtils.createOrUpdateImage(image, user);
+            user.setImagePath(pictureUrl);
+            userRepository.save(user);
+            return ResponseEntity.ok("Profile picture uploaded successfully");
+        } else throw new UserNotFoundException("User Not Found");
     }
 
 

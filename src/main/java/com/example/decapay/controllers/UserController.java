@@ -1,5 +1,6 @@
 package com.example.decapay.controllers;
 
+import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.pojos.requestDtos.ForgetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
@@ -12,8 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @Service
@@ -25,5 +28,10 @@ public class UserController {
     public ResponseEntity<String> editUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest){
 
         return userService.editUser(userUpdateRequest);
+    }
+
+    @PostMapping("/upload-profile-picture")
+    public ResponseEntity<String> uploadProfilePic(@RequestParam("image") MultipartFile image) throws IOException, UserNotFoundException {
+        return userService.uploadProfilePicture(image);
     }
 }
