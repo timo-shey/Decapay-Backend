@@ -9,17 +9,13 @@ import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.exceptions.UserAlreadyExistException;
 import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
-import com.example.decapay.configurations.security.CustomUserDetailService;
-import com.example.decapay.configurations.security.JwtUtils;
 
 import com.example.decapay.pojos.requestDtos.*;
 
-import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.MailSenderUtil;
-import com.example.decapay.utils.PasswordUtils;
 import com.example.decapay.utils.UserIdUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -45,7 +41,6 @@ import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.InputMismatchException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -71,13 +66,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtUtils jwtUtils;
 
-//    public UserServiceImpl(UserRepository userRepository, UserUtil userUtil,PasswordEncoder passwordEncoder,TokenRepository tokenRepository,EmailSenderService emailSenderService) {
-//        this.userRepository = userRepository;
-//        this.userUtil = userUtil;
-//        this.passwordEncoder=passwordEncoder;
-//        this.tokenRepository=tokenRepository;
-//        this.emailSenderService=emailSenderService;
-//    }
 
     @Override
     public UserResponseDto createUser(UserRequestDto request) throws  MessagingException {
@@ -98,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
         BeanUtils.copyProperties(request,newUser);
 
-      //  modelMapper.map(request, newUser);
+
 
         User savedUser = userRepository.save(newUser);
 
@@ -108,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
         BeanUtils.copyProperties(savedUser,responseDto);
 
-      //  modelMapper.map(savedUser, responseDto);
+
 
         return responseDto;
 
