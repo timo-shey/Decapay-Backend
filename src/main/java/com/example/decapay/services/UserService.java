@@ -18,7 +18,7 @@ public interface UserService {
 
     String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest);
 
-    String resetPassword(ResetPasswordRequest request, String token);
+    String resetPassword(ResetPasswordRequest request);
 
     String verifyToken(String token);
 }
