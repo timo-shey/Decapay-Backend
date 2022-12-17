@@ -26,12 +26,11 @@ public class UserController {
     private final UserService userService;
     @PutMapping("/edit")
     public ResponseEntity<String> editUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest){
-
         return userService.editUser(userUpdateRequest);
     }
 
     @PostMapping("/upload-profile-picture")
     public ResponseEntity<String> uploadProfilePic(@RequestParam("image") MultipartFile image) throws IOException, UserNotFoundException {
-        return userService.uploadProfilePicture(image);
+        return ResponseEntity.ok(userService.uploadProfilePicture(image));
     }
 }

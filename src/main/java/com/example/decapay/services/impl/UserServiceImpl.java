@@ -206,17 +206,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
+    public String uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
         String email = userUtil.getAuthenticatedUserEmail();
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            String pictureUrl = cloudinaryUtils.createOrUpdateImage(image, user);
-            user.setImagePath(pictureUrl);
-            userRepository.save(user);
-            return ResponseEntity.ok("Profile picture uploaded successfully");
-        } else throw new UserNotFoundException("User Not Found");
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        String pictureUrl = cloudinaryUtils.createOrUpdateImage(image, user);
+        user.setImagePath(pictureUrl);
+        userRepository.save(user);
+        return "Profile picture uploaded successfully";
     }
-
 
 }

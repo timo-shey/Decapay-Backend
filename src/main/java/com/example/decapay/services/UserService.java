@@ -25,5 +25,5 @@ public interface UserService {
 
     String verifyToken(String token);
 
-    ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException;
+    String uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException;
 }
