@@ -1,5 +1,6 @@
 package com.example.decapay.models;
 
+import com.example.decapay.enums.BudgetPeriod;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
@@ -25,6 +26,9 @@ public class Budget extends BaseEntity{
     private String title;
     private BigDecimal amount;
     private String description;
+
+    @Enumerated(value = EnumType.STRING)
+    private BudgetPeriod budgetPeriod;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @Timestamp
