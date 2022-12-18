@@ -1,11 +1,10 @@
 package com.example.decapay.services.impl;
+
 import com.example.decapay.exceptions.AuthenticationException;
 import com.example.decapay.exceptions.ResourceNotFoundException;
-import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.models.Budget;
 import com.example.decapay.models.User;
 import com.example.decapay.repositories.BudgetRepository;
-import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetService;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
@@ -30,21 +29,13 @@ public class BudgetServiceImpl implements BudgetService {
 
         Budget budget = getBudget(budgetId);
 
-        boolean alreadyDeleted = budget.isDeleted();
-
-        if (alreadyDeleted) {
-            throw new ResourceNotFoundException(
-                    HttpStatus.BAD_REQUEST, "Budget with id: " + budgetId + " Already Deleted");
-        }
-
         boolean authorized = budget.getUser().getId().equals(user.getId());
 
         if (!authorized){
             throw new AuthenticationException("Action Not Authorized");
         }
 
-        budget.setDeleted(true);
-        budgetRepository.save(budget);
+        budgetRepository.delete(budget);
     }
 
     private Budget getBudget(Long budgetId) {

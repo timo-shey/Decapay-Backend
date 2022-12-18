@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -51,7 +50,6 @@ class BudgetServiceImplTest {
 
         Budget budget = new Budget();
         budget.setId(1L);
-        budget.setDeleted(false);
         budget.setUser(user);
 
         //given
@@ -63,7 +61,6 @@ class BudgetServiceImplTest {
         budgetService.deleteBudget(1L);
 
         //then
-        verify(budgetRepository).save(budget);
-        assertThat(budget.isDeleted()).isTrue();
+        verify(budgetRepository).delete(budget);
     }
 }
