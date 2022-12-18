@@ -7,6 +7,7 @@ import com.example.decapay.models.User;
 import com.example.decapay.repositories.BudgetRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetService;
+import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,27 +18,23 @@ import org.springframework.stereotype.Service;
 public class BudgetServiceImpl implements BudgetService {
 
     private final BudgetRepository budgetRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final UserUtil userUtil;
 
     @Override
-    public void deleteBudget(Long budget_id) {
+    public void deleteBudget(Long budgetId) {
 
         String email = userUtil.getAuthenticatedUserEmail();
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(
-                        HttpStatus.BAD_REQUEST, "User with email: " + email + " Not Found"));
+        User user = userService.getUserByEmail(email);
 
-        Budget budget = budgetRepository.findById(budget_id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        HttpStatus.BAD_REQUEST, "Budget with id: " + budget_id + " Not Found"));
+        Budget budget = getBudget(budgetId);
 
         boolean alreadyDeleted = budget.isDeleted();
 
         if (alreadyDeleted) {
             throw new ResourceNotFoundException(
-                    HttpStatus.BAD_REQUEST, "Budget with id: " + budget_id + " Already Deleted");
+                    HttpStatus.BAD_REQUEST, "Budget with id: " + budgetId + " Already Deleted");
         }
 
         boolean authorized = budget.getUser().getId().equals(user.getId());
@@ -48,5 +45,11 @@ public class BudgetServiceImpl implements BudgetService {
 
         budget.setDeleted(true);
         budgetRepository.save(budget);
+    }
+
+    private Budget getBudget(Long budgetId) {
+        return budgetRepository.findById(budgetId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        HttpStatus.BAD_REQUEST, "Budget with id: " + budgetId + " Not Found"));
     }
 }

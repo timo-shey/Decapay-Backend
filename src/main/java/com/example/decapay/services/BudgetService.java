@@ -1,5 +1,5 @@
 package com.example.decapay.services;
 
 public interface BudgetService {
-    void deleteBudget(Long budget_id);
+    void deleteBudget(Long budgetId);
 }

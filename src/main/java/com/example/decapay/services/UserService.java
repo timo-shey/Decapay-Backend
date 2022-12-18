@@ -1,5 +1,6 @@
 package com.example.decapay.services;
 
+import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
 import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
@@ -20,4 +21,6 @@ public interface UserService {
     String resetPassword(ResetPasswordRequest request);
 
     String verifyToken(String token);
+
+    User getUserByEmail(String email);
 }

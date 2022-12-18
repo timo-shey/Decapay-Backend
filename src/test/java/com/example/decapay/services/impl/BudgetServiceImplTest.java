@@ -5,6 +5,7 @@ import com.example.decapay.models.User;
 import com.example.decapay.repositories.BudgetRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetService;
+import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class BudgetServiceImplTest {
     private UserRepository userRepository;
 
     @Mock
+    private UserService userService;
+
+    @Mock
     private BudgetRepository budgetRepository;
 
     @Mock
@@ -35,7 +39,7 @@ class BudgetServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        budgetService = new BudgetServiceImpl(budgetRepository, userRepository, userUtil);
+        budgetService = new BudgetServiceImpl(budgetRepository, userService, userUtil);
     }
 
     @Test
@@ -52,7 +56,7 @@ class BudgetServiceImplTest {
 
         //given
         given(userUtil.getAuthenticatedUserEmail()).willReturn("tester@email.com");
-        given(userRepository.findByEmail("tester@email.com")).willReturn(Optional.of(user));
+        given(userService.getUserByEmail("tester@email.com")).willReturn(user);
         given(budgetRepository.findById(1L)).willReturn(Optional.of(budget));
 
         //when

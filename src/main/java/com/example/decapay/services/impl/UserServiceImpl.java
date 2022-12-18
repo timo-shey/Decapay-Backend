@@ -7,6 +7,7 @@ import com.example.decapay.enums.Status;
 import com.example.decapay.enums.VerificationType;
 import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.exceptions.UserAlreadyExistException;
+import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
 
@@ -195,6 +196,14 @@ public class UserServiceImpl implements UserService {
 
 
         return "token exist";
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(
+                        HttpStatus.BAD_REQUEST, "User with email: " + email + " Not Found"));
     }
 
 

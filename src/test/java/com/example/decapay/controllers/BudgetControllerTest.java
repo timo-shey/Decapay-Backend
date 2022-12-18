@@ -38,7 +38,7 @@ class BudgetControllerTest {
 
         long budgetId = 1L;
 
-        mockMvc.perform(delete("/api/v1/budgets/{budget_id}", budgetId))
+        mockMvc.perform(delete("/api/v1/budgets/{budgetId}", budgetId))
                 .andExpect(status().isOk());
     }
 }
