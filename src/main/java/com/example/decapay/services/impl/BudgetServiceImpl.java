@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class BudgetServiceImpl implements BudgetService {
@@ -19,6 +21,11 @@ public class BudgetServiceImpl implements BudgetService {
     private final BudgetRepository budgetRepository;
     private final UserService userService;
     private final UserUtil userUtil;
+
+    @Override
+    public List<Budget> getBudgets(String userId, int page, int limit) {
+        return null;
+    }
 
     @Override
     public void deleteBudget(Long budgetId) {
