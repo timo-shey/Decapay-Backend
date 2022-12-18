@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -26,6 +24,7 @@ public class Budget extends BaseEntity{
 
     private String title;
     private BigDecimal amount;
+    private String description;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @Timestamp
