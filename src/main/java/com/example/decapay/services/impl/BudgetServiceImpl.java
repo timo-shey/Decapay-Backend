@@ -23,7 +23,11 @@ public class BudgetServiceImpl implements BudgetService {
     private final UserUtil userUtil;
 
     @Override
-    public List<Budget> getBudgets(String userId, int page, int limit) {
+    public List<Budget> getBudgets(int page, int limit) {
+        String email = userUtil.getAuthenticatedUserEmail();
+        User user = userService.getUserByEmail(email);
+
+
         return null;
     }
 

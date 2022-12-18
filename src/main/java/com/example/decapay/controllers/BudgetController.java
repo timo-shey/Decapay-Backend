@@ -16,10 +16,9 @@ public class BudgetController {
     private final BudgetService budgetService;
 
     @GetMapping
-    public ResponseEntity<List<Budget>> getBudgets(@RequestParam(value = "userId") String userId,
-                                                   @RequestParam(value = "page", defaultValue = "0") int page,
+    public ResponseEntity<List<Budget>> getBudgets(@RequestParam(value = "page", defaultValue = "0") int page,
                                                    @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        List<Budget> budgets = budgetService.getBudgets(userId, page, limit);
+        List<Budget> budgets = budgetService.getBudgets(page, limit);
         return ResponseEntity.ok(budgets);
     }
 

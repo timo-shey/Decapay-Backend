@@ -5,7 +5,7 @@ import com.example.decapay.models.Budget;
 import java.util.List;
 
 public interface BudgetService {
-    List<Budget> getBudgets(String userId, int page, int limit);
+    List<Budget> getBudgets(int page, int limit);
     void deleteBudget(Long budgetId);
 
 }
