@@ -48,8 +48,6 @@ class BudgetControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private MockMvc mockMvcSecurity;
-
     @Autowired
     ObjectMapper objectMapper;
 
@@ -61,15 +59,6 @@ class BudgetControllerTest {
 
     @MockBean
     private JwtAuthFilter jwtAuthFilter;
-
-    @BeforeEach
-    void init() {
-        MockitoAnnotations.openMocks(this);
-        this.mockMvcSecurity = MockMvcBuilders
-                .webAppContextSetup(this.webApplicationContext)
-                .apply(springSecurity())
-                .build();
-    }
 
     @Test
     @DisplayName("Controller Test to a all Budget for particular User")
@@ -95,8 +84,8 @@ class BudgetControllerTest {
 
         String urlPath = "/api/v1/budgets";
 
-        MvcResult mvcResult = mockMvcSecurity.perform(
-                        get(urlPath).with(SecurityMockMvcRequestPostProcessors.user("testUser")))
+        MvcResult mvcResult = mockMvc.perform(
+                        get(urlPath))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(1))
@@ -105,22 +94,6 @@ class BudgetControllerTest {
         assertNotNull(mvcResult.getResponse());
         verify(budgetService, times(1)).getBudgets(0, 10);
     }
-
-    @Test
-    @DisplayName("UnAuthorized User to get all Budget should fail. 401")
-    void getBudgets_UnAuthorized() throws Exception {
-        List<BudgetRest> budgetRests = new ArrayList<>();
-        when(budgetService.getBudgets(eq(0), eq(10))).thenReturn(budgetRests);
-
-        String urlPath = "/api/v1/budgets";
-
-        mockMvcSecurity.perform(
-                        get(urlPath))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andReturn();
-    }
-
 
     @Test
     void testDeleteBudget() throws Exception {
