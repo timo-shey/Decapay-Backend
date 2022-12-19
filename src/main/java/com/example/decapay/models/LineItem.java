@@ -2,8 +2,6 @@ package com.example.decapay.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,7 +19,8 @@ import java.util.List;
 @Table(name = "line_item_tb")
 public class LineItem extends BaseEntity {
 
-    @OneToOne(mappedBy = "lineItem")
+    @OneToOne
+    @JoinColumn(name = "category_tb_id")
     private BudgetCategory budgetCategory;
 
     private BigDecimal projectedAmount = BigDecimal.ZERO;
