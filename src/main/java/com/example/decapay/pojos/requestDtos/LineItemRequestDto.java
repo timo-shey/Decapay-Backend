@@ -16,13 +16,13 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class LineItemRequestDto {
 
-    @NotBlank
+    @NotBlank(message = "Budget category Id is required")
     private Long budgetCategoryId;
 
-    @NotBlank
+    @NotBlank(message = "Budget Id is required")
     private Long budgetId;
 
-    @NotBlank
+    @NotBlank(message = "the projected amount is required")
     private BigDecimal projectedAmount;
 
 }
