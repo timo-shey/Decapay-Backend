@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -50,7 +49,7 @@ class BudgetServiceImplTest {
 
 
     @Test
-    void createBudget() {
+    void testCreateBudget() {
         User activeUser = new User();
         activeUser.setId(2L);
         activeUser.setEmail("mybudget@email.com");
@@ -74,6 +73,26 @@ class BudgetServiceImplTest {
         assertEquals(budgetRequest.getTitle(), returnedBudget.getTitle());
         assertEquals(budgetRequest.getPeriod(), returnedBudget.getPeriod());
         assertEquals(budgetRequest.getDescription(), returnedBudget.getDescription());
+    }
+
+    @Test
+    void testFetchBudget() {
+        User activeUser = new User();
+        activeUser.setId(2L);
+        activeUser.setEmail("mybudget@email.com");
+        userRepository.save(activeUser);
+        Budget budget = new Budget();
+        budget.setId(2L);
+        budget.setUser(activeUser);
+        budgetRepository.save(budget);
+        given(userUtil.getAuthenticatedUserEmail()).willReturn("mybudget@email.com");
+        given(userService.getUserByEmail("mybudget@email.com")).willReturn(activeUser);
+        given(budgetRepository.findBudgetByIdAndUserId(2L, 2L)).willReturn(Optional.of(budget));
+        CreateBudgetResponse returnedBudget = budgetService.fetchBudgetById(2L);
+        assertEquals(budget.getDescription(), returnedBudget.getDescription());
+        assertEquals(budget.getTitle(), returnedBudget.getTitle());
+        assertEquals(budget.getAmount(), returnedBudget.getAmount());
+        assertEquals(String.valueOf(budget.getBudgetPeriod()), returnedBudget.getPeriod());
     }
 
 

@@ -22,6 +22,11 @@ public class BudgetController {
         return new ResponseEntity<>(budgetService.createBudget(request), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{budgetId}")
+    public ResponseEntity<CreateBudgetResponse> fetchBudget(@PathVariable(name = "budgetId")Long budgetId){
+        return ResponseEntity.ok(budgetService.fetchBudgetById(budgetId));
+    }
+
     @DeleteMapping("/{budgetId}")
     public ResponseEntity<String> deleteBudget(@PathVariable Long budgetId){
         budgetService.deleteBudget(budgetId);

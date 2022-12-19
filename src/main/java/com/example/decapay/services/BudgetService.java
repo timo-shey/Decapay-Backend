@@ -6,5 +6,6 @@ import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
 public interface BudgetService {
 
     CreateBudgetResponse createBudget(CreateBudgetRequest budgetRequest);
+    CreateBudgetResponse fetchBudgetById(Long budgetId);
     void deleteBudget(Long budgetId);
 }

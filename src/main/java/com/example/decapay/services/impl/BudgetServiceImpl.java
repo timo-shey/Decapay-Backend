@@ -36,6 +36,19 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    public CreateBudgetResponse fetchBudgetById(Long budgetId) {
+        String email = userUtil.getAuthenticatedUserEmail();
+
+        User activeUser = userService.getUserByEmail(email);
+
+        Budget budget = budgetRepository.findBudgetByIdAndUserId(budgetId, activeUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        HttpStatus.BAD_REQUEST, "Budget with id: " + budgetId + " Not Found"
+                ));
+        return CreateBudgetResponse.convertBudgetToCreateBudgetResponse(budget);
+    }
+
+    @Override
     public void deleteBudget(Long budgetId) {
 
         String email = userUtil.getAuthenticatedUserEmail();
