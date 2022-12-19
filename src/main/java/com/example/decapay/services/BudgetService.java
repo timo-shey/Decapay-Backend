@@ -1,11 +1,11 @@
 package com.example.decapay.services;
 
-import com.example.decapay.models.Budget;
+import com.example.decapay.pojos.responseDtos.BudgetRest;
 
 import java.util.List;
 
 public interface BudgetService {
-    List<Budget> getBudgets(int page, int limit);
+    List<BudgetRest> getBudgets(int page, int limit);
     void deleteBudget(Long budgetId);
 
 }

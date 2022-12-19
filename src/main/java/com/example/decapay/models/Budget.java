@@ -23,7 +23,6 @@ import java.util.List;
 @Table(name = "budget_tb")
 public class Budget extends BaseEntity{
 
-    private String title;
     private BigDecimal amount;
     private String description;
 

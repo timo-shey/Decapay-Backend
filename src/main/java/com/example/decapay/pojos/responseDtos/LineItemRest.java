@@ -1,8 +1,8 @@
 package com.example.decapay.pojos.responseDtos;
 
 import lombok.Data;
+
 import java.math.BigDecimal;
-import java.util.List;
 
 
 /**
@@ -12,9 +12,7 @@ import java.util.List;
  */
 
 @Data
-public class BudgetRest {
-    private BigDecimal amount;
-    private BigDecimal totalAmountSpent;
-    private BigDecimal percentage;
-    List<LineItemRest> lineItemRests;
+public class LineItemRest {
+    private BigDecimal amountSpentSoFar;
+    private BigDecimal percentageSpentSoFar;
 }
