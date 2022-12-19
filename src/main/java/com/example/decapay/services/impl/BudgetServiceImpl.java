@@ -8,6 +8,7 @@ import com.example.decapay.models.User;
 import com.example.decapay.pojos.responseDtos.BudgetRest;
 import com.example.decapay.pojos.responseDtos.LineItemRest;
 import com.example.decapay.repositories.BudgetRepository;
+import com.example.decapay.repositories.LineItemRepository;
 import com.example.decapay.services.BudgetService;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
@@ -28,6 +29,8 @@ import java.util.List;
 public class BudgetServiceImpl implements BudgetService {
 
     private final BudgetRepository budgetRepository;
+
+    private final LineItemRepository lineItemRepository;
     private final UserService userService;
     private final UserUtil userUtil;
 
@@ -53,7 +56,7 @@ public class BudgetServiceImpl implements BudgetService {
             BudgetRest budgetRest = new BudgetRest();
             budgetRest.setAmount(budget.getAmount());
 
-            List<LineItem> lineItems = budget.getLineItems();
+            List<LineItem> lineItems = lineItemRepository.findAllByBudget(budget);
             BigDecimal totalAmountSpent = lineItems.stream()
                     .map(LineItem::getTotalAmountSpent)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -76,6 +79,7 @@ public class BudgetServiceImpl implements BudgetService {
 
             BigDecimal totalAmountSoFar = lineItem.getTotalAmountSpent();
             BigDecimal percentageSoFar = totalAmountSoFar.divide(lineItem.getProjectedAmount(), new MathContext(2));
+            lineItemRest.setProjectedAmount(lineItem.getProjectedAmount());
             lineItemRest.setAmountSpentSoFar(totalAmountSoFar);
             lineItemRest.setPercentageSpentSoFar(percentageSoFar);
             lineItemRests.add(lineItemRest);
