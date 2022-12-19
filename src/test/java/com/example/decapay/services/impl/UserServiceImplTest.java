@@ -4,6 +4,7 @@ import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtUtils;
 import com.example.decapay.exceptions.AuthenticationException;
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
+import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,8 +57,8 @@ public class UserServiceImplTest {
         loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail("oluseun@gmail.com");
         loginRequestDto.setPassword("oluseun1");
-    }
 
+    }
     @Test
     public void userLogin(){
     when(authenticationManager.authenticate(

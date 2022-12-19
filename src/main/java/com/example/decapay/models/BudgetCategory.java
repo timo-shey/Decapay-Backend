@@ -2,6 +2,8 @@ package com.example.decapay.models;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -21,4 +23,8 @@ public class BudgetCategory extends BaseEntity{
     @ManyToOne()
     @JoinColumn(name = "user_tb_id")
     private User user;
+
+    @OneToOne
+    @JoinColumn(name = "line_item_tb_id")
+    private LineItem lineItem;
 }
