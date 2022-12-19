@@ -1,12 +1,14 @@
 package com.example.decapay.controllers;
 
+import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
+import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
 import com.example.decapay.services.BudgetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
@@ -14,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class BudgetController {
 
     private final BudgetService budgetService;
+
+    @PostMapping
+    public ResponseEntity<CreateBudgetResponse> createBudget(@Valid @RequestBody CreateBudgetRequest request){
+        return new ResponseEntity<>(budgetService.createBudget(request), HttpStatus.CREATED);
+    }
 
     @DeleteMapping("/{budgetId}")
     public ResponseEntity<String> deleteBudget(@PathVariable Long budgetId){
