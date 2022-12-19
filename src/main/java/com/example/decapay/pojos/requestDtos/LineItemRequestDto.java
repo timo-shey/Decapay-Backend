@@ -23,6 +23,5 @@ public class LineItemRequestDto {
 
     private BigDecimal projectedAmount;
 
-//    private BigDecimal totalAmountSpent;
 
 }
