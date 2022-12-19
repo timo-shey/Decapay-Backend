@@ -1,7 +1,6 @@
 package com.example.decapay.exceptions;
 
 
-import com.example.decapay.pojos.responseDtos.ApiResponse;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,8 +53,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ApiResponse<String> entityNotFoundExceptionHandler(EntityNotFoundException ex){
-        return  new ApiResponse<>(ex.getMessage(), HttpStatus.NOT_FOUND.value(),null);
+    public ResponseEntity<String> entityNotFoundExceptionHandler(EntityNotFoundException ex){
+        return new ResponseEntity<>(ex.getMessage(), null, HttpStatus.NOT_FOUND.value());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
