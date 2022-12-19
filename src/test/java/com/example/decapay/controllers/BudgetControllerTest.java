@@ -2,6 +2,7 @@ package com.example.decapay.controllers;
 
 import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtAuthFilter;
+import com.example.decapay.pojos.requestDtos.BudgetDto;
 import com.example.decapay.services.BudgetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers=BudgetController.class)
@@ -32,6 +36,9 @@ class BudgetControllerTest {
     @MockBean
     private JwtAuthFilter jwtAuthFilter;
 
+    @Autowired
+    private BudgetController budgetController;
+
 
     @Test
     void testDeleteBudget() throws Exception {
@@ -40,5 +47,26 @@ class BudgetControllerTest {
 
         mockMvc.perform(delete("/api/v1/budgets/{budgetId}", budgetId))
                 .andExpect(status().isOk());
+    }
+
+
+    @Test
+    void checkIfBudgetIsUpdated() throws Exception {
+
+       // long budgetId = 1L;
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setBudgetId(123L);
+        budgetDto.setTitle("hello");
+        budgetDto.setAmount(BigDecimal.valueOf(2321.00));
+        budgetDto.setDescription("we won");
+
+
+        String pass = objectMapper.writeValueAsString(budgetDto);
+        mockMvc.perform(put("/api/v1/budgets/{budgetId}", 1)
+                .contentType("application/json")
+                .content(pass))
+                .andExpect(status().isOk());
+
     }
 }
