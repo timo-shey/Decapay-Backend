@@ -30,8 +30,8 @@ class LineItemServicesImplTest {
 
     @Test
     void updateLineItem() {
+        Long lineItemId = 1L;
         LineItemRequestDto lineItemRequestDto = LineItemRequestDto.builder()
-                .lineItemId(1L)
                 .projectedAmount(new BigDecimal("20000"))
                 .build();
 
@@ -41,9 +41,9 @@ class LineItemServicesImplTest {
         lineItem.setBudget(new Budget());
         lineItem.setBudgetCategory(new BudgetCategory());
 
-        when(lineItemRepositoryMock.findById(lineItem.getId())).thenReturn(Optional.of(lineItem));
+        when(lineItemRepositoryMock.findById(lineItemId)).thenReturn(Optional.of(lineItem));
         when(lineItemRepositoryMock.save(any(LineItem.class))).thenReturn(lineItem);
 
-        assertEquals(lineItemServicesImlMcok.updateLineItem(lineItemRequestDto).getStatusCode(), HttpStatus.OK);
+        assertEquals(lineItemServicesImlMcok.updateLineItem(lineItemRequestDto, lineItemId).getStatusCode(), HttpStatus.OK);
     }
 }

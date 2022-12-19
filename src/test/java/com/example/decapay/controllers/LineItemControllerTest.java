@@ -42,18 +42,18 @@ class LineItemControllerTest {
     LineItemResponseDto lineItemResponseDto;
     @Test
     void updateALineItem() throws Exception {
+        Long lineItemId = 1L;
         lineItemResponseDto = new LineItemResponseDto();
         LineItemRequestDto lineItemRequestDto = LineItemRequestDto.builder()
-                .lineItemId(1L)
                 .projectedAmount(new BigDecimal("25000"))
                 .budgetCategoryId(2L)
                 .budgetId(5L)
                 .build();
 
-        given(lineItemServices.updateLineItem(lineItemRequestDto)).willReturn(ResponseEntity.ok(lineItemResponseDto));
+        given(lineItemServices.updateLineItem(lineItemRequestDto, lineItemId)).willReturn(ResponseEntity.ok(lineItemResponseDto));
 
         String requestBody = mapper.writeValueAsString(lineItemRequestDto);
-        mockMvc.perform(post("/api/v1/user/line-item/update")
+        mockMvc.perform(post("/api/v1/user/line-items/update/{lineItemId}", lineItemId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isOk());

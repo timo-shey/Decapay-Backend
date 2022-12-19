@@ -22,6 +22,4 @@ public class LineItemResponseDto {
     private BigDecimal projectedAmount;
 
     private BigDecimal totalAmountSpent;
-
-//    private List<ExpenseResponseDto> expenses;
 }

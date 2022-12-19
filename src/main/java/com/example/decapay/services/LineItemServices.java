@@ -7,5 +7,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface LineItemServices {
 
-    ResponseEntity<LineItemResponseDto> updateLineItem(LineItemRequestDto lineItemRequestDto);
+    ResponseEntity<LineItemResponseDto> updateLineItem(LineItemRequestDto lineItemRequestDto, Long lineItemId);
 }

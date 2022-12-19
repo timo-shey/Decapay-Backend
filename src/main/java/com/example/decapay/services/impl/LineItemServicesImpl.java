@@ -19,19 +19,15 @@ public class LineItemServicesImpl implements LineItemServices {
     private final LineItemRepository lineItemRepository;
 
     @Override
-    public ResponseEntity<LineItemResponseDto> updateLineItem(LineItemRequestDto lineItemRequestDto) {
+    public ResponseEntity<LineItemResponseDto> updateLineItem(LineItemRequestDto lineItemRequestDto, Long lineItemId) {
 
         LineItemResponseDto lineItemResponseDto = null;
-        LineItem lineItem = null;
-        if (lineItemRequestDto.getLineItemId() != null) {
-            lineItem = lineItemRepository.findById(lineItemRequestDto.getLineItemId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Line item does not exist", HttpStatus.NOT_FOUND, "Please select a valid line item"));
-            lineItem.setProjectedAmount(lineItemRequestDto.getProjectedAmount());
-            lineItem = lineItemRepository.save(lineItem);
 
-        } else {
-            throw new ValidationException("Line item id cannot be null");
-        }
+        LineItem lineItem = lineItemRepository.findById(lineItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Line item does not exist", HttpStatus.NOT_FOUND, "Please select a valid line item"));
+        lineItem.setProjectedAmount(lineItemRequestDto.getProjectedAmount());
+        lineItem = lineItemRepository.save(lineItem);
+
 
         lineItemResponseDto = LineItemResponseDto.builder()
                 .lineItemId(lineItem.getId())
@@ -40,6 +36,7 @@ public class LineItemServicesImpl implements LineItemServices {
                 .projectedAmount(lineItem.getProjectedAmount())
                 .totalAmountSpent(lineItem.getTotalAmountSpent())
                 .build();
+
         return new ResponseEntity<>(lineItemResponseDto, HttpStatus.OK);
     }
 }
