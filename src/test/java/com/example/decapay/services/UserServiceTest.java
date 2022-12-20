@@ -65,7 +65,6 @@ class UserServiceTest {
         userUpdateRequest.setLastName("Ajayi");
         userUpdateRequest.setEmail("olamic695@gmail.com");
         userUpdateRequest.setPhoneNumber("08022222222");
-
     }
 
     @Test
@@ -87,7 +86,7 @@ class UserServiceTest {
     public void testUploadProfilePicture() throws IOException, UserNotFoundException {
         // Prepare test data
         MultipartFile image = Mockito.mock(MultipartFile.class);
-        String email = "test@example.com";
+        String email = "olamic695@gmail.com";
         User user = new User();
         user.setEmail(email);
         String pictureUrl = "http://test.com/image.jpg";
@@ -95,13 +94,13 @@ class UserServiceTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(cloudinaryUtils.createOrUpdateImage(image, user)).thenReturn(pictureUrl);
 
-
         // Test the method
-        String result = userService.uploadProfilePicture(image);
+        String result = String.valueOf(userService.uploadProfilePicture(image));
 
         // Verify the results
         assertEquals("Profile picture uploaded successfully", result);
         assertEquals(pictureUrl, user.getImagePath());
         verify(userRepository).save(user);
     }
+
 }

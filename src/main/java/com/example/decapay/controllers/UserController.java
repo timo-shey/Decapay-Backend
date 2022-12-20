@@ -7,6 +7,7 @@ import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.pojos.responseDtos.ApiResponse;
 import com.example.decapay.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,9 @@ public class UserController {
         return userService.editUser(userUpdateRequest);
     }
 
-    @PostMapping("/upload-profile-picture")
-    public ResponseEntity<String> uploadProfilePic(@RequestParam("image") MultipartFile image) throws IOException, UserNotFoundException {
-        return ResponseEntity.ok(userService.uploadProfilePicture(image));
+    @PostMapping(value = "/upload-profile-picture" , consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> uploadProfilePic(@RequestPart(name = "file") MultipartFile image) throws IOException, UserNotFoundException {
+        System.out.println("i am inside the controller");
+        return userService.uploadProfilePicture(image);
     }
 }
