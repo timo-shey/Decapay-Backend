@@ -1,10 +1,11 @@
-package com.example.decapay.services;
+package com.example.decapay.services.impl;
 
 import com.example.decapay.configurations.mails.EmailSenderService;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
+import com.example.decapay.services.UserService;
 import com.example.decapay.services.impl.UserServiceImpl;
 import com.example.decapay.utils.MailSenderUtil;
 import com.example.decapay.utils.UserIdUtil;
