@@ -22,4 +22,10 @@ public class BudgetCategoryController {
         budgetCategoryService.createBudgetCategory(budgetCategoryRequest);
         return ResponseEntity.ok("Budget category created");
     }
+    @PutMapping("/update/{budgetCategoryId}")
+    public ResponseEntity<String> updateBudgetCategory(@Valid @PathVariable Long budgetCategoryId, @RequestBody BudgetCategoryRequest budgetCategoryRequest)
+    {
+      BudgetCategoryResponse  budgetCategoryResponse=  budgetCategoryService.updateBudgetCategory(budgetCategoryId,budgetCategoryRequest);
+      return  ResponseEntity.ok("Budget category updated");
+    }
 }

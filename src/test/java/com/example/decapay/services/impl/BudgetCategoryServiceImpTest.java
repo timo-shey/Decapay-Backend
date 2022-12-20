@@ -57,6 +57,8 @@ class BudgetCategoryServiceImpTest {
 
     private BudgetCategoryRequest budgetCategoryRequest;
 
+    private BudgetCategory budgetCategory;
+
     @BeforeEach
     void setUp() {
          budgetCategoryService=new BudgetCategoryServiceImp(
@@ -64,6 +66,8 @@ class BudgetCategoryServiceImpTest {
          );
         budgetCategoryRequest=new BudgetCategoryRequest();
         budgetCategoryRequest.setName("Food Stuff");
+        budgetCategory = new BudgetCategory();
+
 
     }
 
@@ -72,8 +76,6 @@ class BudgetCategoryServiceImpTest {
 
         User user=new User();
 
-        BudgetCategory budgetCategory= new BudgetCategory();
-
         String email="mic@gmail.com";
 
         given(userUtil.getAuthenticatedUserEmail()).willReturn(email);
@@ -81,6 +83,24 @@ class BudgetCategoryServiceImpTest {
         given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
         budgetCategoryService.createBudgetCategory(budgetCategoryRequest);
+
+    }
+    @Test
+    void updateBudgetCategory() {
+
+        User user=new User();
+
+
+        String email="mic@gmail.com";
+        budgetCategory.setId(1L);
+
+
+        given(userUtil.getAuthenticatedUserEmail()).willReturn(email);
+
+        given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
+        given(budgetCategoryRepository.findById(1L)).willReturn(Optional.of(budgetCategory));
+
+        budgetCategoryService.updateBudgetCategory(1L,budgetCategoryRequest);
 
     }
 }

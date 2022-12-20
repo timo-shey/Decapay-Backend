@@ -11,6 +11,7 @@ import com.example.decapay.utils.UserUtil;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,25 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
        return budgetCategoryResponse;
 
 
+
+    }
+
+
+    @Override
+    public BudgetCategoryResponse updateBudgetCategory(Long budgetCategoryId, BudgetCategoryRequest budgetCategoryRequest)
+    {
+
+        String email = userUtil.getAuthenticatedUserEmail();
+
+        userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User not found"));
+
+        BudgetCategory budgetCategory =   budgetCategoryRepository.findById(budgetCategoryId).orElseThrow(()-> new EntityNotFoundException("Budget not found"));
+
+        BeanUtils.copyProperties(budgetCategoryRequest, budgetCategory);
+
+        budgetCategoryRepository.save(budgetCategory);
+
+        return BudgetCategoryResponse.mapFrom(budgetCategory);
 
     }
 }
