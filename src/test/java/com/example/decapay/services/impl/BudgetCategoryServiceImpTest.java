@@ -20,8 +20,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BudgetCategoryServiceImpTest {
@@ -82,5 +85,30 @@ class BudgetCategoryServiceImpTest {
 
         budgetCategoryService.createBudgetCategory(budgetCategoryRequest);
 
+    }
+
+    @Test
+    final void testDeleteBudgetCategory(){
+        User user = new User();
+       BudgetCategory budgetCategory = new BudgetCategory();
+
+        //stub user object
+        user.setId(1L);;
+        user.setDeleted(false);
+        user.setEmail("testing@gmail.com");
+
+        //stub budgetCategory object
+        budgetCategory.setId(1L);
+        budgetCategory.setDeleted(false);
+        budgetCategory.setUser(user);
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(userUtil.getAuthenticatedUserEmail()).thenReturn("testing@gmail.com");
+        when(budgetCategoryRepository.findById(1L)).thenReturn(Optional.of(budgetCategory));
+
+        budgetCategoryService.deleteBudgetCategory(budgetCategory.getId());
+        verify(budgetCategoryRepository).save(budgetCategory);
+        assertThat(budgetCategory.isDeleted()).isTrue();
+        verify(budgetCategoryRepository,times(1)).save(any(BudgetCategory.class));
     }
 }

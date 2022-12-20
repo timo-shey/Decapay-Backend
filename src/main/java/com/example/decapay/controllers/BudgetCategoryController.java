@@ -22,4 +22,10 @@ public class BudgetCategoryController {
         budgetCategoryService.createBudgetCategory(budgetCategoryRequest);
         return ResponseEntity.ok("Budget category created");
     }
+
+    @DeleteMapping("/{category_id}")
+    public ResponseEntity<String> deleteBudgetCategory(@PathVariable Long category_id){
+        budgetCategoryService.deleteBudgetCategory(category_id);
+        return ResponseEntity.ok("Category successfully deleted");
+    }
 }

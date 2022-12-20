@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface BudgetCategoryService {
     BudgetCategoryResponse createBudgetCategory(BudgetCategoryRequest budgetCategoryRequest);
+
+    public void deleteBudgetCategory (Long budgetCategoryId);
 }
