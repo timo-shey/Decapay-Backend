@@ -2,29 +2,21 @@ package com.example.decapay.controllers;
 
 import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtAuthFilter;
-import com.example.decapay.models.LineItem;
 import com.example.decapay.pojos.responseDtos.BudgetRest;
 import com.example.decapay.pojos.responseDtos.LineItemRest;
-import com.example.decapay.repositories.LineItemRepository;
 import com.example.decapay.services.BudgetService;
+import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,7 +24,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,17 +34,40 @@ class BudgetControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    BudgetService budgetService;
+
     @Autowired
     ObjectMapper objectMapper;
 
-    @MockBean
-    private BudgetService budgetService;
 
     @MockBean
     private CustomUserDetailService customUserDetailService;
 
     @MockBean
     private JwtAuthFilter jwtAuthFilter;
+
+
+    @Test
+    void testCreateBudget() throws Exception {
+
+        CreateBudgetRequest budgetRequest = new CreateBudgetRequest();
+        String budgetJson = objectMapper.writeValueAsString(budgetRequest);
+
+        mockMvc.perform(post("/api/v1/budgets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(budgetJson))
+                        .andExpect(status().isCreated());
+    }
+
+    @Test
+    void testFetchBudget() throws Exception {
+
+        long budgetId = 2L;
+
+        mockMvc.perform(get("/api/v1/budgets/{budgetId}", budgetId))
+                .andExpect(status().isOk());
+    }
 
     @Test
     @DisplayName("Controller Test to a all Budget for particular User")
@@ -88,6 +102,7 @@ class BudgetControllerTest {
 
         assertNotNull(mvcResult.getResponse());
         verify(budgetService, times(1)).getBudgets(0, 10);
+
     }
 
     @Test

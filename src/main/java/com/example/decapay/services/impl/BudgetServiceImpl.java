@@ -7,6 +7,8 @@ import com.example.decapay.models.LineItem;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.responseDtos.BudgetRest;
 import com.example.decapay.pojos.responseDtos.LineItemRest;
+import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
+import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
 import com.example.decapay.repositories.BudgetRepository;
 import com.example.decapay.repositories.LineItemRepository;
 import com.example.decapay.services.BudgetService;
@@ -88,6 +90,31 @@ public class BudgetServiceImpl implements BudgetService {
         return lineItemRests;
     }
 
+    public CreateBudgetResponse createBudget(CreateBudgetRequest budgetRequest) {
+        String email = userUtil.getAuthenticatedUserEmail();
+
+        User activeUser = userService.getUserByEmail(email);
+
+        Budget budget = CreateBudgetRequest.mapCreateBudgetRequestToBudget(budgetRequest);
+
+        saveBudget(budget, activeUser);
+
+        return CreateBudgetResponse.convertBudgetToCreateBudgetResponse(budget);
+    }
+
+    @Override
+    public CreateBudgetResponse fetchBudgetById(Long budgetId) {
+        String email = userUtil.getAuthenticatedUserEmail();
+
+        User activeUser = userService.getUserByEmail(email);
+
+        Budget budget = budgetRepository.findBudgetByIdAndUserId(budgetId, activeUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        HttpStatus.BAD_REQUEST, "Budget with id: " + budgetId + " Not Found"
+                ));
+        return CreateBudgetResponse.convertBudgetToCreateBudgetResponse(budget);
+    }
+
     @Override
     public void deleteBudget(Long budgetId) {
 
@@ -110,5 +137,10 @@ public class BudgetServiceImpl implements BudgetService {
         return budgetRepository.findById(budgetId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         HttpStatus.BAD_REQUEST, "Budget with id: " + budgetId + " Not Found"));
+    }
+
+    private void saveBudget(Budget budget, User user){
+        budget.setUser(user);
+        budgetRepository.save(budget);
     }
 }

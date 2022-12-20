@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -23,19 +23,20 @@ import java.util.List;
 @Table(name = "budget_tb")
 public class Budget extends BaseEntity{
 
+    private String title;
     private BigDecimal amount;
     private String description;
 
     @Enumerated(value = EnumType.STRING)
     private BudgetPeriod budgetPeriod;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Timestamp
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Timestamp
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @OneToMany(mappedBy = "budget", cascade = CascadeType.ALL)
     private List<LineItem> lineItems;
