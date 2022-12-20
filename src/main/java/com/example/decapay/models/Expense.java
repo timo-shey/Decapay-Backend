@@ -2,8 +2,6 @@ package com.example.decapay.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -24,6 +22,8 @@ import java.math.BigDecimal;
 public class Expense extends BaseEntity{
 
     private BigDecimal amount;
+
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "line_item_tb_id")
