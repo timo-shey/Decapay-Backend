@@ -10,11 +10,11 @@ import com.example.decapay.repositories.BudgetRepository;
 import com.example.decapay.services.BudgetService;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Service
 public class BudgetServiceImpl implements BudgetService {
 
@@ -76,4 +76,5 @@ public class BudgetServiceImpl implements BudgetService {
         budget.setUser(user);
         budgetRepository.save(budget);
     }
+
 }

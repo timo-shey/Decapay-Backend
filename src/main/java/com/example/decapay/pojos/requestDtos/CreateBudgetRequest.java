@@ -22,9 +22,9 @@ public class CreateBudgetRequest {
     private BigDecimal amount;
     @NotNull(message = "Budget Period is required. Accepted input includes: ANNUAL, MONTHLY, WEEKLY, DAILY, CUSTOM")
     private String period;
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Invalid date format")
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Invalid date format. Date should be in yyyy-MM-dd format.")
     private String budgetStartDate;
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Invalid date format")
+    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Invalid date format. Date should be in yyyy-MM-dd format.")
     private String budgetEndDate;
     @NotBlank
     private String description;
@@ -36,8 +36,8 @@ public class CreateBudgetRequest {
     private int year;
 
 
-
     public static Budget mapCreateBudgetRequestToBudget (CreateBudgetRequest request){
+
         Budget budget = new Budget();
         budget.setTitle(request.getTitle());
         budget.setAmount(request.getAmount());
@@ -53,21 +53,36 @@ public class CreateBudgetRequest {
             if(year.isBefore(LocalDate.now()))
                 throw new ValidationException("Invalid Date. Please enter a new year.");
             else {
-                budget.setStartDate(year.minusYears(1L));
-                budget.setEndDate(year);
+                budget.setStartDate(year);
+                budget.setEndDate(year.plusYears(1L));
             }
+
         } else if (request.getPeriod().equals(String.valueOf(BudgetPeriod.MONTHLY))){
             LocalDate month = LocalDate.of(request.getYear(), request.getMonth(), LocalDate.now().getDayOfMonth());
-            budget.setStartDate(month.minusMonths(1L));
-            budget.setEndDate(month);
+            if(month.isBefore(LocalDate.now()))
+                throw new ValidationException("Invalid Date. Please enter a new month.");
+            else {
+                budget.setStartDate(month);
+                budget.setEndDate(month.plusMonths(1L));
+            }
 
         } else if (request.getPeriod().equals(String.valueOf(BudgetPeriod.WEEKLY))) {
-            budget.setStartDate(DateParser.parseDate(request.getBudgetStartDate()).minusWeeks(1L));
-            budget.setEndDate(DateParser.parseDate(request.getBudgetStartDate()));
+            if(DateParser.parseDate(request.getBudgetStartDate()).isBefore
+                    (LocalDate.now()))
+                throw new ValidationException("Invalid Date. Please enter a valid date.");
+            else {
+                budget.setStartDate(DateParser.parseDate(request.getBudgetStartDate()));
+                budget.setEndDate(DateParser.parseDate(request.getBudgetStartDate()).plusWeeks(1L));
+            }
 
         } else if (request.getPeriod().equals(String.valueOf(BudgetPeriod.DAILY))) {
-            budget.setStartDate(DateParser.parseDate(request.getBudgetStartDate()));
-            budget.setEndDate(DateParser.parseDate(request.getBudgetStartDate()).plusDays(1L));
+            if(DateParser.parseDate(request.getBudgetStartDate()).isBefore
+                    (LocalDate.now()))
+                throw new ValidationException("Invalid Date. Please enter a valid date.");
+            else {
+                budget.setStartDate(DateParser.parseDate(request.getBudgetStartDate()));
+                budget.setEndDate(DateParser.parseDate(request.getBudgetStartDate()).plusDays(1L));
+            }
 
         } else if (request.getPeriod().equals(String.valueOf(BudgetPeriod.CUSTOM))) {
             if(DateParser.parseDate(request.getBudgetEndDate()).isBefore
