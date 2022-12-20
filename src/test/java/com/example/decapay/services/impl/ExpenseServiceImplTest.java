@@ -18,6 +18,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ExpenseServiceImplTest {
@@ -45,5 +47,24 @@ class ExpenseServiceImplTest {
         when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
 
         assertEquals(expenseService.createExpense(expenseRequestDto,lineItem.getId()).getStatusCode(), HttpStatus.OK);
+    }
+
+
+    @Test
+    void deleteExpense() {
+        LineItem lineItem =new LineItem();
+        lineItem.setId(1L);
+        Expense expense=new Expense();
+        expense.setAmount(BigDecimal.valueOf(100000));
+        expense.setId(1L);
+        expense.setLineItem(lineItem);
+
+
+
+        given(expenseRepository.findById(anyLong())).willReturn(Optional.of(expense));
+
+        Boolean result = expenseService.deleteExpense(expense.getId());
+        assertEquals( true, result);
+
     }
 }
