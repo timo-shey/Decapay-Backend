@@ -1,6 +1,8 @@
 package com.example.decapay.controllers;
 
 import com.example.decapay.pojos.requestDtos.BudgetDto;
+import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
+import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
 import com.example.decapay.services.BudgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,16 @@ import javax.validation.Valid;
 public class BudgetController {
 
     private final BudgetService budgetService;
+
+    @PostMapping
+    public ResponseEntity<CreateBudgetResponse> createBudget(@Valid @RequestBody CreateBudgetRequest request){
+        return new ResponseEntity<>(budgetService.createBudget(request), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{budgetId}")
+    public ResponseEntity<CreateBudgetResponse> fetchBudget(@PathVariable(name = "budgetId")Long budgetId){
+        return ResponseEntity.ok(budgetService.fetchBudgetById(budgetId));
+    }
 
     @DeleteMapping("/{budgetId}")
     public ResponseEntity<String> deleteBudget(@PathVariable Long budgetId){
