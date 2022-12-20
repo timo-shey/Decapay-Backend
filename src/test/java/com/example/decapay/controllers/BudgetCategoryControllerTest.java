@@ -1,5 +1,6 @@
 package com.example.decapay.controllers;
 
+import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtAuthFilter;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.BudgetCategoryRequest;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +37,9 @@ class BudgetCategoryControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private CustomUserDetailService customUserDetailService;
 
     @MockBean
     private UserUtil userUtil;
@@ -66,6 +71,15 @@ class BudgetCategoryControllerTest {
         mockMvc.perform(post("/api/v1/budgets/category/create")
                         .contentType("application/json")
                         .content(requestBody))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testDeleteBudgetCategory() throws Exception {
+
+        long budgetCategoryId = 1L;
+
+        mockMvc.perform(delete("/api/v1/budgets/category/{budgetCategoryId}", budgetCategoryId))
                 .andExpect(status().isOk());
     }
 }

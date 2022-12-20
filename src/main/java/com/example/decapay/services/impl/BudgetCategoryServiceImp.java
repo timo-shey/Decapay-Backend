@@ -1,5 +1,8 @@
 package com.example.decapay.services.impl;
 
+import com.example.decapay.exceptions.AuthenticationException;
+import com.example.decapay.exceptions.ResourceNotFoundException;
+import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.models.BudgetCategory;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.BudgetCategoryRequest;
@@ -43,5 +46,29 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
 
 
 
+    }
+
+    @Override
+    public void deleteBudgetCategory(Long budgetCategoryId) {
+
+        User user = userRepository.findByEmail(userUtil.getAuthenticatedUserEmail())
+                .orElseThrow(() -> new UserNotFoundException(
+                        HttpStatus.BAD_REQUEST, "specified user not found in the database"));
+
+        BudgetCategory budgetCategory = budgetCategoryRepository.findById(budgetCategoryId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        HttpStatus.BAD_REQUEST, "Specified budget category not found"));
+
+        if (budgetCategory.isDeleted()) {
+            throw new ResourceNotFoundException(
+                    HttpStatus.BAD_REQUEST, "Budget Category specified already deleted");
+        }
+
+        if (!(budgetCategory.getUser().getId().equals(user.getId()))){
+            throw new AuthenticationException("Action Not Authorized");
+        }
+
+        budgetCategory.setDeleted(true);
+        budgetCategoryRepository.save(budgetCategory);
     }
 }
