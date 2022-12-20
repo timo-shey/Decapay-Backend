@@ -52,7 +52,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Boolean deleteExpense(Long id){
 
-        Expense expense=expenseRepository.findById(id).orElseThrow(()->new RuntimeException("Expense not found"));
+        Expense expense=expenseRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Expense not found",HttpStatus.BAD_REQUEST,"Please select a valid Expense"));
         expenseRepository.delete(expense);
         return true;
 
