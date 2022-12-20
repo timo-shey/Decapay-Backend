@@ -79,7 +79,7 @@ class BudgetControllerTest {
     @Test
     void checkIfBudgetIsUpdated() throws Exception {
 
-       // long budgetId = 1L;
+
 
         BudgetDto budgetDto = new BudgetDto();
         budgetDto.setBudgetId(123L);
