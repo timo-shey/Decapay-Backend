@@ -25,22 +25,22 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public ResponseEntity<ExpenseResponseDto> createExpense(ExpenseRequestDto expenseRequestDto, Long lineId) {
-        //get total amount from the line item repo and assign to a variable
+
         LineItem lineItem = lineItemRepository.findById(lineId).orElseThrow(() -> new ResourceNotFoundException("Line item does not exist", HttpStatus.NOT_FOUND, "Please select a valid line item"));
         BigDecimal totalAmount = lineItem.getTotalAmountSpent();
 
-        //create new expense in the repo
+
         Expense expense = new Expense();
         expense.setAmount(expenseRequestDto.getAmount());
         expense.setDescription(expenseRequestDto.getDescription());
         expenseRepository.save(expense);
 
-        //set new total by adding currently logged expense to the existing expense in the lineitem repo
+
         BigDecimal newTotal = totalAmount.add(expense.getAmount());
         lineItem.setTotalAmountSpent(newTotal);
         lineItemRepository.save(lineItem);
 
-        //set the response to the user
+
         ExpenseResponseDto expenseResponseDto = new ExpenseResponseDto();
         expenseResponseDto.setAmount(expense.getAmount());
         expenseResponseDto.setDescription(expense.getDescription());
