@@ -1,14 +1,15 @@
 package com.example.decapay.pojos.requestDtos;
 
 import com.example.decapay.enums.BudgetPeriod;
+import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Budget;
+import com.example.decapay.utils.DateParser;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Data
 @RequiredArgsConstructor
@@ -34,29 +35,48 @@ public class CreateBudgetRequest {
     @Max(2100)
     private int year;
 
+
+
     public static Budget mapCreateBudgetRequestToBudget (CreateBudgetRequest request){
         Budget budget = new Budget();
         budget.setTitle(request.getTitle());
         budget.setAmount(request.getAmount());
         budget.setDescription(request.getDescription());
-        budget.setBudgetPeriod(BudgetPeriod.valueOf(request.getPeriod()));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate budgetStartDate = LocalDate.parse(request.getBudgetStartDate(), formatter);
-        LocalDate budgetEndDate = LocalDate.parse(request.getBudgetEndDate(), formatter);
-        if (request.getPeriod().equalsIgnoreCase(String.valueOf(BudgetPeriod.ANNUAL))){
-            budget.setStartDate(LocalDate.now());
-            budget.setEndDate(LocalDate.ofEpochDay(request.getYear()));
-        } else if (request.getPeriod().equalsIgnoreCase(String.valueOf(BudgetPeriod.MONTHLY))){
-            budget.setStartDate(LocalDate.now());
-            budget.setEndDate(LocalDate.ofEpochDay(request.getMonth()));
-        } else if (request.getPeriod().equalsIgnoreCase(String.valueOf(BudgetPeriod.WEEKLY))) {
-            budget.setStartDate(LocalDate.now());
-            budget.setEndDate(budgetEndDate);
-        } else if (request.getPeriod().equalsIgnoreCase(String.valueOf(BudgetPeriod.DAILY))) {
-            budget.setStartDate(budgetStartDate);
-        } else if (request.getPeriod().equalsIgnoreCase(String.valueOf(BudgetPeriod.CUSTOM))) {
-            budget.setStartDate(budgetStartDate);
-            budget.setEndDate(budgetEndDate);
+
+        String period = request.getPeriod();
+        budget.setBudgetPeriod(BudgetPeriod.valueOf(period));
+
+
+        LocalDate year = LocalDate.of(request.getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+
+        if (request.getPeriod().equals(String.valueOf(BudgetPeriod.ANNUAL))){
+            if(year.isBefore(LocalDate.now()))
+                throw new ValidationException("Invalid Date. Please enter a new year.");
+            else {
+                budget.setStartDate(year.minusYears(1L));
+                budget.setEndDate(year);
+            }
+        } else if (request.getPeriod().equals(String.valueOf(BudgetPeriod.MONTHLY))){
+            LocalDate month = LocalDate.of(request.getYear(), request.getMonth(), LocalDate.now().getDayOfMonth());
+            budget.setStartDate(month.minusMonths(1L));
+            budget.setEndDate(month);
+
+        } else if (request.getPeriod().equals(String.valueOf(BudgetPeriod.WEEKLY))) {
+            budget.setStartDate(DateParser.parseDate(request.getBudgetStartDate()).minusWeeks(1L));
+            budget.setEndDate(DateParser.parseDate(request.getBudgetStartDate()));
+
+        } else if (request.getPeriod().equals(String.valueOf(BudgetPeriod.DAILY))) {
+            budget.setStartDate(DateParser.parseDate(request.getBudgetStartDate()));
+            budget.setEndDate(DateParser.parseDate(request.getBudgetStartDate()).plusDays(1L));
+
+        } else if (request.getPeriod().equals(String.valueOf(BudgetPeriod.CUSTOM))) {
+            if(DateParser.parseDate(request.getBudgetEndDate()).isBefore
+                    (DateParser.parseDate(request.getBudgetStartDate())))
+                throw new ValidationException("Invalid Date. Please enter a valid date.");
+            else {
+                budget.setStartDate(DateParser.parseDate(request.getBudgetStartDate()));
+                budget.setEndDate(DateParser.parseDate(request.getBudgetEndDate()));
+            }
         }
         return budget;
     }
