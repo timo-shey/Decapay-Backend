@@ -4,6 +4,7 @@ package com.example.decapay.controllers;
 import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtAuthFilter;
 import com.example.decapay.pojos.expenseDto.ExpenseRequestDto;
+import com.example.decapay.pojos.expenseDto.ExpenseResponseDto;
 import com.example.decapay.services.impl.ExpenseServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,6 +47,10 @@ class ExpenseControllerTest {
     private WebApplicationContext context;
     @Autowired
     private ObjectMapper objectMapper;
+    @MockBean
+    private ExpenseResponseDto expenseResponseDto;
+
+
 
 
     @BeforeEach
@@ -65,6 +73,26 @@ class ExpenseControllerTest {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+    }
+
+
+    @Test
+    void updateExpense() throws Exception {
+
+        Long expenseId = 1L;
+        expenseResponseDto = new ExpenseResponseDto();
+        ExpenseRequestDto expenseRequestDto = ExpenseRequestDto.builder()
+                .amount(new BigDecimal("13000")).description("Expenses")
+                .build();
+
+        given(expenseService.updateExpense(expenseRequestDto, expenseId)).willReturn(ResponseEntity.ok(expenseResponseDto));
+
+        String requestBody = objectMapper.writeValueAsString(expenseRequestDto);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/expense/update/{expenseId}", expenseId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isOk());
 
     }
 }

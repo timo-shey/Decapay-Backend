@@ -65,6 +65,25 @@ class ExpenseServiceImplTest {
 
         Boolean result = expenseService.deleteExpense(expense.getId());
         assertEquals( true, result);
+    }
 
+
+    @Test
+    void updateExpense() {
+
+        Long expenseId = 1L;
+        ExpenseRequestDto expenseRequestDto = ExpenseRequestDto.builder()
+                .amount(new BigDecimal(3000))
+                .description("expenses update").build();
+
+        Expense expense = new Expense();
+        expense.setId(1L);
+        expense.setAmount(new BigDecimal(3000));
+        expense.setDescription("test expenses");
+
+        when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
+        when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
+
+        assertEquals(expenseService.updateExpense(expenseRequestDto, expenseId).getStatusCode(), HttpStatus.OK);
     }
 }
