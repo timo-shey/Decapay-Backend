@@ -8,7 +8,6 @@ import com.example.decapay.pojos.expenseDto.ExpenseResponseDto;
 import com.example.decapay.repositories.ExpenseRepository;
 import com.example.decapay.repositories.LineItemRepository;
 import com.example.decapay.services.ExpenseService;
-import com.example.decapay.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +46,15 @@ public class ExpenseServiceImpl implements ExpenseService {
         expenseResponseDto.setCreatedAt(expense.getCreatedAt());
 
         return ResponseEntity.ok(expenseResponseDto);
+    }
+
+
+    @Override
+    public Boolean deleteExpense(Long id){
+
+        Expense expense=expenseRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Expense not found",HttpStatus.BAD_REQUEST,"Please select a valid Expense"));
+        expenseRepository.delete(expense);
+        return true;
+
     }
 }
