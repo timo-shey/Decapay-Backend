@@ -3,6 +3,7 @@ package com.example.decapay.services.impl;
 import com.example.decapay.models.BudgetCategory;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.BudgetCategoryRequest;
+import com.example.decapay.pojos.responseDtos.BudgetCategoryResponse;
 import com.example.decapay.repositories.BudgetCategoryRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetCategoryService;
@@ -27,7 +28,7 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
     private final UserUtil userUtil;
 
     @Override
-    public ResponseEntity<String> createBudgetCategory(BudgetCategoryRequest budgetCategoryRequest) {
+    public BudgetCategoryResponse createBudgetCategory(BudgetCategoryRequest budgetCategoryRequest) {
 
         String email= userUtil.getAuthenticatedUserEmail();
 
@@ -39,9 +40,13 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
         budgetCategory.setName(budgetCategoryRequest.getName());
         budgetCategory.setUser(user);
 
-        budgetCategoryRepository.save(budgetCategory);
+        budgetCategory=budgetCategoryRepository.save(budgetCategory);
 
-        return ResponseEntity.ok("Budget category added");
+       BudgetCategoryResponse budgetCategoryResponse= BudgetCategoryResponse.mapFrom(budgetCategory);
+
+       return budgetCategoryResponse;
+
+
 
     }
 }
