@@ -1,8 +1,6 @@
 package com.example.decapay.pojos.expenseDto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +8,8 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExpenseRequestDto {
     @Min(1)
     private BigDecimal amount;
