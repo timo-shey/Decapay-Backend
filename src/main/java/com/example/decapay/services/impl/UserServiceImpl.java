@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
         String email = userUtil.getAuthenticatedUserEmail();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+                .orElseThrow(() -> new UserNotFoundException("User Not Found",HttpStatus.NOT_FOUND,"Contact Admin"));
         String pictureUrl = cloudinaryUtils.createOrUpdateImage(image, user);
         if (pictureUrl.equals("unsuccessful"))
             return ResponseEntity.unprocessableEntity().body("Network not available at the moment. please try again later");
@@ -196,10 +196,15 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return ResponseEntity.ok("Profile picture uploaded successfully");
     }
-    public User getUserByEmail(String email) {
 
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(
-                        HttpStatus.BAD_REQUEST, "User with email: " + email + " Not Found"));
+    @Override
+    public User getUserByEmail(String email) {
+        return null;
     }
+//    public User getUserByEmail(String email) {
+//
+//        return userRepository.findByEmail(email)
+//                .orElseThrow(() -> new UserNotFoundException(
+//                        HttpStatus.BAD_REQUEST, "User with email: " + email + " Not Found"));
+//    }
 }
