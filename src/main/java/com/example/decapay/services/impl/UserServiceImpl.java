@@ -197,14 +197,10 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok("Profile picture uploaded successfully");
     }
 
-    @Override
-    public User getUserByEmail(String email) {
-        return null;
+        public User getUserByEmail(String email) {
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new UserNotFoundException("User with email: " + email + " Not Found",HttpStatus.BAD_REQUEST,"Contact Admin"));
     }
-//    public User getUserByEmail(String email) {
-//
-//        return userRepository.findByEmail(email)
-//                .orElseThrow(() -> new UserNotFoundException(
-//                        HttpStatus.BAD_REQUEST, "User with email: " + email + " Not Found"));
-//    }
 }

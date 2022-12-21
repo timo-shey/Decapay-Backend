@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -57,4 +59,10 @@ public class ExpenseServiceImpl implements ExpenseService {
         return true;
 
     }
+
+    @Override
+    public List<Expense> getExpenses(Long lineId) {
+        return expenseRepository.findAllLineItemById(lineId);
+    }
+
 }
