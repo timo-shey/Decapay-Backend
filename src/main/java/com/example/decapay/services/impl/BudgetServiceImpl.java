@@ -160,19 +160,6 @@ public class BudgetServiceImpl implements BudgetService {
         saveBudget(budget, user);
         return BudgetDtoResponse.convertBudgetToBudgetDtoResponse(budget);
 
-//        Budget budget = getBudget(budgetId);
-//
-//        budget.setTitle(budgetDto.getTitle());
-//        budget.setAmount(budgetDto.getAmount());
-//        budget.setDescription(budgetDto.getDescription());
-//        budget.setUpdatedAt(budgetDto.getUpdatedAt());
-//        budget.setBudgetPeriod(budgetDto.getBudgetPeriod());
-//        budget.setStartDate(LocalDate.from(LocalDateTime.now()));
-//        budget.setEndDate(LocalDate.from(LocalDateTime.now()));
-//
-//        budgetRepository.save(budget);
-//
-//        return budgetDto;
     }
 
     private Budget getBudget(Long budgetId) {
