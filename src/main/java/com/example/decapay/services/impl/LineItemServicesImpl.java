@@ -29,7 +29,7 @@ public class LineItemServicesImpl implements LineItemServices {
 
 
 
-    public ResponseEntity<LineItemResponseDto> createLineItem (LineItemRequestDto lineItemRequestDto) {
+    public LineItemResponseDto createLineItem (LineItemRequestDto lineItemRequestDto) {
         Budget budget = budgetRepository.findById(lineItemRequestDto.getBudgetId()).orElseThrow( ()
                 -> new ResourceNotFoundException("cannot create line item", HttpStatus.FORBIDDEN, "please select a budget"));
         BudgetCategory budgetCategory = budgetCategoryRepository.findById(lineItemRequestDto.getBudgetCategoryId()).orElseThrow(()
@@ -40,16 +40,15 @@ public class LineItemServicesImpl implements LineItemServices {
         newLineItem.setProjectedAmount(lineItemRequestDto.getProjectedAmount());
         newLineItem.setBudget(budget);
 
-        lineItemRepository.save(newLineItem);
+        newLineItem =  lineItemRepository.save(newLineItem);
 
         LineItemResponseDto lineItemResponseDto = new LineItemResponseDto();
-        lineItemResponseDto.setLineItemId(lineItemResponseDto.getLineItemId());
-        lineItemResponseDto.setBudgetAmount(lineItemResponseDto.getBudgetAmount());
-        lineItemResponseDto.setBudgetCategoryName(lineItemResponseDto.getBudgetCategoryName());
-        lineItemResponseDto.setProjectedAmount(lineItemResponseDto.getProjectedAmount());
-        lineItemResponseDto.setTotalAmountSpent(lineItemResponseDto.getTotalAmountSpent());
+        lineItemResponseDto.setLineItemId(newLineItem.getId());
+        lineItemResponseDto.setBudgetAmount(newLineItem.getBudget().getAmount());
+        lineItemResponseDto.setBudgetCategoryName(newLineItem.getBudgetCategory().getName());
+        lineItemResponseDto.setProjectedAmount(newLineItem.getProjectedAmount());
 
-        return new ResponseEntity<>(lineItemResponseDto, HttpStatus.CREATED);
+        return lineItemResponseDto;
     }
 
     @Override

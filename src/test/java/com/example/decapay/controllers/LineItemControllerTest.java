@@ -47,17 +47,14 @@ class LineItemControllerTest {
     @Test
     void createLineItem() throws Exception {
 
-        lineItemResponseDto = new LineItemResponseDto();
-        LineItemRequestDto lineItemRequestDto1 = LineItemRequestDto.builder()
-                .projectedAmount(new BigDecimal("3000"))
-                .build();
 
-        given(lineItemServices.createLineItem(lineItemRequestDto1)).willReturn(ResponseEntity.ok(lineItemResponseDto));
-        String lineItemJson = mapper.writeValueAsString(lineItemRequestDto1);
+        LineItemRequestDto lineItemRequestDto = new LineItemRequestDto();
+        String lineItemJson = mapper.writeValueAsString(lineItemRequestDto);
+
         mockMvc.perform(post("/api/v1/user/line-items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(lineItemJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
     }
     @Test

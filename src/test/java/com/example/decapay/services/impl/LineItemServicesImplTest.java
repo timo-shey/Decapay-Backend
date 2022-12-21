@@ -53,24 +53,25 @@ class LineItemServicesImplTest {
     @Test
     void createLineItem() {
 
-        LineItem newLineItem = new LineItem();
-        newLineItem.setBudgetCategory(new BudgetCategory());
-        newLineItem.setProjectedAmount(new BigDecimal("50000"));
-        newLineItem.setBudget(new Budget());
-        lineItemRepositoryMock.save(newLineItem);
+        LineItemRequestDto lineItemRequestDto = LineItemRequestDto.builder()
+                .projectedAmount(new BigDecimal("20000"))
+                .budgetCategoryId(1L)
+                .budgetId(2L)
+                .build();
+
+        LineItem lineItem = new LineItem();
+        lineItem.setId(1L);
+        lineItem.setProjectedAmount(new BigDecimal("20000"));
+        lineItem.setBudget(new Budget());
+        lineItem.setBudgetCategory(new BudgetCategory());
+
+        when(budgetRepository.findById(lineItemRequestDto.getBudgetId())).thenReturn(Optional.of(new Budget()));
+        when(budgetCategoryRepository.findById(lineItemRequestDto.getBudgetCategoryId())).thenReturn(Optional.of(new BudgetCategory()));
+        when(lineItemRepositoryMock.save(any(LineItem.class))).thenReturn(lineItem);
+
+        assertEquals(lineItemServicesImlMcok.createLineItem(lineItemRequestDto).getLineItemId(),  1L);
 
 
-        LineItemResponseDto lineItemResponseDto = new LineItemResponseDto();
-        lineItemResponseDto.setLineItemId(2L);
-        lineItemResponseDto.setBudgetAmount(new BigDecimal("2000"));
-        lineItemResponseDto.setBudgetCategoryName("example of category");
-        lineItemResponseDto.setProjectedAmount(new BigDecimal("5000"));
-        lineItemResponseDto.setTotalAmountSpent(new BigDecimal("7000"));
-
-        when(budgetRepository.findById(budget.getId())).thenReturn(Optional.of(budget));
-        when(budgetCategoryRepository.findById(budgetCategory.getId())).thenReturn(Optional.of(budgetCategory));
-
-        assertEquals(lineItemServicesImlMcok.createLineItem(lineItemRequestDto).getStatusCode(), HttpStatus.CREATED);
     }
 
     @Test
