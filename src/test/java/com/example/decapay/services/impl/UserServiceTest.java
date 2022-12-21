@@ -6,7 +6,6 @@ import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.UserService;
-import com.example.decapay.services.impl.UserServiceImpl;
 import com.example.decapay.utils.MailSenderUtil;
 import com.example.decapay.utils.UserIdUtil;
 import com.example.decapay.utils.UserUtil;
@@ -17,7 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.Optional;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
