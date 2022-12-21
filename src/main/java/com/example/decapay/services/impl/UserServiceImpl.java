@@ -5,19 +5,20 @@ import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtUtils;
 import com.example.decapay.enums.Status;
 import com.example.decapay.enums.VerificationType;
-import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.exceptions.UserAlreadyExistException;
 import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
-
+import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
-
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
+import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.UserService;
+import com.example.decapay.utils.CloudinaryUtils;
 import com.example.decapay.utils.MailSenderUtil;
 import com.example.decapay.utils.UserIdUtil;
+import com.example.decapay.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-import com.example.decapay.models.User;
-import com.example.decapay.repositories.UserRepository;
-
-import com.example.decapay.utils.UserUtil;
-
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.InputMismatchException;
 
 @Service
@@ -66,6 +63,9 @@ public class UserServiceImpl implements UserService {
     private CustomUserDetailService customUserDetailService;
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private CloudinaryUtils cloudinaryUtils;
 
 
     @Override
@@ -185,12 +185,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByEmail(String email) {
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(
-                        HttpStatus.BAD_REQUEST, "User with email: " + email + " Not Found"));
+    public ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
+        String email = userUtil.getAuthenticatedUserEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User Not Found",HttpStatus.NOT_FOUND,"Contact Admin"));
+        String pictureUrl = cloudinaryUtils.createOrUpdateImage(image, user);
+        if (pictureUrl.equals("unsuccessful"))
+            return ResponseEntity.unprocessableEntity().body("Network not available at the moment. please try again later");
+        user.setImagePath(pictureUrl);
+        userRepository.save(user);
+        return ResponseEntity.ok("Profile picture uploaded successfully");
     }
 
-
+    @Override
+    public User getUserByEmail(String email) {
+        return null;
+    }
+//    public User getUserByEmail(String email) {
+//
+//        return userRepository.findByEmail(email)
+//                .orElseThrow(() -> new UserNotFoundException(
+//                        HttpStatus.BAD_REQUEST, "User with email: " + email + " Not Found"));
+//    }
 }

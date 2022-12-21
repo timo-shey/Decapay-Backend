@@ -6,7 +6,6 @@ import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.UserRequestDto;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.services.UserService;
-import com.example.decapay.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

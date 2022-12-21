@@ -132,7 +132,7 @@ class BudgetServiceImplTest {
         LocalDate endDate = DateParser.parseDate("2023-01-19");
         Budget budget = new Budget();
         budget.setAmount(BigDecimal.valueOf(1000));
-        budget.setBudgetPeriod(BudgetPeriod.MONTHLY);
+        budget.setBudgetPeriod(BudgetPeriod.CUSTOM);
         budget.setTitle("Test");
         budget.setId(2L);
         budget.setDescription("Testing....");
