@@ -1,13 +1,11 @@
 package com.example.decapay.services.impl;
 
-import com.example.decapay.configurations.security.JwtUtils;
 import com.example.decapay.exceptions.WrongPasswordException;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.PasswordUpdateRequest;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.PasswordUpdateService;
 import com.example.decapay.utils.UserUtil;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,12 +34,12 @@ public class PasswordUpdateServiceImpl  implements PasswordUpdateService {
         if(optionalUser.isPresent()){
             User user = optionalUser.get();
             String encodedPassword = user.getPassword();
-            Boolean matches = passwordEncoder.matches(password, encodedPassword);
+            boolean isPasswordAmatch = passwordEncoder.matches(password, encodedPassword);
 
-            if(!matches) throw new WrongPasswordException(HttpStatus.BAD_REQUEST, "incorrect password" );
+            if(!isPasswordAmatch) throw new WrongPasswordException(HttpStatus.BAD_REQUEST, "incorrect password" );
 
-            Boolean equals = newPassword.equals(confirmPassword);
-            if(!equals) throw new WrongPasswordException(HttpStatus.BAD_REQUEST, "new password does not match");
+            boolean isPasswordEquals = newPassword.equals(confirmPassword);
+            if(!isPasswordEquals) throw new WrongPasswordException(HttpStatus.BAD_REQUEST, "new password does not match");
 
             user.setPassword(passwordEncoder.encode(newPassword));
 

@@ -1,15 +1,14 @@
 package com.example.decapay.models;
 
+import com.example.decapay.enums.BudgetPeriod;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -26,14 +25,18 @@ public class Budget extends BaseEntity{
 
     private String title;
     private BigDecimal amount;
+    private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
-    @Timestamp
-    private LocalDateTime startDate;
+    @Enumerated(value = EnumType.STRING)
+    private BudgetPeriod budgetPeriod;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Timestamp
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @Timestamp
+    private LocalDate endDate;
 
     @OneToMany(mappedBy = "budget", cascade = CascadeType.ALL)
     private List<LineItem> lineItems;
