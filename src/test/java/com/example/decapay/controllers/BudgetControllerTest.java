@@ -2,7 +2,7 @@ package com.example.decapay.controllers;
 
 import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtAuthFilter;
-import com.example.decapay.pojos.responseDtos.BudgetRest;
+import com.example.decapay.pojos.responseDtos.BudgetViewModel;
 import com.example.decapay.pojos.responseDtos.LineItemRest;
 import com.example.decapay.services.BudgetService;
 import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
@@ -80,16 +80,16 @@ class BudgetControllerTest {
         List<LineItemRest> lineItems = new ArrayList<>();
         lineItems.add(lineItemRest);
 
-        List<BudgetRest> budgetRests = new ArrayList<>();
-        BudgetRest budgetRest = new BudgetRest();
-        budgetRest.setAmount(new BigDecimal(5000));
-        budgetRest.setTotalAmountSpent(new BigDecimal(4000));
-        budgetRest.setPercentage(new BigDecimal("0.8"));
-        budgetRest.setLineItemRests(lineItems);
+        List<BudgetViewModel> budgetViewModels = new ArrayList<>();
+        BudgetViewModel budgetViewModel = new BudgetViewModel();
+        budgetViewModel.setAmount(new BigDecimal(5000));
+        budgetViewModel.setTotalAmountSpent(new BigDecimal(4000));
+        budgetViewModel.setPercentage(new BigDecimal("0.8"));
+        budgetViewModel.setLineItemRests(lineItems);
 
-        budgetRests.add(budgetRest);
+        budgetViewModels.add(budgetViewModel);
 
-        when(budgetService.getBudgets(eq(0), eq(10))).thenReturn(budgetRests);
+        when(budgetService.getBudgets(eq(0), eq(10))).thenReturn(budgetViewModels);
 
         String urlPath = "/api/v1/budgets";
 
