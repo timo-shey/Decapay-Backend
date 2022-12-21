@@ -21,4 +21,6 @@ public interface UserService {
     String verifyToken(String token);
 
     User getUserByEmail(String email);
+
+    void verifyUserExists(String userEmail);
 }

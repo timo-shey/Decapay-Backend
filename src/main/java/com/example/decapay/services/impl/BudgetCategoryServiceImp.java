@@ -7,6 +7,7 @@ import com.example.decapay.pojos.responseDtos.BudgetCategoryResponse;
 import com.example.decapay.repositories.BudgetCategoryRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetCategoryService;
+import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
     private final BudgetCategoryRepository budgetCategoryRepository;
     private  final UserRepository userRepository;
     private final UserUtil userUtil;
+    private final UserService userService;
 
     @Override
     public BudgetCategoryResponse createBudgetCategory(BudgetCategoryRequest budgetCategoryRequest) {
@@ -56,11 +58,16 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
     public BudgetCategoryResponse updateBudgetCategory(Long budgetCategoryId, BudgetCategoryRequest budgetCategoryRequest)
     {
 
-        String email = userUtil.getAuthenticatedUserEmail();
+        String email = userUtil
+                .getAuthenticatedUserEmail();
 
-        userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        userService.verifyUserExists(email);
 
-        BudgetCategory budgetCategory =   budgetCategoryRepository.findById(budgetCategoryId).orElseThrow(()-> new EntityNotFoundException("Budget not found"));
+        BudgetCategory budgetCategory =
+                budgetCategoryRepository
+                        .findById(budgetCategoryId)
+                        .orElseThrow(()-> new
+                                EntityNotFoundException("Budget not found"));
 
         BeanUtils.copyProperties(budgetCategoryRequest, budgetCategory);
 

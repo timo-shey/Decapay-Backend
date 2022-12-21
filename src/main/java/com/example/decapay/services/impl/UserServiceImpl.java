@@ -192,5 +192,11 @@ public class UserServiceImpl implements UserService {
                         HttpStatus.BAD_REQUEST, "User with email: " + email + " Not Found"));
     }
 
+    @Override
+    public void verifyUserExists(String userEmail) {
+        userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException(
+                        HttpStatus.BAD_REQUEST, "User with email: " + userEmail + " Not Found"));
 
+    }
 }
