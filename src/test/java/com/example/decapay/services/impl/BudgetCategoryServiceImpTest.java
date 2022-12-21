@@ -98,12 +98,10 @@ class BudgetCategoryServiceImpTest {
 
         //stub user object
         user.setId(1L);;
-        user.setDeleted(false);
         user.setEmail("testing@gmail.com");
 
         //stub budgetCategory object
         budgetCategory.setId(1L);
-        budgetCategory.setDeleted(false);
         budgetCategory.setUser(user);
 
         when(userService.getUserByEmail(anyString())).thenReturn(user);
