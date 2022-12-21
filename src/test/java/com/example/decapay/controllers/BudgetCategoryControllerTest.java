@@ -16,10 +16,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers=BudgetCategoryController.class)
@@ -66,6 +69,24 @@ class BudgetCategoryControllerTest {
         mockMvc.perform(post("/api/v1/budgets/category/create")
                         .contentType("application/json")
                         .content(requestBody))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void categoryList() throws Exception {
+        List<BudgetCategoryResponse> budgetCategoryResponses= new ArrayList<>();
+        User user =new User();
+        given(userUtil.getAuthenticatedUserEmail()).willReturn("peterhamza6@gmail.com");
+
+        given(userRepository.findByEmail("peterhamza6@gmail.com")).willReturn(Optional.of(user));
+
+        given(budgetCategoryService.listBudgetCategory()).willReturn(budgetCategoryResponses);
+
+
+        String requestBody = mapper.writeValueAsString(budgetCategoryResponses);
+        mockMvc.perform(get("/api/v1/budgets/category")
+                .contentType("application/json")
+                .content(requestBody))
                 .andExpect(status().isOk());
     }
 }
