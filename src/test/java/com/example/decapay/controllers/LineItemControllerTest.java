@@ -40,6 +40,26 @@ class LineItemControllerTest {
     LineItemServices lineItemServices;
     @MockBean
     LineItemResponseDto lineItemResponseDto;
+
+
+
+
+    @Test
+    void createLineItem() throws Exception {
+
+        lineItemResponseDto = new LineItemResponseDto();
+        LineItemRequestDto lineItemRequestDto1 = LineItemRequestDto.builder()
+                .projectedAmount(new BigDecimal("3000"))
+                .build();
+
+        given(lineItemServices.createLineItem(lineItemRequestDto1)).willReturn(ResponseEntity.ok(lineItemResponseDto));
+        String lineItemJson = mapper.writeValueAsString(lineItemRequestDto1);
+        mockMvc.perform(post("/api/v1/user/line-items")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(lineItemJson))
+                .andExpect(status().isOk());
+
+    }
     @Test
     void updateALineItem() throws Exception {
         Long lineItemId = 1L;
