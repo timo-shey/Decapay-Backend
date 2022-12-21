@@ -22,7 +22,7 @@ public class BudgetCategoryController {
         return ResponseEntity.ok("Budget category created");
     }
 
-    @DeleteMapping("/{category_id}")
+    @DeleteMapping("/{categoryId}")
     public ResponseEntity<String> deleteBudgetCategory(@PathVariable Long category_id){
         budgetCategoryService.deleteBudgetCategory(category_id);
         return ResponseEntity.ok("Budget Category successfully deleted");
