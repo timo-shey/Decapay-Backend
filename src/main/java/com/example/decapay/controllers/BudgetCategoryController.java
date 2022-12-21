@@ -23,7 +23,7 @@ public class BudgetCategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<String> deleteBudgetCategory(@PathVariable Long category_id){
+    public ResponseEntity<String> deleteBudgetCategory(@PathVariable Long categoryId){
         budgetCategoryService.deleteBudgetCategory(category_id);
         return ResponseEntity.ok("Budget Category successfully deleted");
     }
