@@ -7,20 +7,27 @@ import com.example.decapay.pojos.expenseDto.ExpenseRequestDto;
 import com.example.decapay.pojos.expenseDto.ExpenseResponseDto;
 import com.example.decapay.repositories.ExpenseRepository;
 import com.example.decapay.repositories.LineItemRepository;
+import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.ExpenseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ExpenseServiceImpl implements ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final LineItemRepository lineItemRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -60,6 +67,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    public ResponseEntity<Page<Expense>> getExpenses(Long lineId, Integer pageNo, Integer pageSize, String sortBy, boolean isAscending) {
+        Page<Expense> userPage = expenseRepository.findAllLineItemById(lineId, PageRequest.of(pageNo, pageSize,
+                isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy ));
+        return ResponseEntity.ok(userPage);
+    }
+
     @Transactional
     public ExpenseResponseDto updateExpense(ExpenseRequestDto expenseRequestDto, Long expenseId) {
 
