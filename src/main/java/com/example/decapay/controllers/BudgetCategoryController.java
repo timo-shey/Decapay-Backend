@@ -1,7 +1,6 @@
 package com.example.decapay.controllers;
 
 import com.example.decapay.pojos.requestDtos.BudgetCategoryRequest;
-import com.example.decapay.pojos.responseDtos.BudgetCategoryResponse;
 import com.example.decapay.services.BudgetCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

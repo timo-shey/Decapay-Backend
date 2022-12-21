@@ -4,6 +4,7 @@ import com.example.decapay.enums.BudgetPeriod;
 import com.example.decapay.models.Budget;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 @Data
 @RequiredArgsConstructor
+@ToString
 //@NoArgsConstructor
 public class CreateBudgetRequest {
     @NotNull(message = "Title is required")
