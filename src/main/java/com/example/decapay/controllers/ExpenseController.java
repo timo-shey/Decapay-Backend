@@ -38,4 +38,9 @@ public class ExpenseController {
                 return expenseService.getExpenses(lineId,pageNo,pageSize,sortBy, isAscending);
     }
 
+    @PutMapping("/update/{expenseId}")
+    public ResponseEntity<ExpenseResponseDto> updateExpense(@Valid @RequestBody ExpenseRequestDto expenseRequestDto,
+                                                            @PathVariable(name = "expenseId") Long expenseId ){
+        return new ResponseEntity<>(expenseService.updateExpense(expenseRequestDto, expenseId), HttpStatus.OK);
+    }
 }

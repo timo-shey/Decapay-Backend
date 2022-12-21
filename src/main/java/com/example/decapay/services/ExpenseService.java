@@ -14,4 +14,6 @@ public interface ExpenseService {
     Boolean deleteExpense(Long id);
 
     ResponseEntity<Page<Expense>> getExpenses(Long lineId, Integer pageNo, Integer pageSize, String sortBy, boolean isAscending);
+
+    ExpenseResponseDto updateExpense(ExpenseRequestDto expenseRequestDto, Long expenseId);
 }

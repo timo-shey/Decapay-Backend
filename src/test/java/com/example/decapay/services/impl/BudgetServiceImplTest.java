@@ -4,7 +4,7 @@ import com.example.decapay.enums.BudgetPeriod;
 import com.example.decapay.models.Budget;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.models.User;
-import com.example.decapay.pojos.responseDtos.BudgetRest;
+import com.example.decapay.pojos.responseDtos.BudgetViewModel;
 import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
 import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
 import com.example.decapay.repositories.BudgetRepository;
@@ -33,7 +33,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -84,12 +83,12 @@ class BudgetServiceImplTest {
         when(budgetRepository.findAllByUser(user, pageable)).thenReturn(budgetPage);
         when(lineItemRepository.findAllByBudget(any(Budget.class))).thenReturn(createLineItemList());
 
-        List<BudgetRest> budgetRest = budgetService.getBudgets(0, 2);
+        List<BudgetViewModel> budgetViewModel = budgetService.getBudgets(0, 2);
 
-        assertNotNull(budgetRest);
-        assertEquals(1, budgetRest.size());
-        assertEquals(new BigDecimal("0.6"), budgetRest.get(0).getPercentage());
-        assertEquals(new BigDecimal("0.94"), budgetRest.get(0).getLineItemRests().get(0).getPercentageSpentSoFar());
+        assertNotNull(budgetViewModel);
+        assertEquals(1, budgetViewModel.size());
+        assertEquals(new BigDecimal("0.6"), budgetViewModel.get(0).getPercentage());
+        assertEquals(new BigDecimal("0.94"), budgetViewModel.get(0).getLineItemRests().get(0).getPercentageSpentSoFar());
         verify(budgetRepository, times(1)).findAllByUser(any(User.class), any(Pageable.class));
 
     }

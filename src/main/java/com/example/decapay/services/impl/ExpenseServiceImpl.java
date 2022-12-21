@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,4 +73,23 @@ public class ExpenseServiceImpl implements ExpenseService {
         return ResponseEntity.ok(userPage);
     }
 
+    @Transactional
+    public ExpenseResponseDto updateExpense(ExpenseRequestDto expenseRequestDto, Long expenseId) {
+
+
+        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() ->
+        { throw new ResourceNotFoundException(HttpStatus.NOT_FOUND, "Expense not found");});
+
+        expense.setAmount(expenseRequestDto.getAmount());
+        expense.setDescription(expenseRequestDto.getDescription());
+        expense = expenseRepository.save(expense);
+
+
+        ExpenseResponseDto expenseResponseDto = new ExpenseResponseDto();
+        expenseResponseDto.setAmount(expense.getAmount());
+        expenseResponseDto.setDescription(expense.getDescription());
+        expenseResponseDto.setCreatedAt(expense.getCreatedAt());
+        return expenseResponseDto;
+
+    }
 }
