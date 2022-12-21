@@ -75,6 +75,7 @@ public class CloudinaryUtils {
 
             Map params = setImageParameter(user);
             try {
+                System.out.println(cloudinary.uploader().upload(filePath, params).get(config.getSecreteKey()).toString());
 
                 imageUrl = cloudinary.uploader().upload(filePath, params).get(config.getSecreteKey()).toString();
 
@@ -85,7 +86,7 @@ public class CloudinaryUtils {
                                 .background("auto:predominant"))
                         .imageTag(user.getUserId());
             } catch (Exception e) {
-                e.getMessage();
+                return "unsuccessful";
             }
 
 
