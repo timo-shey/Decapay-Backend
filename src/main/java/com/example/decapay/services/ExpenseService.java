@@ -8,4 +8,6 @@ public interface ExpenseService {
     ResponseEntity<ExpenseResponseDto> createExpense(ExpenseRequestDto expenseRequestDto, Long lineId);
 
     Boolean deleteExpense(Long id);
+
+    ExpenseResponseDto updateExpense(ExpenseRequestDto expenseRequestDto, Long expenseId);
 }
