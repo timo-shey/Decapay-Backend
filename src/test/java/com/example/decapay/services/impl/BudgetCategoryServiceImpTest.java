@@ -9,6 +9,7 @@ import com.example.decapay.repositories.BudgetCategoryRepository;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetCategoryService;
+import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserIdUtil;
 import com.example.decapay.utils.UserUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,10 +20,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BudgetCategoryServiceImpTest {
@@ -40,6 +43,9 @@ class BudgetCategoryServiceImpTest {
     private UserIdUtil userIdUtil;
     @Mock
     private UserUtil userUtil;
+
+    @Mock
+    private UserService userService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -61,7 +67,7 @@ class BudgetCategoryServiceImpTest {
     @BeforeEach
     void setUp() {
          budgetCategoryService=new BudgetCategoryServiceImp(
-                 budgetCategoryRepository,userRepository, userUtil
+                 budgetCategoryRepository,userRepository, userUtil, userService
          );
         budgetCategoryRequest=new BudgetCategoryRequest();
         budgetCategoryRequest.setName("Food Stuff");
@@ -83,5 +89,27 @@ class BudgetCategoryServiceImpTest {
 
         budgetCategoryService.createBudgetCategory(budgetCategoryRequest);
 
+    }
+
+    @Test
+    final void testDeleteBudgetCategory(){
+        User user = new User();
+       BudgetCategory budgetCategory = new BudgetCategory();
+
+        //stub user object
+        user.setId(1L);;
+        user.setEmail("testing@gmail.com");
+
+        //stub budgetCategory object
+        budgetCategory.setId(1L);
+        budgetCategory.setUser(user);
+
+        when(userService.getUserByEmail(anyString())).thenReturn(user);
+        when(userUtil.getAuthenticatedUserEmail()).thenReturn("testing@gmail.com");
+        when(budgetCategoryRepository.findById(1L)).thenReturn(Optional.of(budgetCategory));
+
+        budgetCategoryService.deleteBudgetCategory(budgetCategory.getId());
+        verify(budgetCategoryRepository).save(budgetCategory);
+        verify(budgetCategoryRepository,times(1)).save(any(BudgetCategory.class));
     }
 }

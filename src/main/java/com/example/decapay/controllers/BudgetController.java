@@ -1,6 +1,6 @@
 package com.example.decapay.controllers;
 
-import com.example.decapay.pojos.responseDtos.BudgetRest;
+import com.example.decapay.pojos.responseDtos.BudgetViewModel;
 import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
 import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
 import com.example.decapay.services.BudgetService;
@@ -20,9 +20,9 @@ public class BudgetController {
     private final BudgetService budgetService;
 
     @GetMapping
-    public ResponseEntity<List<BudgetRest>> getBudgets(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                       @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        List<BudgetRest> budgets = budgetService.getBudgets(page, limit);
+    public ResponseEntity<List<BudgetViewModel>> getBudgets(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                            @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        List<BudgetViewModel> budgets = budgetService.getBudgets(page, limit);
         return ResponseEntity.ok(budgets);
     }
 

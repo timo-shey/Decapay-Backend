@@ -5,4 +5,6 @@ import com.example.decapay.pojos.responseDtos.BudgetCategoryResponse;
 
 public interface BudgetCategoryService {
     BudgetCategoryResponse createBudgetCategory(BudgetCategoryRequest budgetCategoryRequest);
+
+    public void deleteBudgetCategory (Long budgetCategoryId);
 }
