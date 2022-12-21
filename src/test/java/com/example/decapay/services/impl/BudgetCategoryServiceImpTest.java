@@ -20,18 +20,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
-import java.util.Optional;
-
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class BudgetCategoryServiceImpTest {
@@ -87,4 +83,22 @@ class BudgetCategoryServiceImpTest {
 
 
     }
+    @Test
+    void listBudgetCategory() {
+
+        List<BudgetCategoryResponse> budgetCategoryResponses = new ArrayList<>();
+
+        List<BudgetCategory> budgetCategories= new ArrayList<>();
+
+        User user = new User();
+        given(userUtil.getAuthenticatedUserEmail()).willReturn("peterhamza6@gmail.com");
+
+        given(userRepository.findByEmail("peterhamza6@gmail.com")).willReturn(Optional.of(user));
+
+        lenient().when(budgetCategoryRepository.findByUser(user)).thenReturn(budgetCategories);
+
+        lenient().when(budgetCategoryService.listBudgetCategory()).thenReturn(budgetCategoryResponses);
+
+    }
+
 }

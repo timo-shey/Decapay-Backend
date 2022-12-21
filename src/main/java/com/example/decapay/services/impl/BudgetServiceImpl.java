@@ -5,7 +5,7 @@ import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.models.Budget;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.models.User;
-import com.example.decapay.pojos.responseDtos.BudgetRest;
+import com.example.decapay.pojos.responseDtos.BudgetViewModel;
 import com.example.decapay.pojos.responseDtos.LineItemRest;
 import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
 import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
@@ -37,7 +37,7 @@ public class BudgetServiceImpl implements BudgetService {
     private final UserUtil userUtil;
 
     @Override
-    public List<BudgetRest> getBudgets(int page, int limit) {
+    public List<BudgetViewModel> getBudgets(int page, int limit) {
         String email = userUtil.getAuthenticatedUserEmail();
         User user = userService.getUserByEmail(email);
 
@@ -48,29 +48,29 @@ public class BudgetServiceImpl implements BudgetService {
 
         List<Budget> budgets = budgetPage.getContent();
 
-        return budgetRest(budgets);
+        return getBudgetRest(budgets);
     }
 
-    private List<BudgetRest> budgetRest(List<Budget> budgets) {
-        List<BudgetRest> budgetRestList = new ArrayList<>();
+    private List<BudgetViewModel> getBudgetRest(List<Budget> budgets) {
+        List<BudgetViewModel> budgetViewModelList = new ArrayList<>();
 
         budgets.forEach(budget -> {
-            BudgetRest budgetRest = new BudgetRest();
-            budgetRest.setAmount(budget.getAmount());
+            BudgetViewModel budgetViewModel = new BudgetViewModel();
+            budgetViewModel.setAmount(budget.getAmount());
 
             List<LineItem> lineItems = lineItemRepository.findAllByBudget(budget);
             BigDecimal totalAmountSpent = lineItems.stream()
                     .map(LineItem::getTotalAmountSpent)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            budgetRest.setTotalAmountSpent(totalAmountSpent);
+            budgetViewModel.setTotalAmountSpent(totalAmountSpent);
 
             BigDecimal percentage = totalAmountSpent.divide(budget.getAmount(), new MathContext(2));
-            budgetRest.setPercentage(percentage);
-            budgetRest.setLineItemRests(getLineItemRest(lineItems));
-            budgetRestList.add(budgetRest);
+            budgetViewModel.setPercentage(percentage);
+            budgetViewModel.setLineItemRests(getLineItemRest(lineItems));
+            budgetViewModelList.add(budgetViewModel);
         });
 
-        return budgetRestList;
+        return budgetViewModelList;
     }
 
     private List<LineItemRest> getLineItemRest(List<LineItem> lineItems) {
