@@ -2,8 +2,8 @@ package com.example.decapay.repositories;
 
 import com.example.decapay.models.BudgetCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface BudgetCategoryRepository extends JpaRepository<BudgetCategory, Long> {
-
-
+@Repository
+public interface BudgetCategoryRepository extends JpaRepository<BudgetCategory,Long> {
 }

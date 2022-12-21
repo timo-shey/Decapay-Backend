@@ -5,19 +5,19 @@ import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtUtils;
 import com.example.decapay.enums.Status;
 import com.example.decapay.enums.VerificationType;
-import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.exceptions.UserAlreadyExistException;
 import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
-
+import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
-
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
+import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.MailSenderUtil;
 import com.example.decapay.utils.UserIdUtil;
+import com.example.decapay.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +30,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
-import com.example.decapay.models.User;
-import com.example.decapay.repositories.UserRepository;
-
-import com.example.decapay.utils.UserUtil;
-
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
@@ -140,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest) {
+    public ResponseEntity<String> forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest) {
         String email = forgotPasswordRequest.getEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -157,34 +150,20 @@ public class UserServiceImpl implements UserService {
 
         String link = String.format("%s%s", forgotPasswordUrl, generatedToken + " expires in 15 minutes.");
         emailSenderService.sendPasswordResetEmail( forgotPasswordRequest.getEmail(), "forgot Password token", link);
-        return "Check your email for password reset instructions";
+        return ResponseEntity.ok("Check your email for password reset instructions");
     }
 
     @Override
-    public String resetPassword(ResetPasswordRequest request) {
+    public ResponseEntity<String> resetPassword(ResetPasswordRequest request) {
         if (!request.getNewPassword().equals(request.getConfirmPassword()))
             throw new InputMismatchException("Passwords do not match");
-
-
-
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-//        Token tokenEntity = tokenRepository.findByToken(token)
-//                .orElseThrow(() -> new ResourceNotFoundException(HttpStatus.NOT_FOUND, "Token does not exist."));
-//
-//        if (tokenEntity.getStatus().equals(Status.EXPIRED))
-//            throw new ResourceNotFoundException(HttpStatus.BAD_REQUEST, "Token expired.");
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
-        //todo: to be removed
-
-//        tokenEntity.setStatus(Status.EXPIRED);
-//        tokenRepository.save(tokenEntity);
-
-        return "Password reset successful";
+        return ResponseEntity.ok("Password reset successful");
     }
 
     @Override

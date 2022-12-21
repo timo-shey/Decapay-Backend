@@ -21,4 +21,8 @@ public class BudgetCategory extends BaseEntity{
     @ManyToOne()
     @JoinColumn(name = "user_tb_id")
     private User user;
+
+    @OneToOne
+    @JoinColumn(name = "line_item_tb_id")
+    private LineItem lineItem;
 }

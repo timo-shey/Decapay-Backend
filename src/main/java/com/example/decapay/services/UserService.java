@@ -14,9 +14,9 @@ public interface UserService {
 
     ResponseEntity<String> editUser(UserUpdateRequest userUpdateRequest);
 
-    String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest);
+    ResponseEntity<String> forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest);
 
-    String resetPassword(ResetPasswordRequest request);
+    ResponseEntity<String> resetPassword(ResetPasswordRequest request);
 
     String verifyToken(String token);
 
