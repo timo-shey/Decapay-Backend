@@ -1,15 +1,19 @@
 package com.example.decapay.services.impl;
 
+import com.example.decapay.enums.BudgetPeriod;
 import com.example.decapay.exceptions.AuthenticationException;
 import com.example.decapay.exceptions.ResourceNotFoundException;
+import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Budget;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.BudgetDto;
 import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
+import com.example.decapay.pojos.responseDtos.BudgetDtoResponse;
 import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
 import com.example.decapay.repositories.BudgetRepository;
 import com.example.decapay.services.BudgetService;
 import com.example.decapay.services.UserService;
+import com.example.decapay.utils.DateParser;
 import com.example.decapay.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static com.example.decapay.pojos.requestDtos.BudgetDto.mapBudgetDtoToBudget;
 
 @RequiredArgsConstructor
 @Service
@@ -64,7 +70,7 @@ public class BudgetServiceImpl implements BudgetService {
 
         boolean authorized = budget.getUser().getId().equals(user.getId());
 
-        if (!authorized){
+        if (!authorized) {
             throw new AuthenticationException("Action Not Authorized");
         }
 
@@ -72,21 +78,33 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public BudgetDto updateBudget(BudgetDto budgetDto, Long budgetId) {
+    public BudgetDtoResponse updateBudget(BudgetDto budgetDto, Long budgetId) {
+
+        String email = userUtil.getAuthenticatedUserEmail();
+        User user = userService.getUserByEmail(email);
 
         Budget budget = getBudget(budgetId);
-
+        budget.setId(budget.getId());
         budget.setTitle(budgetDto.getTitle());
         budget.setAmount(budgetDto.getAmount());
         budget.setDescription(budgetDto.getDescription());
-        budget.setUpdatedAt(budgetDto.getUpdatedAt());
-        budget.setBudgetPeriod(budgetDto.getBudgetPeriod());
-        budget.setStartDate(LocalDate.from(LocalDateTime.now()));
-        budget.setEndDate(LocalDate.from(LocalDateTime.now()));
+        mapBudgetDtoToBudget(budgetDto, budget);
+        saveBudget(budget, user);
+        return BudgetDtoResponse.convertBudgetToBudgetDtoResponse(budget);
 
-        budgetRepository.save(budget);
-
-        return budgetDto;
+//        Budget budget = getBudget(budgetId);
+//
+//        budget.setTitle(budgetDto.getTitle());
+//        budget.setAmount(budgetDto.getAmount());
+//        budget.setDescription(budgetDto.getDescription());
+//        budget.setUpdatedAt(budgetDto.getUpdatedAt());
+//        budget.setBudgetPeriod(budgetDto.getBudgetPeriod());
+//        budget.setStartDate(LocalDate.from(LocalDateTime.now()));
+//        budget.setEndDate(LocalDate.from(LocalDateTime.now()));
+//
+//        budgetRepository.save(budget);
+//
+//        return budgetDto;
     }
 
     private Budget getBudget(Long budgetId) {
@@ -95,8 +113,12 @@ public class BudgetServiceImpl implements BudgetService {
                         HttpStatus.BAD_REQUEST, "Budget with id: " + budgetId + " Not Found"));
     }
 
-    private void saveBudget(Budget budget, User user){
+    private void saveBudget(Budget budget, User user) {
         budget.setUser(user);
         budgetRepository.save(budget);
     }
+
+
+
+
 }

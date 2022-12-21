@@ -82,7 +82,7 @@ class BudgetControllerTest {
 
 
         BudgetDto budgetDto = new BudgetDto();
-        budgetDto.setBudgetId(123L);
+        budgetDto.setId(1L);
         budgetDto.setTitle("hello");
         budgetDto.setAmount(BigDecimal.valueOf(2321.00));
         budgetDto.setDescription("we won");
