@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 @Data
-public class BudgetRest {
+public class BudgetViewModel {
     private BigDecimal amount;
     private BigDecimal totalAmountSpent;
     private BigDecimal percentage;

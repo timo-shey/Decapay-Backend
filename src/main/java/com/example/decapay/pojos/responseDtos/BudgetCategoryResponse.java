@@ -2,8 +2,11 @@ package com.example.decapay.pojos.responseDtos;
 import com.example.decapay.models.BudgetCategory;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 @Getter
 @Setter
+@ToString
 
 
 public class BudgetCategoryResponse {
