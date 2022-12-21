@@ -3,6 +3,7 @@ package com.example.decapay.services.impl;
 import com.example.decapay.models.Expense;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.pojos.expenseDto.ExpenseRequestDto;
+import com.example.decapay.pojos.expenseDto.ExpenseResponseDto;
 import com.example.decapay.repositories.ExpenseRepository;
 import com.example.decapay.repositories.LineItemRepository;
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,9 @@ class ExpenseServiceImplTest {
         ExpenseRequestDto expenseRequestDto = ExpenseRequestDto.builder()
                 .amount(new BigDecimal(3000))
                 .description("expenses update").build();
+        ExpenseResponseDto expenseResponseDto = new ExpenseResponseDto();
+        expenseResponseDto.setAmount(expenseRequestDto.getAmount());
+        expenseResponseDto.setDescription(expenseRequestDto.getDescription());
 
         Expense expense = new Expense();
         expense.setId(1L);
@@ -84,6 +88,6 @@ class ExpenseServiceImplTest {
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
         when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
 
-        assertEquals(expenseService.updateExpense(expenseRequestDto, expenseId).getStatusCode(), HttpStatus.OK);
+        assertEquals(expenseService.updateExpense(expenseRequestDto, expenseId), expenseResponseDto);
     }
 }

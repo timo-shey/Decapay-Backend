@@ -61,7 +61,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    public ResponseEntity<ExpenseResponseDto> updateExpense(ExpenseRequestDto expenseRequestDto, Long expenseId) {
+    public ExpenseResponseDto updateExpense(ExpenseRequestDto expenseRequestDto, Long expenseId) {
 
 
         Expense expense = expenseRepository.findById(expenseId).orElseThrow(() ->
@@ -69,14 +69,14 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         expense.setAmount(expenseRequestDto.getAmount());
         expense.setDescription(expenseRequestDto.getDescription());
-
-
         expense = expenseRepository.save(expense);
+
+
         ExpenseResponseDto expenseResponseDto = new ExpenseResponseDto();
         expenseResponseDto.setAmount(expense.getAmount());
         expenseResponseDto.setDescription(expense.getDescription());
         expenseResponseDto.setCreatedAt(expense.getCreatedAt());
-        return new ResponseEntity<>(expenseResponseDto, HttpStatus.OK);
+        return expenseResponseDto;
 
     }
 }
