@@ -13,6 +13,7 @@ import com.example.decapay.services.BudgetCategoryService;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
