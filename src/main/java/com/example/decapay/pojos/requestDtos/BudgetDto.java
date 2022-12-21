@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 
 @Data
 @RequiredArgsConstructor
+@ToString
 public class BudgetDto {
 
     private Long id;
@@ -38,15 +39,15 @@ public class BudgetDto {
     @Min(1)
     @Max(12)
     private int month;
-    public BudgetDto(String title, BigDecimal amount, String budgetPeriod, LocalDateTime updatedAt, String startDate, String endDate, String description) {
-        this.title = title;
-        this.amount = amount;
-        this.budgetPeriod = budgetPeriod;
-        this.updatedAt = updatedAt;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.description = description;
-    }
+//    public BudgetDto(String title, BigDecimal amount, String budgetPeriod, LocalDateTime updatedAt, String startDate, String endDate, String description) {
+//        this.title = title;
+//        this.amount = amount;
+//        this.budgetPeriod = budgetPeriod;
+//        this.updatedAt = updatedAt;
+//        this.startDate = startDate;
+//        this.endDate = endDate;
+//        this.description = description;
+//    }
 
     public static void mapBudgetDtoToBudget(BudgetDto budgetDto, Budget budget) {
         budget.setUpdatedAt(budgetDto.getUpdatedAt());
@@ -93,6 +94,19 @@ public class BudgetDto {
                 budget.setEndDate(DateParser.parseDate(budgetDto.getEndDate()));
             }
         }
+
+
     }
+
+////    public static CreateBudgetRequest mapBudgetToBudgetDto (Budget request){
+////        BudgetDto budget1 = new BudgetDto();
+////        budget1.setTitle(request.getTitle());
+////        budget1.setAmount(request.getAmount());
+////        budget1.setDescription(request.getDescription());
+////        budget1.setPeriod(String.valueOf(request.getBudgetPeriod()));
+////        budget1.setBudgetStartDate(String.valueOf(request.getStartDate()));
+////        budget1.setBudgetEndDate(String.valueOf(request.getEndDate()));
+//
+//    }
 }
 

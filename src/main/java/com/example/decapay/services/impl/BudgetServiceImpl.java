@@ -151,10 +151,11 @@ public class BudgetServiceImpl implements BudgetService {
         User user = userService.getUserByEmail(email);
 
         Budget budget = getBudget(budgetId);
-        budget.setId(budget.getId());
+
         budget.setTitle(budgetDto.getTitle());
         budget.setAmount(budgetDto.getAmount());
         budget.setDescription(budgetDto.getDescription());
+
         mapBudgetDtoToBudget(budgetDto, budget);
         saveBudget(budget, user);
         return BudgetDtoResponse.convertBudgetToBudgetDtoResponse(budget);

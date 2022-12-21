@@ -25,12 +25,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -191,71 +193,53 @@ class BudgetServiceImplTest {
         verify(budgetRepository).delete(budget);
     }
 
-//    @Test
-//    void updateBudgetTest() {
-//        BudgetDto budgetDto1 = new BudgetDto();
-//        budgetDto1.setId(1l);
-//        budgetDto1.setTitle("hello");
-//        budgetDto1.setAmount(BigDecimal.valueOf(1234.00));
-//        budgetDto1.setDescription("hello world");
-//        budgetDto1.setBudgetPeriod(String.valueOf(BudgetPeriod.ANNUAL));
-//
-//
-//
-//        User user = new User();
-//        Budget budget = new Budget();
-//        budget.setUser(user);
-//        budget.setTitle("hello");
-//        budget.setAmount(BigDecimal.valueOf(1234.44));
-//        budget.setDescription("hello world");
-//        budget.setBudgetPeriod(BudgetPeriod.ANNUAL);
-//
-//        // given
-//        when(budgetRepository.findById(1L)).thenReturn(Optional.of(budget));
-//        budgetService.updateBudget(budgetDto1,1L);
-//
-//        verify(budgetRepository).save(budget);
-//    }
 
-//    @Test
-//    void testUpdateBudget() {
-//        User activeUser = new User();
-//        activeUser.setId(1L);
-//        activeUser.setEmail("updatebudget@email.com");
-//        userRepository.save(activeUser);
-//        LocalDate startDate = DateParser.parseDate("2022-12-19");
-//        LocalDate endDate = DateParser.parseDate("2023-01-19");
-//        Budget budget = new Budget();
-//        budget.setAmount(BigDecimal.valueOf(1000));
-//        budget.setBudgetPeriod(BudgetPeriod.CUSTOM);
-//        budget.setTitle("Test");
-//        budget.setId(1L);
-//        budget.setDescription("Testing....");
-//        budget.setStartDate(startDate);
-//        budget.setEndDate(endDate);
-//        budget.setUser(activeUser);
-//        given(userUtil.getAuthenticatedUserEmail()).willReturn("updatebudget@email.com");
-//        given(userService.getUserByEmail("updatebudget@email.com")).willReturn(activeUser);
-//        given(budgetRepository.findById(1L)).willReturn(Optional.of(budget));
-//
-//
-//        BudgetDto budgetDto = new BudgetDto();
-//        BeanUtils.copyProperties(budget,budgetDto);
-//
-//        BudgetDtoResponse dtoResponse = budgetService.updateBudget(budgetDto,1L);
-//
-//        verify(budgetRepository).save(budget);
-//
-//        assertEquals(budgetDto.getAmount(),dtoResponse.getAmount());
-//        assertEquals(budgetDto.getTitle(),dtoResponse.getTitle());
-//        assertEquals(budgetDto.getDescription(),dtoResponse.getDescription());
+    @Test
+    void testUpdateBudget() {
+        User activeUser = new User();
+        activeUser.setId(1L);
+        activeUser.setEmail("updatebudget@email.com");
+        userRepository.save(activeUser);
+        LocalDate startDate = DateParser.parseDate("2022-12-19");
+        LocalDate endDate = DateParser.parseDate("2023-01-19");
+        Budget budget = new Budget();
+        budget.setAmount(BigDecimal.valueOf(1000));
+        budget.setBudgetPeriod(BudgetPeriod.CUSTOM);
+        budget.setTitle("Test");
+        budget.setId(1L);
+        budget.setDescription("Testing....");
+        budget.setStartDate(startDate);
+        budget.setEndDate(endDate);
+        budget.setUser(activeUser);
+        //given
+        given(userUtil.getAuthenticatedUserEmail()).willReturn("updatebudget@email.com");
+        given(userService.getUserByEmail("updatebudget@email.com")).willReturn(activeUser);
+        given(budgetRepository.findById(1L)).willReturn(Optional.of(budget));
 
-//        CreateBudgetRequest budgetRequest = CreateBudgetRequest.mapBudgetToCreateBudgetRequest(budget);
-//        CreateBudgetResponse returnedBudget = budgetService.createBudget(budgetRequest);
-//
-//        assertEquals(budgetRequest.getAmount(), returnedBudget.getAmount());
-//        assertEquals(budgetRequest.getTitle(), returnedBudget.getTitle());
-//        assertEquals(budgetRequest.getPeriod(), returnedBudget.getPeriod());
-//        assertEquals(budgetRequest.getDescription(), returnedBudget.getDescription());
-//    }
+
+
+        BudgetDto budgetDto = new BudgetDto();
+       budgetDto.setTitle(budget.getTitle());
+       budgetDto.setAmount(budget.getAmount());
+       budgetDto.setDescription(budget.getDescription());
+       budgetDto.setBudgetPeriod(String.valueOf(budget.getBudgetPeriod()));
+       budgetDto.setStartDate(String.valueOf(budget.getStartDate()));
+       budgetDto.setUpdatedAt(LocalDateTime.now());
+       budgetDto.setEndDate(String.valueOf(budget.getEndDate()));
+        System.out.println(budgetDto);
+
+        budgetService.updateBudget(budgetDto, 1L);
+
+        BudgetDtoResponse dtoResponse = new BudgetDtoResponse();
+        dtoResponse.setTitle(budgetDto.getTitle());
+        dtoResponse.setAmount(budgetDto.getAmount());
+        dtoResponse.setPeriod(String.valueOf(budgetDto.getBudgetPeriod()));
+        dtoResponse.setDescription(budgetDto.getDescription());
+        System.out.println(dtoResponse);
+        verify(budgetRepository).save(budget);
+        assertEquals(budgetDto.getAmount(), dtoResponse.getAmount());
+        assertEquals(budgetDto.getTitle(), dtoResponse.getTitle());
+        assertEquals(budgetDto.getDescription(), dtoResponse.getDescription());
+
+    }
 }
