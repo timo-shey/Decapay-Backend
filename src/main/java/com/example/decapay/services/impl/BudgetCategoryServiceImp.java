@@ -10,6 +10,7 @@ import com.example.decapay.pojos.responseDtos.BudgetCategoryResponse;
 import com.example.decapay.repositories.BudgetCategoryRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetCategoryService;
+import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
     private final BudgetCategoryRepository budgetCategoryRepository;
     private  final UserRepository userRepository;
     private final UserUtil userUtil;
+
+    private final UserService userService;
 
     @Override
     public BudgetCategoryResponse createBudgetCategory(BudgetCategoryRequest budgetCategoryRequest) {
@@ -51,24 +54,15 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
     @Override
     public void deleteBudgetCategory(Long budgetCategoryId) {
 
-        User user = userRepository.findByEmail(userUtil.getAuthenticatedUserEmail())
-                .orElseThrow(() -> new UserNotFoundException(
-                        HttpStatus.BAD_REQUEST, "specified user not found in the database"));
+  User user = userService.getUserByEmail(userUtil.getAuthenticatedUserEmail());
 
         BudgetCategory budgetCategory = budgetCategoryRepository.findById(budgetCategoryId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         HttpStatus.BAD_REQUEST, "Specified budget category not found"));
 
-        if (budgetCategory.isDeleted()) {
-            throw new ResourceNotFoundException(
-                    HttpStatus.BAD_REQUEST, "Budget Category specified already deleted");
-        }
-
         if (!(budgetCategory.getUser().getId().equals(user.getId()))){
             throw new AuthenticationException("Action Not Authorized");
         }
-
-        budgetCategory.setDeleted(true);
         budgetCategoryRepository.save(budgetCategory);
     }
 }

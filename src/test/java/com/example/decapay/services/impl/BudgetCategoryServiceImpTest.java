@@ -9,6 +9,7 @@ import com.example.decapay.repositories.BudgetCategoryRepository;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetCategoryService;
+import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserIdUtil;
 import com.example.decapay.utils.UserUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +44,9 @@ class BudgetCategoryServiceImpTest {
     @Mock
     private UserUtil userUtil;
 
+    @Mock
+    private UserService userService;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -63,7 +67,7 @@ class BudgetCategoryServiceImpTest {
     @BeforeEach
     void setUp() {
          budgetCategoryService=new BudgetCategoryServiceImp(
-                 budgetCategoryRepository,userRepository, userUtil
+                 budgetCategoryRepository,userRepository, userUtil, userService
          );
         budgetCategoryRequest=new BudgetCategoryRequest();
         budgetCategoryRequest.setName("Food Stuff");
@@ -102,13 +106,12 @@ class BudgetCategoryServiceImpTest {
         budgetCategory.setDeleted(false);
         budgetCategory.setUser(user);
 
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(userService.getUserByEmail(anyString())).thenReturn(user);
         when(userUtil.getAuthenticatedUserEmail()).thenReturn("testing@gmail.com");
         when(budgetCategoryRepository.findById(1L)).thenReturn(Optional.of(budgetCategory));
 
         budgetCategoryService.deleteBudgetCategory(budgetCategory.getId());
         verify(budgetCategoryRepository).save(budgetCategory);
-        assertThat(budgetCategory.isDeleted()).isTrue();
         verify(budgetCategoryRepository,times(1)).save(any(BudgetCategory.class));
     }
 }
