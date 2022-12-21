@@ -35,13 +35,9 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
         budgetCategory.setName(budgetCategoryRequest.getName());
         budgetCategory.setUser(user);
 
-        budgetCategory=budgetCategoryRepository.save(budgetCategory);
+        budgetCategoryRepository.save(budgetCategory);
 
-       BudgetCategoryResponse budgetCategoryResponse= BudgetCategoryResponse.mapFrom(budgetCategory);
-
-       return budgetCategoryResponse;
-
-
+       return BudgetCategoryResponse.mapFrom(budgetCategory);
 
     }
 }

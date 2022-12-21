@@ -6,6 +6,7 @@ import com.example.decapay.models.Budget;
 import com.example.decapay.utils.DateParser;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 
 @Data
 @RequiredArgsConstructor
+@ToString
 //@NoArgsConstructor
 public class CreateBudgetRequest {
     @NotNull(message = "Title is required")
