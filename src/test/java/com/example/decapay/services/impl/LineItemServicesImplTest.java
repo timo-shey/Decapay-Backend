@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -92,4 +94,28 @@ class LineItemServicesImplTest {
 
         assertEquals(lineItemServicesImlMcok.updateLineItem(lineItemRequestDto, lineItemId).getStatusCode(), HttpStatus.OK);
     }
+
+    @Test
+    void getLineItems() {
+        LineItem lineItem1 = new LineItem();
+        lineItem1.setId(1L);
+        lineItem1.setProjectedAmount(new BigDecimal("20000"));
+        lineItem1.setBudget(new Budget());
+        lineItem1.setBudgetCategory(new BudgetCategory());
+
+        LineItem lineItem2 = new LineItem();
+        lineItem2.setId(2L);
+        lineItem2.setProjectedAmount(new BigDecimal("30000"));
+        lineItem2.setBudget(new Budget());
+        lineItem2.setBudgetCategory(new BudgetCategory());
+
+        List<LineItem> lineItems = Arrays.asList(lineItem1, lineItem2);
+        when(lineItemRepositoryMock.findAll()).thenReturn(lineItems);
+
+        List<LineItemResponseDto> lineItemResponseDtos = lineItemServicesImlMcok.getLineItems();
+        assertEquals(lineItemResponseDtos.size(), 2);
+        assertEquals(lineItemResponseDtos.get(0).getLineItemId(), 1L);
+        assertEquals(lineItemResponseDtos.get(1).getLineItemId(), 2L);
+    }
+
 }

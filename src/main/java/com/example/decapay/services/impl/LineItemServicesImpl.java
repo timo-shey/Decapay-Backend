@@ -1,7 +1,6 @@
 package com.example.decapay.services.impl;
 
 import com.example.decapay.exceptions.ResourceNotFoundException;
-import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Budget;
 import com.example.decapay.models.BudgetCategory;
 import com.example.decapay.models.LineItem;
@@ -15,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -72,4 +74,22 @@ public class LineItemServicesImpl implements LineItemServices {
 
         return new ResponseEntity<>(lineItemResponseDto, HttpStatus.OK);
     }
+
+    @Override
+    public List<LineItemResponseDto> getLineItems() {
+        List<LineItem> lineItems = lineItemRepository.findAll();
+        List<LineItemResponseDto> lineItemResponseDtos = new ArrayList<>();
+        for (LineItem lineItem : lineItems) {
+            LineItemResponseDto lineItemResponseDto = new LineItemResponseDto();
+            lineItemResponseDto.setLineItemId(lineItem.getId());
+            lineItemResponseDto.setBudgetAmount(lineItem.getBudget().getAmount());
+            lineItemResponseDto.setBudgetCategoryName(lineItem.getBudgetCategory().getName());
+            lineItemResponseDto.setProjectedAmount(lineItem.getProjectedAmount());
+            lineItemResponseDtos.add(lineItemResponseDto);
+        }
+        return lineItemResponseDtos;
+    }
+
+
+
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController
@@ -27,5 +28,11 @@ public class LineItemController {
     @PostMapping("/update/{lineItemId}")
     public ResponseEntity<LineItemResponseDto> updateALineItem(@RequestBody LineItemRequestDto lineItemRequestDto, @Valid @PathVariable Long lineItemId) {
         return lineItemServices.updateLineItem(lineItemRequestDto, lineItemId);
+    }
+
+    @GetMapping("/listLineItems")
+    public ResponseEntity<List<LineItemResponseDto>> getLineItems() {
+        List<LineItemResponseDto> lineItems = lineItemServices.getLineItems();
+        return new ResponseEntity<>(lineItems, HttpStatus.OK);
     }
 }
