@@ -40,6 +40,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense expense = new Expense();
         expense.setAmount(expenseRequestDto.getAmount());
         expense.setDescription(expenseRequestDto.getDescription());
+        expense.setLineItem(lineItem);
         expenseRepository.save(expense);
 
 
