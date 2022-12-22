@@ -209,7 +209,6 @@ class BudgetServiceImplTest {
         given(userUtil.getAuthenticatedUserEmail()).willReturn("updatebudget@email.com");
         given(userService.getUserByEmail("updatebudget@email.com")).willReturn(activeUser);
         given(budgetRepository.findById(1L)).willReturn(Optional.of(budget));
-
         BudgetDto budgetDto = new BudgetDto();
        budgetDto.setTitle(budget.getTitle());
        budgetDto.setAmount(budget.getAmount());
@@ -219,9 +218,7 @@ class BudgetServiceImplTest {
        budgetDto.setUpdatedAt(LocalDateTime.now());
        budgetDto.setEndDate(String.valueOf(budget.getEndDate()));
         System.out.println(budgetDto);
-
         budgetService.updateBudget(budgetDto, 1L);
-
         BudgetDtoResponse dtoResponse = new BudgetDtoResponse();
         dtoResponse.setTitle(budgetDto.getTitle());
         dtoResponse.setAmount(budgetDto.getAmount());
@@ -232,6 +229,5 @@ class BudgetServiceImplTest {
         assertEquals(budgetDto.getAmount(), dtoResponse.getAmount());
         assertEquals(budgetDto.getTitle(), dtoResponse.getTitle());
         assertEquals(budgetDto.getDescription(), dtoResponse.getDescription());
-
     }
 }
