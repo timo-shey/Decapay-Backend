@@ -210,8 +210,6 @@ class BudgetServiceImplTest {
         given(userService.getUserByEmail("updatebudget@email.com")).willReturn(activeUser);
         given(budgetRepository.findById(1L)).willReturn(Optional.of(budget));
 
-
-
         BudgetDto budgetDto = new BudgetDto();
        budgetDto.setTitle(budget.getTitle());
        budgetDto.setAmount(budget.getAmount());
