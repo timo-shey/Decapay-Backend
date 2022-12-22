@@ -40,6 +40,23 @@ class LineItemControllerTest {
     LineItemServices lineItemServices;
     @MockBean
     LineItemResponseDto lineItemResponseDto;
+
+
+
+
+    @Test
+    void createLineItem() throws Exception {
+
+
+        LineItemRequestDto lineItemRequestDto = new LineItemRequestDto();
+        String lineItemJson = mapper.writeValueAsString(lineItemRequestDto);
+
+        mockMvc.perform(post("/api/v1/user/line-items")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(lineItemJson))
+                .andExpect(status().isCreated());
+
+    }
     @Test
     void updateALineItem() throws Exception {
         Long lineItemId = 1L;

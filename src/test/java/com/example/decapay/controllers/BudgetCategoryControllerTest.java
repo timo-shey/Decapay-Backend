@@ -1,5 +1,6 @@
 package com.example.decapay.controllers;
 
+import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtAuthFilter;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.BudgetCategoryRequest;
@@ -16,13 +17,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers=BudgetCategoryController.class)
@@ -38,6 +37,9 @@ class BudgetCategoryControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private CustomUserDetailService customUserDetailService;
 
     @MockBean
     private UserUtil userUtil;
@@ -73,20 +75,11 @@ class BudgetCategoryControllerTest {
     }
 
     @Test
-    void categoryList() throws Exception {
-        List<BudgetCategoryResponse> budgetCategoryResponses= new ArrayList<>();
-        User user =new User();
-        given(userUtil.getAuthenticatedUserEmail()).willReturn("peterhamza6@gmail.com");
+    void testDeleteBudgetCategory() throws Exception {
 
-        given(userRepository.findByEmail("peterhamza6@gmail.com")).willReturn(Optional.of(user));
+        long budgetCategoryId = 1L;
 
-        given(budgetCategoryService.listBudgetCategory()).willReturn(budgetCategoryResponses);
-
-
-        String requestBody = mapper.writeValueAsString(budgetCategoryResponses);
-        mockMvc.perform(get("/api/v1/budgets/category")
-                .contentType("application/json")
-                .content(requestBody))
+        mockMvc.perform(delete("/api/v1/budgets/category/{budgetCategoryId}", budgetCategoryId))
                 .andExpect(status().isOk());
     }
 }

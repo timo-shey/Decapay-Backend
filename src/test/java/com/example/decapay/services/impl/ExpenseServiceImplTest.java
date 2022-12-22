@@ -3,6 +3,7 @@ package com.example.decapay.services.impl;
 import com.example.decapay.models.Expense;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.pojos.expenseDto.ExpenseRequestDto;
+import com.example.decapay.pojos.expenseDto.ExpenseResponseDto;
 import com.example.decapay.repositories.ExpenseRepository;
 import com.example.decapay.repositories.LineItemRepository;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ExpenseServiceImplTest {
@@ -44,5 +47,47 @@ class ExpenseServiceImplTest {
         when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
 
         assertEquals(expenseService.createExpense(expenseRequestDto,lineItem.getId()).getStatusCode(), HttpStatus.OK);
+    }
+
+
+
+    @Test
+    void deleteExpense() {
+        LineItem lineItem =new LineItem();
+        lineItem.setId(1L);
+        Expense expense=new Expense();
+        expense.setAmount(BigDecimal.valueOf(100000));
+        expense.setId(1L);
+        expense.setLineItem(lineItem);
+
+
+
+        given(expenseRepository.findById(anyLong())).willReturn(Optional.of(expense));
+
+        Boolean result = expenseService.deleteExpense(expense.getId());
+        assertEquals( true, result);
+    }
+
+
+    @Test
+    void updateExpense() {
+
+        Long expenseId = 1L;
+        ExpenseRequestDto expenseRequestDto = ExpenseRequestDto.builder()
+                .amount(new BigDecimal(3000))
+                .description("expenses update").build();
+        ExpenseResponseDto expenseResponseDto = new ExpenseResponseDto();
+        expenseResponseDto.setAmount(expenseRequestDto.getAmount());
+        expenseResponseDto.setDescription(expenseRequestDto.getDescription());
+
+        Expense expense = new Expense();
+        expense.setId(1L);
+        expense.setAmount(new BigDecimal(3000));
+        expense.setDescription("test expenses");
+
+        when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
+        when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
+
+        assertEquals(expenseService.updateExpense(expenseRequestDto, expenseId), expenseResponseDto);
     }
 }
