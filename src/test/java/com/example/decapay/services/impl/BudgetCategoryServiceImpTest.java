@@ -9,6 +9,7 @@ import com.example.decapay.repositories.BudgetCategoryRepository;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetCategoryService;
+import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserIdUtil;
 import com.example.decapay.utils.UserUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,6 +56,9 @@ class BudgetCategoryServiceImpTest {
     @Mock
     private TokenRepository tokenRepository;
 
+    @Mock
+    private UserService userService;
+
     private BudgetCategoryRequest budgetCategoryRequest;
 
     private BudgetCategory budgetCategory;
@@ -62,7 +66,7 @@ class BudgetCategoryServiceImpTest {
     @BeforeEach
     void setUp() {
          budgetCategoryService=new BudgetCategoryServiceImp(
-                 budgetCategoryRepository,userRepository, userUtil
+                 budgetCategoryRepository,userRepository, userUtil,userService
          );
         budgetCategoryRequest=new BudgetCategoryRequest();
         budgetCategoryRequest.setName("Food Stuff");
