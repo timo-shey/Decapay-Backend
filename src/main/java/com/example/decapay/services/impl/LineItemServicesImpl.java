@@ -1,9 +1,11 @@
 package com.example.decapay.services.impl;
 
+import com.example.decapay.exceptions.AuthenticationException;
 import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Budget;
 import com.example.decapay.models.BudgetCategory;
+import com.example.decapay.models.Expense;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.pojos.requestDtos.LineItemRequestDto;
 import com.example.decapay.pojos.responseDtos.LineItemResponseDto;
@@ -72,4 +74,20 @@ public class LineItemServicesImpl implements LineItemServices {
 
         return new ResponseEntity<>(lineItemResponseDto, HttpStatus.OK);
     }
+
+
+    public Boolean deleteLineItem(Long id) {
+
+        LineItem lineItem = lineItemRepository.findById(id).orElseThrow(()
+                ->new ResourceNotFoundException("line item  not found", HttpStatus.BAD_REQUEST,"Please select a valid line item"));
+        lineItemRepository.delete(lineItem);
+        return true;
+
+    }
+
+
+
+
+
+
 }

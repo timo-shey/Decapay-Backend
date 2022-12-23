@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface LineItemRepository extends JpaRepository<LineItem, Long> {
     List<LineItem> findAllByBudget(Budget budget);
+
 }
