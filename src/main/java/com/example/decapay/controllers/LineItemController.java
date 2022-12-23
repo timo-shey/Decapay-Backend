@@ -28,4 +28,9 @@ public class LineItemController {
     public ResponseEntity<LineItemResponseDto> updateALineItem(@RequestBody LineItemRequestDto lineItemRequestDto, @Valid @PathVariable Long lineItemId) {
         return lineItemServices.updateLineItem(lineItemRequestDto, lineItemId);
     }
+
+    @DeleteMapping("/delete_line_item/{Id}")
+    public ResponseEntity<Boolean> deleteLineItem(@PathVariable Long Id){
+        return new ResponseEntity<>( lineItemServices.deleteLineItem(Id), HttpStatus.OK);
+    }
 }

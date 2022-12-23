@@ -10,4 +10,6 @@ public interface LineItemServices {
     LineItemResponseDto createLineItem(LineItemRequestDto lineItemRequestDto);
 
     ResponseEntity<LineItemResponseDto> updateLineItem(LineItemRequestDto lineItemRequestDto, Long lineItemId);
+
+    Boolean deleteLineItem(Long id);
 }
