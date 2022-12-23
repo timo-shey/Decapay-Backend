@@ -1,5 +1,7 @@
 package com.example.decapay.controllers;
 
+import com.example.decapay.pojos.requestDtos.BudgetDto;
+import com.example.decapay.pojos.responseDtos.BudgetDtoResponse;
 import com.example.decapay.pojos.responseDtos.BudgetViewModel;
 import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
 import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
@@ -18,6 +20,11 @@ import javax.validation.Valid;
 public class BudgetController {
 
     private final BudgetService budgetService;
+
+    @PutMapping("/{budgetId}")
+    public ResponseEntity<BudgetDtoResponse> updateBudget(@Valid @RequestBody BudgetDto budgetDto, @PathVariable Long budgetId) {
+        return ResponseEntity.ok(budgetService.updateBudget(budgetDto,budgetId));
+    }
 
     @GetMapping
     public ResponseEntity<List<BudgetViewModel>> getBudgets(@RequestParam(value = "page", defaultValue = "0") int page,

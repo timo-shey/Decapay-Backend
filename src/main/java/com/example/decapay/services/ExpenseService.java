@@ -11,6 +11,7 @@ import java.util.List;
 public interface ExpenseService {
     ResponseEntity<ExpenseResponseDto> createExpense(ExpenseRequestDto expenseRequestDto, Long lineId);
 
+
     Boolean deleteExpense(Long id);
 
     ResponseEntity<Page<Expense>> getExpenses(Long lineId, Integer pageNo, Integer pageSize, String sortBy, boolean isAscending);

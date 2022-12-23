@@ -1,4 +1,4 @@
-package com.example.decapay.services.impl;
+package com.example.decapay.services;
 
 import com.example.decapay.configurations.mails.EmailSenderService;
 import com.example.decapay.exceptions.UserNotFoundException;
@@ -6,6 +6,7 @@ import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
+import com.example.decapay.services.impl.UserServiceImpl;
 import com.example.decapay.utils.CloudinaryUtils;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.MailSenderUtil;

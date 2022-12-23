@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -53,6 +55,7 @@ class BudgetCategoryServiceImpTest {
     @Autowired
     private ObjectMapper mapper;
 
+
     @Mock
     private CustomUserDetailService customUserDetailService;
 
@@ -72,14 +75,22 @@ class BudgetCategoryServiceImpTest {
         budgetCategoryRequest=new BudgetCategoryRequest();
         budgetCategoryRequest.setName("Food Stuff");
 
+
+
+
     }
 
     @Test
     void createBudgetCategory() {
-
         User user=new User();
 
+        LocalDateTime localDateTime= LocalDateTime.now();
         BudgetCategory budgetCategory= new BudgetCategory();
+        budgetCategory.setId(1L);
+        budgetCategory.setUser(user);
+        budgetCategory.setName("Provision");
+        budgetCategory.setCreatedAt(localDateTime);
+        budgetCategory.setUpdatedAt(localDateTime);
 
         String email="mic@gmail.com";
 
