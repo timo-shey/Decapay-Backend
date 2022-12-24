@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestController
@@ -29,7 +30,14 @@ public class LineItemController {
         return lineItemServices.updateLineItem(lineItemRequestDto, lineItemId);
     }
 
-    @DeleteMapping("/delete_line_item/{Id}")
+
+    @GetMapping("/listLineItems")
+    public ResponseEntity<List<LineItemResponseDto>> getLineItems() {
+        List<LineItemResponseDto> lineItems = lineItemServices.getLineItems();
+        return new ResponseEntity<>(lineItems, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-line-item/{Id}")
     public ResponseEntity<Boolean> deleteLineItem(@PathVariable Long Id){
         return new ResponseEntity<>( lineItemServices.deleteLineItem(Id), HttpStatus.OK);
     }

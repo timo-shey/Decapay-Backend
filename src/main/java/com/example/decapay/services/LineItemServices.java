@@ -4,6 +4,8 @@ import com.example.decapay.pojos.requestDtos.LineItemRequestDto;
 import com.example.decapay.pojos.responseDtos.LineItemResponseDto;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 
 public interface LineItemServices {
 
@@ -11,5 +13,8 @@ public interface LineItemServices {
 
     ResponseEntity<LineItemResponseDto> updateLineItem(LineItemRequestDto lineItemRequestDto, Long lineItemId);
 
+    List<LineItemResponseDto> getLineItems();
+
     Boolean deleteLineItem(Long id);
+
 }
