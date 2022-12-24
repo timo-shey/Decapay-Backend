@@ -35,6 +35,7 @@ public class LineItemController {
     public ResponseEntity<List<LineItemResponseDto>> getLineItems() {
         List<LineItemResponseDto> lineItems = lineItemServices.getLineItems();
         return new ResponseEntity<>(lineItems, HttpStatus.OK);
+    }
 
     @DeleteMapping("/delete-line-item/{Id}")
     public ResponseEntity<Boolean> deleteLineItem(@PathVariable Long Id){
