@@ -30,8 +30,6 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
     private final UserUtil userUtil;
     private final UserService userService;
 
-    private final UserService userService;
-
     @Override
     public BudgetCategoryResponse createBudgetCategory(BudgetCategoryRequest budgetCategoryRequest) {
 
