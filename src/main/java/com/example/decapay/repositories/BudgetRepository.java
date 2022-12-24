@@ -10,6 +10,5 @@ import java.util.Optional;
 
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
     Page<Budget> findAllByUser(User user, Pageable pageable);
-
     Optional<Budget> findBudgetByIdAndUserId(Long budgetId, Long userId);
 }

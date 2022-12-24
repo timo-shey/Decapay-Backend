@@ -3,6 +3,7 @@ package com.example.decapay.services.impl;
 import com.example.decapay.models.Expense;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.pojos.expenseDto.ExpenseRequestDto;
+import com.example.decapay.pojos.expenseDto.ExpenseResponseDto;
 import com.example.decapay.repositories.ExpenseRepository;
 import com.example.decapay.repositories.LineItemRepository;
 import org.junit.jupiter.api.Test;
@@ -10,13 +11,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -50,6 +50,7 @@ class ExpenseServiceImplTest {
     }
 
 
+
     @Test
     void deleteExpense() {
         LineItem lineItem =new LineItem();
@@ -65,6 +66,28 @@ class ExpenseServiceImplTest {
 
         Boolean result = expenseService.deleteExpense(expense.getId());
         assertEquals( true, result);
+    }
 
+
+    @Test
+    void updateExpense() {
+
+        Long expenseId = 1L;
+        ExpenseRequestDto expenseRequestDto = ExpenseRequestDto.builder()
+                .amount(new BigDecimal(3000))
+                .description("expenses update").build();
+        ExpenseResponseDto expenseResponseDto = new ExpenseResponseDto();
+        expenseResponseDto.setAmount(expenseRequestDto.getAmount());
+        expenseResponseDto.setDescription(expenseRequestDto.getDescription());
+
+        Expense expense = new Expense();
+        expense.setId(1L);
+        expense.setAmount(new BigDecimal(3000));
+        expense.setDescription("test expenses");
+
+        when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
+        when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
+
+        assertEquals(expenseService.updateExpense(expenseRequestDto, expenseId), expenseResponseDto);
     }
 }

@@ -1,5 +1,8 @@
 package com.example.decapay.services.impl;
 
+import com.example.decapay.exceptions.AuthenticationException;
+import com.example.decapay.exceptions.ResourceNotFoundException;
+import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.models.BudgetCategory;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.BudgetCategoryRequest;
@@ -9,16 +12,13 @@ import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.BudgetCategoryService;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +28,8 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
     private final BudgetCategoryRepository budgetCategoryRepository;
     private  final UserRepository userRepository;
     private final UserUtil userUtil;
+    private final UserService userService;
+
     private final UserService userService;
 
     @Override
@@ -54,6 +56,7 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
     }
 
 
+
     @Override
     public BudgetCategoryResponse updateBudgetCategory(Long budgetCategoryId, BudgetCategoryRequest budgetCategoryRequest)
     {
@@ -75,5 +78,19 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
 
         return BudgetCategoryResponse.mapFrom(budgetCategory);
 
+    }
+    @Override
+    public void deleteBudgetCategory(Long budgetCategoryId) {
+
+        User user = userService.getUserByEmail(userUtil.getAuthenticatedUserEmail());
+
+        BudgetCategory budgetCategory = budgetCategoryRepository.findById(budgetCategoryId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        HttpStatus.BAD_REQUEST, "Specified budget category not found"));
+
+        if (!(budgetCategory.getUser().getId().equals(user.getId()))){
+            throw new AuthenticationException("Action Not Authorized");
+        }
+        budgetCategoryRepository.save(budgetCategory);
     }
 }

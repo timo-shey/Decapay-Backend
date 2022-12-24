@@ -4,8 +4,10 @@ import com.example.decapay.enums.BudgetPeriod;
 import com.example.decapay.models.Budget;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.models.User;
-import com.example.decapay.pojos.responseDtos.BudgetRest;
+import com.example.decapay.pojos.requestDtos.BudgetDto;
 import com.example.decapay.pojos.requestDtos.CreateBudgetRequest;
+import com.example.decapay.pojos.responseDtos.BudgetDtoResponse;
+import com.example.decapay.pojos.responseDtos.BudgetViewModel;
 import com.example.decapay.pojos.responseDtos.CreateBudgetResponse;
 import com.example.decapay.repositories.BudgetRepository;
 import com.example.decapay.repositories.LineItemRepository;
@@ -24,20 +26,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import java.time.LocalDate;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 class BudgetServiceImplTest {
@@ -54,16 +54,17 @@ class BudgetServiceImplTest {
     private BudgetRepository budgetRepository;
 
     @Mock
-    private LineItemRepository lineItemRepository;
+    private UserUtil userUtil;
 
     @Mock
-    private UserUtil userUtil;
+    private LineItemRepository lineItemRepository;
 
     User user;
 
     @BeforeEach
     void setUp() {
-        budgetService = new BudgetServiceImpl(budgetRepository, lineItemRepository, userService, userUtil);
+        budgetService = new BudgetServiceImpl(budgetRepository,lineItemRepository, userService, userUtil);
+
         user = new User();
         user.setId(1L);
         user.setEmail("tester@email.com");
@@ -84,14 +85,13 @@ class BudgetServiceImplTest {
         when(budgetRepository.findAllByUser(user, pageable)).thenReturn(budgetPage);
         when(lineItemRepository.findAllByBudget(any(Budget.class))).thenReturn(createLineItemList());
 
-        List<BudgetRest> budgetRest = budgetService.getBudgets(0, 2);
+        List<BudgetViewModel> budgetViewModel = budgetService.getBudgets(0, 2);
 
-        assertNotNull(budgetRest);
-        assertEquals(1, budgetRest.size());
-        assertEquals(new BigDecimal("0.6"), budgetRest.get(0).getPercentage());
-        assertEquals(new BigDecimal("0.94"), budgetRest.get(0).getLineItemRests().get(0).getPercentageSpentSoFar());
+        assertNotNull(budgetViewModel);
+        assertEquals(1, budgetViewModel.size());
+        assertEquals(new BigDecimal("0.6"), budgetViewModel.get(0).getPercentage());
+        assertEquals(new BigDecimal("0.94"), budgetViewModel.get(0).getLineItemRests().get(0).getPercentageSpentSoFar());
         verify(budgetRepository, times(1)).findAllByUser(any(User.class), any(Pageable.class));
-
     }
 
     private List<Budget> createBudgetList() {
@@ -121,7 +121,6 @@ class BudgetServiceImplTest {
         return lineItems;
     }
 
-
     @Test
     void testCreateBudget() {
         User activeUser = new User();
@@ -132,7 +131,7 @@ class BudgetServiceImplTest {
         LocalDate endDate = DateParser.parseDate("2023-01-19");
         Budget budget = new Budget();
         budget.setAmount(BigDecimal.valueOf(1000));
-        budget.setBudgetPeriod(BudgetPeriod.MONTHLY);
+        budget.setBudgetPeriod(BudgetPeriod.CUSTOM);
         budget.setTitle("Test");
         budget.setId(2L);
         budget.setDescription("Testing....");
@@ -169,9 +168,9 @@ class BudgetServiceImplTest {
         assertEquals(String.valueOf(budget.getBudgetPeriod()), returnedBudget.getPeriod());
     }
 
-
     @Test
     void testDeleteBudget() {
+
         Budget budget = new Budget();
         budget.setId(1L);
         budget.setUser(user);
@@ -187,5 +186,48 @@ class BudgetServiceImplTest {
         //then
         verify(budgetRepository).delete(budget);
     }
-}
 
+
+    @Test
+    void testUpdateBudget() {
+        User activeUser = new User();
+        activeUser.setId(1L);
+        activeUser.setEmail("updatebudget@email.com");
+        userRepository.save(activeUser);
+        LocalDate startDate = DateParser.parseDate("2022-12-19");
+        LocalDate endDate = DateParser.parseDate("2023-01-19");
+        Budget budget = new Budget();
+        budget.setAmount(BigDecimal.valueOf(1000));
+        budget.setBudgetPeriod(BudgetPeriod.CUSTOM);
+        budget.setTitle("Test");
+        budget.setId(1L);
+        budget.setDescription("Testing....");
+        budget.setStartDate(startDate);
+        budget.setEndDate(endDate);
+        budget.setUser(activeUser);
+        //given
+        given(userUtil.getAuthenticatedUserEmail()).willReturn("updatebudget@email.com");
+        given(userService.getUserByEmail("updatebudget@email.com")).willReturn(activeUser);
+        given(budgetRepository.findById(1L)).willReturn(Optional.of(budget));
+        BudgetDto budgetDto = new BudgetDto();
+       budgetDto.setTitle(budget.getTitle());
+       budgetDto.setAmount(budget.getAmount());
+       budgetDto.setDescription(budget.getDescription());
+       budgetDto.setBudgetPeriod(String.valueOf(budget.getBudgetPeriod()));
+       budgetDto.setStartDate(String.valueOf(budget.getStartDate()));
+       budgetDto.setUpdatedAt(LocalDateTime.now());
+       budgetDto.setEndDate(String.valueOf(budget.getEndDate()));
+        System.out.println(budgetDto);
+        budgetService.updateBudget(budgetDto, 1L);
+        BudgetDtoResponse dtoResponse = new BudgetDtoResponse();
+        dtoResponse.setTitle(budgetDto.getTitle());
+        dtoResponse.setAmount(budgetDto.getAmount());
+        dtoResponse.setPeriod(String.valueOf(budgetDto.getBudgetPeriod()));
+        dtoResponse.setDescription(budgetDto.getDescription());
+        System.out.println(dtoResponse);
+        verify(budgetRepository).save(budget);
+        assertEquals(budgetDto.getAmount(), dtoResponse.getAmount());
+        assertEquals(budgetDto.getTitle(), dtoResponse.getTitle());
+        assertEquals(budgetDto.getDescription(), dtoResponse.getDescription());
+    }
+}

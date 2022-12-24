@@ -2,6 +2,8 @@ package com.example.decapay.exceptions;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
 @AllArgsConstructor

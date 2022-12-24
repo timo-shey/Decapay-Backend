@@ -1,5 +1,6 @@
 package com.example.decapay.pojos.expenseDto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
