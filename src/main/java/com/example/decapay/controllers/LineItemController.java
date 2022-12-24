@@ -30,9 +30,14 @@ public class LineItemController {
         return lineItemServices.updateLineItem(lineItemRequestDto, lineItemId);
     }
 
+
     @GetMapping("/listLineItems")
     public ResponseEntity<List<LineItemResponseDto>> getLineItems() {
         List<LineItemResponseDto> lineItems = lineItemServices.getLineItems();
         return new ResponseEntity<>(lineItems, HttpStatus.OK);
+
+    @DeleteMapping("/delete-line-item/{Id}")
+    public ResponseEntity<Boolean> deleteLineItem(@PathVariable Long Id){
+        return new ResponseEntity<>( lineItemServices.deleteLineItem(Id), HttpStatus.OK);
     }
 }

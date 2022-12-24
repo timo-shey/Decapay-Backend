@@ -9,6 +9,7 @@ import com.example.decapay.repositories.ExpenseRepository;
 import com.example.decapay.repositories.LineItemRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.ExpenseService;
+import com.example.decapay.utils.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +41,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense expense = new Expense();
         expense.setAmount(expenseRequestDto.getAmount());
         expense.setDescription(expenseRequestDto.getDescription());
+        expense.setLineItem(lineItem);
         expenseRepository.save(expense);
 
 

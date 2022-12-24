@@ -53,8 +53,8 @@ public class UserServiceImplTest {
         loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail("oluseun@gmail.com");
         loginRequestDto.setPassword("oluseun1");
-
     }
+
     @Test
     public void userLogin(){
     when(authenticationManager.authenticate(

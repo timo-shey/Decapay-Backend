@@ -15,4 +15,6 @@ public interface LineItemServices {
 
     List<LineItemResponseDto> getLineItems();
 
+    Boolean deleteLineItem(Long id);
+
 }

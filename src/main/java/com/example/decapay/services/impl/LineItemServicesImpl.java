@@ -1,8 +1,10 @@
 package com.example.decapay.services.impl;
 
+import com.example.decapay.exceptions.AuthenticationException;
 import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.models.Budget;
 import com.example.decapay.models.BudgetCategory;
+import com.example.decapay.models.Expense;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.pojos.requestDtos.LineItemRequestDto;
 import com.example.decapay.pojos.responseDtos.LineItemResponseDto;
@@ -28,9 +30,6 @@ public class LineItemServicesImpl implements LineItemServices {
 
 
 
-
-
-
     public LineItemResponseDto createLineItem (LineItemRequestDto lineItemRequestDto) {
         Budget budget = budgetRepository.findById(lineItemRequestDto.getBudgetId()).orElseThrow( ()
                 -> new ResourceNotFoundException("cannot create line item", HttpStatus.FORBIDDEN, "please select a budget"));
@@ -52,6 +51,7 @@ public class LineItemServicesImpl implements LineItemServices {
 
         return lineItemResponseDto;
     }
+    
 
     @Override
     public ResponseEntity<LineItemResponseDto> updateLineItem(LineItemRequestDto lineItemRequestDto, Long lineItemId) {
@@ -74,6 +74,7 @@ public class LineItemServicesImpl implements LineItemServices {
 
         return new ResponseEntity<>(lineItemResponseDto, HttpStatus.OK);
     }
+    
 
     @Override
     public List<LineItemResponseDto> getLineItems() {
@@ -88,6 +89,15 @@ public class LineItemServicesImpl implements LineItemServices {
             lineItemResponseDtos.add(lineItemResponseDto);
         }
         return lineItemResponseDtos;
+
+
+    public Boolean deleteLineItem(Long id) {
+
+        LineItem lineItem = lineItemRepository.findById(id).orElseThrow(()
+                ->new ResourceNotFoundException("line item  not found", HttpStatus.BAD_REQUEST,"Please select a valid line item"));
+        lineItemRepository.delete(lineItem);
+        return true;
+
     }
 
 
