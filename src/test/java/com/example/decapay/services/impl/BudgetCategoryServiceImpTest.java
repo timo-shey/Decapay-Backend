@@ -67,23 +67,23 @@ class BudgetCategoryServiceImpTest {
 
     private BudgetCategoryRequest budgetCategoryRequest;
 
+    private BudgetCategory budgetCategory;
+
     @BeforeEach
     void setUp() {
          budgetCategoryService=new BudgetCategoryServiceImp(
-                 budgetCategoryRepository,userRepository, userUtil, userService
+                 budgetCategoryRepository,userRepository, userUtil,userService
          );
         budgetCategoryRequest=new BudgetCategoryRequest();
         budgetCategoryRequest.setName("Food Stuff");
-
-
-
+        budgetCategory = new BudgetCategory();
 
     }
 
     @Test
     void createBudgetCategory() {
         User user=new User();
-
+        
         LocalDateTime localDateTime= LocalDateTime.now();
         BudgetCategory budgetCategory= new BudgetCategory();
         budgetCategory.setId(1L);
@@ -103,15 +103,31 @@ class BudgetCategoryServiceImpTest {
     }
 
     @Test
+    void updateBudgetCategory() {
+
+        User user=new User();
+
+
+        String email="mic@gmail.com";
+        budgetCategory.setId(1L);
+
+
+        given(userUtil.getAuthenticatedUserEmail()).willReturn(email);
+
+        given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
+        given(budgetCategoryRepository.findById(1L)).willReturn(Optional.of(budgetCategory));
+
+        budgetCategoryService.updateBudgetCategory(1L,budgetCategoryRequest);
+  }
+
+    @Test
     final void testDeleteBudgetCategory(){
         User user = new User();
        BudgetCategory budgetCategory = new BudgetCategory();
 
-        //stub user object
         user.setId(1L);;
         user.setEmail("testing@gmail.com");
 
-        //stub budgetCategory object
         budgetCategory.setId(1L);
         budgetCategory.setUser(user);
 

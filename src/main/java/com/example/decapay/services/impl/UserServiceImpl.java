@@ -211,7 +211,15 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok("Profile picture uploaded successfully");
     }
 
-        public User getUserByEmail(String email) {
+    @Override
+    public void verifyUserExists(String userEmail) {
+        userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException(
+                        HttpStatus.BAD_REQUEST, "User with email: " + userEmail + " Not Found"));
+     } 
+     
+    @Override
+    public User getUserByEmail(String email) {
 
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->

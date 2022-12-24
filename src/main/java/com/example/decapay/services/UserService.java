@@ -26,4 +26,6 @@ public interface UserService {
 
     ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException;
     User getUserByEmail(String email);
+
+    void verifyUserExists(String userEmail);
 }
