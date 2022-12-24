@@ -65,9 +65,6 @@ class BudgetCategoryServiceImpTest {
     @Mock
     private TokenRepository tokenRepository;
 
-    @Mock
-    private UserService userService;
-
     private BudgetCategoryRequest budgetCategoryRequest;
 
     private BudgetCategory budgetCategory;
@@ -128,11 +125,9 @@ class BudgetCategoryServiceImpTest {
         User user = new User();
        BudgetCategory budgetCategory = new BudgetCategory();
 
-        //stub user object
         user.setId(1L);;
         user.setEmail("testing@gmail.com");
 
-        //stub budgetCategory object
         budgetCategory.setId(1L);
         budgetCategory.setUser(user);
 
