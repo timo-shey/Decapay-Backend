@@ -15,8 +15,6 @@ public class UserUpdateRequest {
     @NotBlank(message = "Last Name field can't be empty")
     private String lastName;
     @NotBlank(message ="Email field can't be empty")
-    @Email(message = "Please enter a valid email address")
-    private String email;
     @NotBlank(message="Phone Number field can't be empty")
     private String phoneNumber;
 

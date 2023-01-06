@@ -126,11 +126,10 @@ public class UserServiceImpl implements UserService {
         String email = userUtil.getAuthenticatedUserEmail();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         user.setFirstName(userUpdateRequest.getFirstName());
-        user.setLastName(user.getLastName());
-        user.setEmail(userUpdateRequest.getEmail());
+        user.setLastName(userUpdateRequest.getLastName());
         user.setPhoneNumber(userUpdateRequest.getPhoneNumber());
 
         userRepository.save(user);
