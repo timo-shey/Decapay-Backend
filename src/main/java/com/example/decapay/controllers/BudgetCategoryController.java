@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +29,18 @@ public class BudgetCategoryController {
     {
       BudgetCategoryResponse  budgetCategoryResponse=  budgetCategoryService.updateBudgetCategory(budgetCategoryId,budgetCategoryRequest);
       return  ResponseEntity.ok("Budget category updated");
+    }
+
+    @GetMapping("/{budgetCategoryId}")
+    public ResponseEntity<BudgetCategoryResponse> getBudgetCategory(@Valid @PathVariable Long budgetCategoryId) {
+        BudgetCategoryResponse  budgetCategoryResponse =  budgetCategoryService.getBudgetCategory(budgetCategoryId);
+        return  ResponseEntity.ok(budgetCategoryResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BudgetCategoryResponse>> getBudgetCategories() {
+        List<BudgetCategoryResponse>  budgetCategoryResponses =  budgetCategoryService.getBudgetCategories();
+        return  ResponseEntity.ok(budgetCategoryResponses);
     }
 
     @DeleteMapping("/{categoryId}")

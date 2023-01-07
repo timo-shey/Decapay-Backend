@@ -67,6 +67,7 @@ public class BudgetServiceImpl implements BudgetService {
 
         budgets.forEach(budget -> {
             BudgetViewModel budgetViewModel = new BudgetViewModel();
+            budgetViewModel.setBudgetId(budget.getId());
             budgetViewModel.setAmount(budget.getAmount());
 
             List<LineItem> lineItems = lineItemRepository.findAllByBudget(budget);
@@ -92,6 +93,7 @@ public class BudgetServiceImpl implements BudgetService {
 
             BigDecimal totalAmountSoFar = lineItem.getTotalAmountSpent();
             BigDecimal percentageSoFar = totalAmountSoFar.divide(lineItem.getProjectedAmount(), new MathContext(2));
+            lineItemRest.setLineItemId(lineItem.getId());
             lineItemRest.setProjectedAmount(lineItem.getProjectedAmount());
             lineItemRest.setAmountSpentSoFar(totalAmountSoFar);
             lineItemRest.setPercentageSpentSoFar(percentageSoFar);

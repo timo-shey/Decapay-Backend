@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -77,6 +78,26 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
         return BudgetCategoryResponse.mapFrom(budgetCategory);
 
     }
+
+    @Override
+    public BudgetCategoryResponse getBudgetCategory(Long budgetCategoryId) {
+        User user = userService.getUserByEmail(userUtil.getAuthenticatedUserEmail());
+        BudgetCategory budgetCategory = budgetCategoryRepository.findById(budgetCategoryId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        HttpStatus.BAD_REQUEST, "Specified budget category not found"));
+        if (!(budgetCategory.getUser().getId().equals(user.getId()))){
+            throw new AuthenticationException("Action Not Authorized");
+        }
+        return BudgetCategoryResponse.mapFrom(budgetCategory);
+    }
+
+    @Override
+    public List<BudgetCategoryResponse> getBudgetCategories() {
+        User user = userService.getUserByEmail(userUtil.getAuthenticatedUserEmail());
+        List<BudgetCategory> budgetCategoryList = budgetCategoryRepository.findByUser(user);
+        return BudgetCategoryResponse.mapFromList(budgetCategoryList);
+    }
+
     @Override
     public void deleteBudgetCategory(Long budgetCategoryId) {
 
@@ -89,6 +110,6 @@ public class BudgetCategoryServiceImp implements BudgetCategoryService {
         if (!(budgetCategory.getUser().getId().equals(user.getId()))){
             throw new AuthenticationException("Action Not Authorized");
         }
-        budgetCategoryRepository.save(budgetCategory);
+        budgetCategoryRepository.delete(budgetCategory);
     }
 }

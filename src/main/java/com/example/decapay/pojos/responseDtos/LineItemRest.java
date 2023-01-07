@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 
 @Data
 public class LineItemRest {
+    private Long lineItemId;
     private BigDecimal projectedAmount;
     private BigDecimal amountSpentSoFar;
     private BigDecimal percentageSpentSoFar;

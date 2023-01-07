@@ -13,6 +13,7 @@ import java.util.List;
 
 @Data
 public class BudgetViewModel {
+    private Long budgetId;
     private BigDecimal amount;
     private BigDecimal totalAmountSpent;
     private BigDecimal percentage;

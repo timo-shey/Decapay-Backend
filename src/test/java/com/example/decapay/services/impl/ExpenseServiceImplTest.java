@@ -80,10 +80,14 @@ class ExpenseServiceImplTest {
         expenseResponseDto.setAmount(expenseRequestDto.getAmount());
         expenseResponseDto.setDescription(expenseRequestDto.getDescription());
 
+        LineItem lineItem = new LineItem();
+        lineItem.setTotalAmountSpent(new BigDecimal(4000));
+
         Expense expense = new Expense();
         expense.setId(1L);
         expense.setAmount(new BigDecimal(3000));
         expense.setDescription("test expenses");
+        expense.setLineItem(lineItem);
 
         when(expenseRepository.findById(expenseId)).thenReturn(Optional.of(expense));
         when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
