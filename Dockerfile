@@ -1,16 +1,19 @@
-# latest maven version
-# The backend file/folder need to be moved in a separate module.
-# this dockerfile is for backend module of the app
-# it should be inside the backend module
-FROM maven:3.8.6 AS build
-RUN mkdir -p /workspace
-WORKDIR /workspace
-COPY pom.xml /workspace
-COPY src /workspace/src
-RUN mvn -f pom.xml clean package
+# syntax=docker/dockerfile:1
 
-# specidied jdk 11 as agreed upon by the team
-FROM openjdk:11
-COPY --from=build /workspace/target/*.jar app.jar
-EXPOSE 8082
-ENTRYPOINT ["java","-jar","app.jar"]
+FROM eclipse-temurin:11-jdk-jammy as base
+WORKDIR /app
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:resolve
+COPY src ./src
+
+FROM base as development
+CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000'"]
+
+FROM base as build
+RUN ./mvnw package
+
+FROM eclipse-temurin:11-jre-jammy as production
+EXPOSE 8080
+COPY --from=build /app/target/DecaPay-Java012-Backend-*.jar /DecaPay-Java012-Backend.jar
+CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/DecaPay-Java012-Backend.jar"]
