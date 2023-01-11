@@ -25,7 +25,7 @@ public class LineItemController {
         return new ResponseEntity<>(lineItemServices.createLineItem(lineItemRequestDto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/update/{lineItemId}")
+    @PutMapping("/update/{lineItemId}")
     public ResponseEntity<LineItemResponseDto> updateALineItem(@RequestBody LineItemRequestDto lineItemRequestDto, @Valid @PathVariable Long lineItemId) {
         return lineItemServices.updateLineItem(lineItemRequestDto, lineItemId);
     }

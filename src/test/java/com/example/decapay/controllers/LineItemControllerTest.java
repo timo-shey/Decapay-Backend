@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = LineItemController.class)
@@ -70,7 +71,7 @@ class LineItemControllerTest {
         given(lineItemServices.updateLineItem(lineItemRequestDto, lineItemId)).willReturn(ResponseEntity.ok(lineItemResponseDto));
 
         String requestBody = mapper.writeValueAsString(lineItemRequestDto);
-        mockMvc.perform(post("/api/v1/user/line-items/update/{lineItemId}", lineItemId)
+        mockMvc.perform(put("/api/v1/user/line-items/update/{lineItemId}", lineItemId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isOk());

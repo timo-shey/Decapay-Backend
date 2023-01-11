@@ -1,5 +1,6 @@
 package com.example.decapay.services.impl;
 
+import com.example.decapay.exceptions.NotFoundException;
 import com.example.decapay.exceptions.ResourceNotFoundException;
 import com.example.decapay.models.Expense;
 import com.example.decapay.models.LineItem;
@@ -63,7 +64,16 @@ public class ExpenseServiceImpl implements ExpenseService {
     public Boolean deleteExpense(Long id){
 
         Expense expense=expenseRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Expense not found",HttpStatus.BAD_REQUEST,"Please select a valid Expense"));
+
+        LineItem lineItem = expense.getLineItem();
+        BigDecimal totalAmount = lineItem.getTotalAmountSpent();
+        BigDecimal preAmount = totalAmount.subtract(expense.getAmount());
+
         expenseRepository.delete(expense);
+
+        lineItem.setTotalAmountSpent(preAmount);
+        lineItemRepository.save(lineItem);
+
         return true;
 
     }
@@ -75,17 +85,22 @@ public class ExpenseServiceImpl implements ExpenseService {
         return ResponseEntity.ok(userPage);
     }
 
-    @Transactional
+    @Override
     public ExpenseResponseDto updateExpense(ExpenseRequestDto expenseRequestDto, Long expenseId) {
 
-
         Expense expense = expenseRepository.findById(expenseId).orElseThrow(() ->
-        { throw new ResourceNotFoundException(HttpStatus.NOT_FOUND, "Expense not found");});
+        { throw new NotFoundException("Expense not found");});
+
+        LineItem lineItem = expense.getLineItem();
+        BigDecimal totalAmount = lineItem.getTotalAmountSpent();
+        BigDecimal preAmount = totalAmount.subtract(expense.getAmount());
 
         expense.setAmount(expenseRequestDto.getAmount());
         expense.setDescription(expenseRequestDto.getDescription());
         expense = expenseRepository.save(expense);
 
+        lineItem.setTotalAmountSpent(preAmount.add(expense.getAmount()));
+        lineItemRepository.save(lineItem);
 
         ExpenseResponseDto expenseResponseDto = new ExpenseResponseDto();
         expenseResponseDto.setAmount(expense.getAmount());

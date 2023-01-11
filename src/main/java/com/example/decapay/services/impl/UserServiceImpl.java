@@ -5,6 +5,7 @@ import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtUtils;
 import com.example.decapay.enums.Status;
 import com.example.decapay.enums.VerificationType;
+import com.example.decapay.exceptions.NotFoundException;
 import com.example.decapay.exceptions.UserAlreadyExistException;
 import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.exceptions.ValidationException;
@@ -142,7 +143,7 @@ public class UserServiceImpl implements UserService {
     public String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest) {
         String email = forgotPasswordRequest.getEmail();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         String generatedToken = jwtUtils.generatePasswordResetToken(email);
 
@@ -167,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
 //        Token tokenEntity = tokenRepository.findByToken(token)
 //                .orElseThrow(() -> new ResourceNotFoundException(HttpStatus.NOT_FOUND, "Token does not exist."));
