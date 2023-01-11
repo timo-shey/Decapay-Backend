@@ -65,8 +65,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Autowired
-    private CloudinaryUtils cloudinaryUtils;
+    private final CloudinaryUtils cloudinaryUtils;
 
 
     @Override
@@ -132,6 +131,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userUpdateRequest.getFirstName());
         user.setLastName(userUpdateRequest.getLastName());
         user.setPhoneNumber(userUpdateRequest.getPhoneNumber());
+
 
         userRepository.save(user);
 
