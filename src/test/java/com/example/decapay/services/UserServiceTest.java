@@ -8,16 +8,17 @@ import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.impl.UserServiceImpl;
 import com.example.decapay.utils.CloudinaryUtils;
-import com.example.decapay.services.UserService;
 import com.example.decapay.utils.MailSenderUtil;
 import com.example.decapay.utils.UserIdUtil;
 import com.example.decapay.utils.UserUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,82 +32,69 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+    @InjectMocks
+    private UserServiceImpl userService;
+
     @Mock
     private MailSenderUtil mailSenderUtil;
     @Mock
     private UserIdUtil userIdUtil;
-
-    @Mock
-    private UserService userService;
-
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private UserUtil userUtil;
-
-
     private UserUpdateRequest userUpdateRequest;
 
     @Mock
     private  PasswordEncoder passwordEncoder;
-
     @Mock
     private  EmailSenderService emailSenderService;
-
     @Mock
     private  TokenRepository tokenRepository;
-
     @Mock
     private CloudinaryUtils cloudinaryUtils;
 
     @BeforeEach
     void setUp() {
 
-        userService = new UserServiceImpl(
-                userRepository, userUtil, passwordEncoder,
-                emailSenderService, tokenRepository, mailSenderUtil, userIdUtil);
-
         userUpdateRequest = new UserUpdateRequest();
         userUpdateRequest.setFirstName("Mic");
         userUpdateRequest.setLastName("Aj");
-        userUpdateRequest.setEmail("mic.com");
         userUpdateRequest.setPhoneNumber("08022222222");
     }
 
     @Test
     void editUser() {
 
-       User user = new User();
-       String email = "mic@gmail.com";
+        User user = new User();
+        String email = "mic@gmail.com";
 
-       given(userUtil.getAuthenticatedUserEmail()).willReturn(email);
+        given(userUtil.getAuthenticatedUserEmail()).willReturn(email);
 
-       given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
+        given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
-       userService.editUser(userUpdateRequest);
+        userService.editUser(userUpdateRequest);
 
-       verify(userRepository).save(user);
+        verify(userRepository).save(user);
     }
 
     @Test
     public void testUploadProfilePicture() throws IOException, UserNotFoundException {
         // Prepare test data
         MultipartFile image = Mockito.mock(MultipartFile.class);
-        String email = "olamic695@gmail.com";
+        String email = "cheesezzy@gmail.com";
         User user = new User();
         user.setEmail(email);
         String pictureUrl = "http://test.com/image.jpg";
+
         when(userUtil.getAuthenticatedUserEmail()).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(cloudinaryUtils.createOrUpdateImage(image, user)).thenReturn(pictureUrl);
 
-        // Test the method
-        String result = String.valueOf(userService.uploadProfilePicture(image));
-
-        // Verify the results
-        assertEquals("Profile picture uploaded successfully", result);
+        ResponseEntity result = userService.uploadProfilePicture(image);
+        assertEquals(ResponseEntity.ok("Profile picture uploaded successfully"), result);
         assertEquals(pictureUrl, user.getImagePath());
+
         verify(userRepository).save(user);
     }
 

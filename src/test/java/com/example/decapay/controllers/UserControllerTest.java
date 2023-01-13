@@ -58,7 +58,6 @@ class UserControllerTest {
         UserUpdateRequest updateRequest = new UserUpdateRequest();
         updateRequest.setFirstName("");
         updateRequest.setLastName("Ajay");
-        updateRequest.setEmail("mic@gmail.com");
 
         String email = "mic@gmail.com";
 
