@@ -1,5 +1,6 @@
 package com.example.decapay.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,7 @@ public class Expense extends BaseEntity{
 
     private String description;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "line_item_tb_id")
     private LineItem lineItem;

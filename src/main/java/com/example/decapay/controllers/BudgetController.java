@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/budgets")
+@RequestMapping("/api/v1/budgets")
 public class BudgetController {
 
     private final BudgetService budgetService;
