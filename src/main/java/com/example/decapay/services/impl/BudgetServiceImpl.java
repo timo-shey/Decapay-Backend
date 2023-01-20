@@ -94,6 +94,7 @@ public class BudgetServiceImpl implements BudgetService {
             BigDecimal totalAmountSoFar = lineItem.getTotalAmountSpent();
             BigDecimal percentageSoFar = totalAmountSoFar.divide(lineItem.getProjectedAmount(), new MathContext(2));
             lineItemRest.setLineItemId(lineItem.getId());
+            lineItemRest.setCategory(lineItem.getBudgetCategory().getName());
             lineItemRest.setProjectedAmount(lineItem.getProjectedAmount());
             lineItemRest.setAmountSpentSoFar(totalAmountSoFar);
             lineItemRest.setPercentageSpentSoFar(percentageSoFar);
