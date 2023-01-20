@@ -17,5 +17,5 @@ public class BudgetViewModel {
     private BigDecimal amount;
     private BigDecimal totalAmountSpent;
     private BigDecimal percentage;
-    List<LineItemRest> lineItemRests;
+    private List<LineItemRest> lineItemRests;
 }
