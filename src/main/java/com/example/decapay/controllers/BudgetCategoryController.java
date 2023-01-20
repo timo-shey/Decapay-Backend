@@ -19,16 +19,16 @@ public class BudgetCategoryController {
     private final BudgetCategoryService budgetCategoryService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createBudgetCategory(@Valid @RequestBody BudgetCategoryRequest budgetCategoryRequest){
-        budgetCategoryService.createBudgetCategory(budgetCategoryRequest);
-        return ResponseEntity.ok("Budget category created");
+    public ResponseEntity<BudgetCategoryResponse> createBudgetCategory(@Valid @RequestBody BudgetCategoryRequest budgetCategoryRequest){
+        BudgetCategoryResponse budgetCategoryResponse = budgetCategoryService.createBudgetCategory(budgetCategoryRequest);
+        return ResponseEntity.ok(budgetCategoryResponse);
     }
 
     @PutMapping("/update/{budgetCategoryId}")
-    public ResponseEntity<String> updateBudgetCategory(@Valid @PathVariable Long budgetCategoryId, @RequestBody BudgetCategoryRequest budgetCategoryRequest)
+    public ResponseEntity<BudgetCategoryResponse> updateBudgetCategory(@Valid @PathVariable Long budgetCategoryId, @RequestBody BudgetCategoryRequest budgetCategoryRequest)
     {
       BudgetCategoryResponse  budgetCategoryResponse=  budgetCategoryService.updateBudgetCategory(budgetCategoryId,budgetCategoryRequest);
-      return  ResponseEntity.ok("Budget category updated");
+      return  ResponseEntity.ok(budgetCategoryResponse);
     }
 
     @GetMapping("/{budgetCategoryId}")
