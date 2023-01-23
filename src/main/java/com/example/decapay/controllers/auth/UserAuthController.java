@@ -4,6 +4,7 @@ import com.example.decapay.pojos.requestDtos.ForgetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
 import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.UserRequestDto;
+import com.example.decapay.pojos.responseDtos.TokenVerificationResponse;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class UserAuthController {
     }
 
     @GetMapping("/verify-token/{token}")
-    public ResponseEntity<?> verifyToken( @PathVariable("token") String token) {
-        return new ResponseEntity<>(userService.verifyToken(token),HttpStatus.FOUND);
+    public TokenVerificationResponse verifyToken(@PathVariable("token") String token) {
+       return userService.verifyToken(token);
     }
 
 
