@@ -12,6 +12,7 @@ import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
+import com.example.decapay.pojos.responseDtos.TokenVerificationResponse;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
@@ -36,7 +37,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -188,14 +188,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String verifyToken(String token) {
-
-          tokenRepository.findByToken(token)
+    public TokenVerificationResponse verifyToken(String token) {
+        TokenVerificationResponse tokenResponse = new TokenVerificationResponse();
+        Token passwordResetToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("token does not exist"));
-          //todo: update user verification status
+        //todo: update user verification status
+        //todo : user verification status updated
+        passwordResetToken.setStatus(Status.VERIFIED);
+        tokenRepository.save(passwordResetToken);
 
+        tokenResponse.setToken(passwordResetToken.getToken());
+        tokenResponse.setStatus(passwordResetToken.getStatus());
+        tokenResponse.setEmail(passwordResetToken.getUser().getEmail());
 
-        return "token exist";
+        System.out.println(tokenResponse);
+        return tokenResponse;
     }
 
     @Override
