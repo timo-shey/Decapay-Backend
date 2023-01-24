@@ -12,6 +12,7 @@ import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
+import com.example.decapay.pojos.responseDtos.LoginResponseDto;
 import com.example.decapay.pojos.responseDtos.TokenVerificationResponse;
 import com.example.decapay.pojos.responseDtos.UpdateProfileResponseDto;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
@@ -41,6 +42,7 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -111,16 +113,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> userLogin(LoginRequestDto loginRequestDto) {
+    public ResponseEntity<LoginResponseDto> userLogin(LoginRequestDto loginRequestDto) {
          authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
-        final UserDetails user = customUserDetailService.loadUserByUsername(loginRequestDto.getEmail());
-        if (user != null)
-            return ResponseEntity.ok(jwtUtils.generateToken(user));
+        final UserDetails userDetails = customUserDetailService.loadUserByUsername(loginRequestDto.getEmail());
+        if (userDetails != null) {
+            Optional<User> userOptional = userRepository.findByEmail(loginRequestDto.getEmail());
+            User user = userOptional.get();
+            LoginResponseDto loginResponse = LoginResponseDto.builder()
+                    .userId(user.getUserId())
+                    .lastName(user.getLastName())
+                    .firstName(user.getFirstName())
+                    .email(user.getEmail())
+                    .imagePath(user.getImagePath())
+                    .token(jwtUtils.generateToken(userDetails))
+                    .build();
 
-        return ResponseEntity.status(400).body("Some Error Occurred");
+            return ResponseEntity.ok(loginResponse);
+        }
+
+        return ResponseEntity.status(400).body(LoginResponseDto.builder().build());
     }
-
 
 
 

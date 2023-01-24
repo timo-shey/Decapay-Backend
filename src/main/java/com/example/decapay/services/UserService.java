@@ -3,6 +3,7 @@ package com.example.decapay.services;
 import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
+import com.example.decapay.pojos.responseDtos.LoginResponseDto;
 import com.example.decapay.pojos.responseDtos.TokenVerificationResponse;
 import com.example.decapay.pojos.responseDtos.UpdateProfileResponseDto;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
@@ -16,7 +17,7 @@ import java.io.IOException;
 public interface UserService {
 
     UserResponseDto createUser(UserRequestDto request) throws MessagingException;
-    ResponseEntity<String> userLogin(LoginRequestDto loginRequestDto);
+    ResponseEntity<LoginResponseDto> userLogin(LoginRequestDto loginRequestDto);
 
     ResponseEntity<String> editUser(UserUpdateRequest userUpdateRequest);
 

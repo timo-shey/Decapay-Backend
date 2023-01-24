@@ -2,7 +2,10 @@ package com.example.decapay.services.impl;
 
 import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtUtils;
+import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
+import com.example.decapay.pojos.responseDtos.LoginResponseDto;
+import com.example.decapay.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,15 +21,21 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
 public class UserServiceImplTest {
 
-    @MockBean
+    @InjectMocks
+    private UserServiceImpl userService;
+
+    @Mock
     private AuthenticationManager authenticationManager;
 
     @Mock
@@ -41,14 +50,16 @@ public class UserServiceImplTest {
     @Mock
     private Authentication authentication;
 
-    @InjectMocks
-    private UserServiceImpl userService;
+    @Mock
+    private UserRepository userRepository;
+
+
 
     LoginRequestDto loginRequestDto;
 
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail("oluseun@gmail.com");
@@ -56,15 +67,27 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void userLogin(){
-    when(authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())))
-            .thenReturn(authentication);
-    when(customUserDetailService.loadUserByUsername(anyString()))
-            .thenReturn(userDetails);
-    when(jwtUtils.generateToken(any(UserDetails.class))).thenReturn("934859hfdjghdhfk");
+    public void userLogin() {
+        User user = new User();
+        user.setFirstName("UserOne");
+        user.setLastName("Testing");
+        user.setUserId("wqertyuiopiuytrffyui");
+        user.setImagePath("www.cloudinary.com/image");
+        user.setEmail("oluseun@gmail.com");
+        user.setPhoneNumber("154-753-875");
 
-        ResponseEntity<String> response = userService.userLogin(loginRequestDto);
+        when(authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())))
+                .thenReturn(authentication);
+        when(customUserDetailService.loadUserByUsername(anyString()))
+                .thenReturn(userDetails);
+        when(jwtUtils.generateToken(any(UserDetails.class))).thenReturn("934859hfdjghdhfk");
+        when(userDetails.getUsername()).thenReturn("test@example.com");
+        when(userRepository.findByEmail("oluseun@gmail.com")).thenReturn(Optional.of(user));
+
+
+        ResponseEntity<LoginResponseDto> response = userService.userLogin(loginRequestDto);
+
         assertNotNull(response);
         verify(customUserDetailService, times(1))
                 .loadUserByUsername(anyString());
