@@ -126,6 +126,7 @@ public class UserServiceImpl implements UserService {
                     .firstName(user.getFirstName())
                     .email(user.getEmail())
                     .imagePath(user.getImagePath())
+                    .phoneNumber(user.getPhoneNumber())
                     .token(jwtUtils.generateToken(userDetails))
                     .build();
 
