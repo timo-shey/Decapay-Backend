@@ -13,6 +13,7 @@ import com.example.decapay.models.Token;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
 import com.example.decapay.pojos.responseDtos.TokenVerificationResponse;
+import com.example.decapay.pojos.responseDtos.UpdateProfileResponseDto;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
@@ -91,7 +92,11 @@ public class UserServiceImpl implements UserService {
 
 
 
+
+
+
         User savedUser = userRepository.save(newUser);
+        savedUser.setImagePath(cloudinaryUtils.defaultImageUpload(savedUser));
 
         mailSenderUtil.verifyMail(savedUser);
 
@@ -206,16 +211,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
+    public ResponseEntity<UpdateProfileResponseDto> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
         String email = userUtil.getAuthenticatedUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found",HttpStatus.NOT_FOUND,"Contact Admin"));
         String pictureUrl = cloudinaryUtils.createOrUpdateImage(image, user);
         if (pictureUrl.equals("unsuccessful"))
-            return ResponseEntity.unprocessableEntity().body("Network not available at the moment. please try again later");
+            return ResponseEntity.unprocessableEntity().body(UpdateProfileResponseDto.builder().error("Network not available at the moment. please try again later").build());
         user.setImagePath(pictureUrl);
         userRepository.save(user);
-        return ResponseEntity.ok("Profile picture uploaded successfully");
+        UpdateProfileResponseDto returnValue = UpdateProfileResponseDto.builder()
+                .imageUrl(pictureUrl)
+                .build();
+        return ResponseEntity.ok(returnValue);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
 import com.example.decapay.pojos.responseDtos.TokenVerificationResponse;
+import com.example.decapay.pojos.responseDtos.UpdateProfileResponseDto;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +27,7 @@ public interface UserService {
    // String verifyToken(String token);
     TokenVerificationResponse verifyToken(String token);
 
-    ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException;
+    ResponseEntity<UpdateProfileResponseDto> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException;
     User getUserByEmail(String email);
 
     void verifyUserExists(String userEmail);

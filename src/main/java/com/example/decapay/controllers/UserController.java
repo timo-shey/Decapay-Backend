@@ -2,6 +2,7 @@ package com.example.decapay.controllers;
 
 import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
+import com.example.decapay.pojos.responseDtos.UpdateProfileResponseDto;
 import com.example.decapay.services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/upload-profile-picture" , consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> uploadProfilePic(@RequestPart(name = "file") MultipartFile image) throws IOException, UserNotFoundException {
+    public ResponseEntity<UpdateProfileResponseDto> uploadProfilePic(@RequestPart(name = "file") MultipartFile image) throws IOException, UserNotFoundException {
         System.out.println("i am inside the controller");
         return userService.uploadProfilePicture(image);
     }

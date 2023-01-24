@@ -85,7 +85,7 @@ class BudgetServiceImplTest {
         when(budgetRepository.findAllByUser(user, pageable)).thenReturn(budgetPage);
         when(lineItemRepository.findAllByBudget(any(Budget.class))).thenReturn(createLineItemList());
 
-        List<BudgetViewModel> budgetViewModel = budgetService.getBudgets(0, 2);
+        List<BudgetViewModel> budgetViewModel = budgetService.getBudgets(0, 1);
 
         assertNotNull(budgetViewModel);
         assertEquals(1, budgetViewModel.size());
