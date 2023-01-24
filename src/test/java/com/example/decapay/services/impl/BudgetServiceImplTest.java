@@ -2,6 +2,7 @@ package com.example.decapay.services.impl;
 
 import com.example.decapay.enums.BudgetPeriod;
 import com.example.decapay.models.Budget;
+import com.example.decapay.models.BudgetCategory;
 import com.example.decapay.models.LineItem;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.BudgetDto;
@@ -75,7 +76,7 @@ class BudgetServiceImplTest {
     void getBudgets() {
         List<Budget> budgets = createBudgetList();
 
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 1);
         int start = Math.min((int) pageable.getOffset(), budgets.size());
         int end = Math.min((start + pageable.getPageSize()), budgets.size());
         Page<Budget> budgetPage = new PageImpl<>(budgets.subList(start, end), pageable, budgets.size());
@@ -106,13 +107,18 @@ class BudgetServiceImplTest {
     }
 
     private List<LineItem> createLineItemList() {
+        BudgetCategory budgetCategory = new BudgetCategory();
+        budgetCategory.setName("House");
+
         LineItem lineItem = new LineItem();
         lineItem.setProjectedAmount(new BigDecimal(800));
+        lineItem.setBudgetCategory(budgetCategory);
         lineItem.setTotalAmountSpent(new BigDecimal(750));
 
         LineItem lineItem2 = new LineItem();
         lineItem2.setProjectedAmount(new BigDecimal(500));
         lineItem2.setTotalAmountSpent(new BigDecimal(450));
+        lineItem2.setBudgetCategory(budgetCategory);
 
         List<LineItem> lineItems = new ArrayList<>();
         lineItems.add(lineItem);
