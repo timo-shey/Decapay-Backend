@@ -4,6 +4,7 @@ import com.example.decapay.configurations.mails.EmailSenderService;
 import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
+import com.example.decapay.pojos.responseDtos.UpdateProfileResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.impl.UserServiceImpl;
@@ -91,8 +92,10 @@ class UserServiceTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(cloudinaryUtils.createOrUpdateImage(image, user)).thenReturn(pictureUrl);
 
+
+
         ResponseEntity result = userService.uploadProfilePicture(image);
-        assertEquals(ResponseEntity.ok("Profile picture uploaded successfully"), result);
+        assertEquals(ResponseEntity.ok(UpdateProfileResponseDto.builder().imageUrl(pictureUrl).build()), result);
         assertEquals(pictureUrl, user.getImagePath());
 
         verify(userRepository).save(user);
