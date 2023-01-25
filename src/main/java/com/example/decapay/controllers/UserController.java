@@ -31,7 +31,6 @@ public class UserController {
 
     @PostMapping(value = "/upload-profile-picture" , consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UpdateProfileResponseDto> uploadProfilePic(@RequestPart(name = "file") MultipartFile image) throws IOException, UserNotFoundException {
-        System.out.println("i am inside the controller");
         return userService.uploadProfilePicture(image);
     }
 }
