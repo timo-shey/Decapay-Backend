@@ -4,6 +4,7 @@ import com.example.decapay.configurations.security.CustomUserDetailService;
 import com.example.decapay.configurations.security.JwtAuthFilter;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
+import com.example.decapay.pojos.responseDtos.LoginResponseDto;
 import com.example.decapay.repositories.UserRepository;
 import com.example.decapay.services.UserService;
 import com.example.decapay.utils.UserUtil;
@@ -52,26 +53,28 @@ class UserControllerTest {
 
     @Test
     void editUser() throws Exception {
-
         User user = new User();
-
         UserUpdateRequest updateRequest = new UserUpdateRequest();
-        updateRequest.setFirstName("");
+        updateRequest.setFirstName("Michael1");
         updateRequest.setLastName("Ajay");
+        updateRequest.setPhoneNumber("08062456738");
+
+        LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+                .lastName(updateRequest.getLastName())
+                .firstName(updateRequest.getFirstName())
+                .phoneNumber(updateRequest.getPhoneNumber())
+                .build();
 
         String email = "mic@gmail.com";
 
         given(userUtil.getAuthenticatedUserEmail()).willReturn(email);
-
         given (userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
-
-        given(userService.editUser(updateRequest)).willReturn(ResponseEntity.ok("User details updated"));
+        given(userService.editUser(updateRequest)).willReturn(ResponseEntity.ok(loginResponseDto));
 
         String requestBody = mapper.writeValueAsString(updateRequest);
         mockMvc.perform(put("/api/v1/user/edit/")
                         .contentType("application/json")
                         .content(requestBody))
                 .andExpect(status().isOk());
-
     }
 }

@@ -4,6 +4,7 @@ import com.example.decapay.configurations.mails.EmailSenderService;
 import com.example.decapay.exceptions.UserNotFoundException;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.UserUpdateRequest;
+import com.example.decapay.pojos.responseDtos.LoginResponseDto;
 import com.example.decapay.pojos.responseDtos.UpdateProfileResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
@@ -27,6 +28,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -64,18 +67,20 @@ class UserServiceTest {
         userUpdateRequest.setPhoneNumber("08022222222");
     }
 
-    @Test
-    void editUser() {
-
+    @Test    void editUser() {
         User user = new User();
+        user.setFirstName("Mic");
+        user.setLastName("Aj");
+        user.setPhoneNumber("08022222222");
+
         String email = "mic@gmail.com";
 
         given(userUtil.getAuthenticatedUserEmail()).willReturn(email);
-
         given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
+        given(userRepository.save(any(User.class))).willReturn(user);
 
-        userService.editUser(userUpdateRequest);
-
+        ResponseEntity<LoginResponseDto> loginResponseDtoResponse = userService.editUser(userUpdateRequest);
+        assertNotNull(loginResponseDtoResponse);
         verify(userRepository).save(user);
     }
 
