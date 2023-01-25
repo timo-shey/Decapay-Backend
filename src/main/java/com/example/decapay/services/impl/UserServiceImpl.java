@@ -140,10 +140,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<String> editUser(UserUpdateRequest userUpdateRequest) {
+    public ResponseEntity<LoginResponseDto> editUser(UserUpdateRequest userUpdateRequest) {
 
         String email = userUtil.getAuthenticatedUserEmail();
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -151,10 +150,15 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userUpdateRequest.getLastName());
         user.setPhoneNumber(userUpdateRequest.getPhoneNumber());
 
+        User updatedUser = userRepository.save(user);
 
-        userRepository.save(user);
+        LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+                .phoneNumber(updatedUser.getPhoneNumber())
+                .firstName(updatedUser.getFirstName())
+                .lastName(updatedUser.getLastName())
+                .build();
 
-        return ResponseEntity.ok("User details updated");
+        return ResponseEntity.ok(loginResponseDto);
     }
 
 
@@ -245,8 +249,8 @@ public class UserServiceImpl implements UserService {
         userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException(
                         HttpStatus.BAD_REQUEST, "User with email: " + userEmail + " Not Found"));
-     } 
-     
+     }
+
     @Override
     public User getUserByEmail(String email) {
 

@@ -19,7 +19,7 @@ public interface UserService {
     UserResponseDto createUser(UserRequestDto request) throws MessagingException;
     ResponseEntity<LoginResponseDto> userLogin(LoginRequestDto loginRequestDto);
 
-    ResponseEntity<String> editUser(UserUpdateRequest userUpdateRequest);
+    ResponseEntity<LoginResponseDto> editUser(UserUpdateRequest userUpdateRequest);
 
     String forgotPasswordRequest(ForgetPasswordRequest forgotPasswordRequest);
 
