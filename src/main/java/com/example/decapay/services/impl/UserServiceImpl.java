@@ -12,7 +12,9 @@ import com.example.decapay.exceptions.ValidationException;
 import com.example.decapay.models.Token;
 import com.example.decapay.models.User;
 import com.example.decapay.pojos.requestDtos.*;
+import com.example.decapay.pojos.responseDtos.LoginResponseDto;
 import com.example.decapay.pojos.responseDtos.TokenVerificationResponse;
+import com.example.decapay.pojos.responseDtos.UpdateProfileResponseDto;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.repositories.TokenRepository;
 import com.example.decapay.repositories.UserRepository;
@@ -40,6 +42,7 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +94,11 @@ public class UserServiceImpl implements UserService {
 
 
 
+
+
+
         User savedUser = userRepository.save(newUser);
+        savedUser.setImagePath(cloudinaryUtils.defaultImageUpload(savedUser));
 
         mailSenderUtil.verifyMail(savedUser);
 
@@ -106,16 +113,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> userLogin(LoginRequestDto loginRequestDto) {
+    public ResponseEntity<LoginResponseDto> userLogin(LoginRequestDto loginRequestDto) {
          authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
-        final UserDetails user = customUserDetailService.loadUserByUsername(loginRequestDto.getEmail());
-        if (user != null)
-            return ResponseEntity.ok(jwtUtils.generateToken(user));
+        final UserDetails userDetails = customUserDetailService.loadUserByUsername(loginRequestDto.getEmail());
+        if (userDetails != null) {
+            Optional<User> userOptional = userRepository.findByEmail(loginRequestDto.getEmail());
+            User user = userOptional.get();
+            LoginResponseDto loginResponse = LoginResponseDto.builder()
+                    .userId(user.getUserId())
+                    .lastName(user.getLastName())
+                    .firstName(user.getFirstName())
+                    .email(user.getEmail())
+                    .imagePath(user.getImagePath())
+                    .phoneNumber(user.getPhoneNumber())
+                    .token(jwtUtils.generateToken(userDetails))
+                    .build();
 
-        return ResponseEntity.status(400).body("Some Error Occurred");
+            return ResponseEntity.ok(loginResponse);
+        }
+
+        return ResponseEntity.status(400).body(LoginResponseDto.builder().build());
     }
-
 
 
 
@@ -206,16 +225,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
+    public ResponseEntity<UpdateProfileResponseDto> uploadProfilePicture(MultipartFile image) throws IOException, UserNotFoundException {
         String email = userUtil.getAuthenticatedUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found",HttpStatus.NOT_FOUND,"Contact Admin"));
         String pictureUrl = cloudinaryUtils.createOrUpdateImage(image, user);
         if (pictureUrl.equals("unsuccessful"))
-            return ResponseEntity.unprocessableEntity().body("Network not available at the moment. please try again later");
+            return ResponseEntity.unprocessableEntity().body(UpdateProfileResponseDto.builder().error("Network not available at the moment. please try again later").build());
         user.setImagePath(pictureUrl);
         userRepository.save(user);
-        return ResponseEntity.ok("Profile picture uploaded successfully");
+        UpdateProfileResponseDto returnValue = UpdateProfileResponseDto.builder()
+                .imageUrl(pictureUrl)
+                .build();
+        return ResponseEntity.ok(returnValue);
     }
 
     @Override

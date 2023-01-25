@@ -4,6 +4,7 @@ import com.example.decapay.pojos.requestDtos.ForgetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.LoginRequestDto;
 import com.example.decapay.pojos.requestDtos.ResetPasswordRequest;
 import com.example.decapay.pojos.requestDtos.UserRequestDto;
+import com.example.decapay.pojos.responseDtos.LoginResponseDto;
 import com.example.decapay.pojos.responseDtos.TokenVerificationResponse;
 import com.example.decapay.pojos.responseDtos.UserResponseDto;
 import com.example.decapay.services.UserService;
@@ -35,7 +36,7 @@ public class UserAuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signIn(@RequestBody @Valid LoginRequestDto loginRequestDto){
+    public ResponseEntity<LoginResponseDto> signIn(@RequestBody @Valid LoginRequestDto loginRequestDto){
         return userService.userLogin(loginRequestDto);
     }
 
