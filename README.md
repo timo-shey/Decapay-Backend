@@ -1,6 +1,7 @@
 # DECAPAY PERSONAL FINANCIAL TRACKER
 <p align="center">
-  <img src="web-front-page.png">
+  <img width="1380" alt="Screenshot 2023-01-24 at 1 29 27 AM" src="https://user-images.githubusercontent.com/101255913/216809734-a147b18f-a359-4199-b7a3-f9d876b0ec72.png">
+
 </p>
 
 
